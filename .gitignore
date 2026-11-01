@@ -218,3 +218,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Frontend React / Vite
+node_modules/
+.vite/
+.env.*
+!.env.example
+*.local
