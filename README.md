@@ -773,3 +773,16 @@ vínculos, erros e resposta perdida. Os testes de backend usam banco em memória
 e provedor simulado por padrão; persistência após reinício no Atlas e mídia real
 exigem os testes opt-in e ambiente exclusivo descritos no backend. As telas de
 cadastro de trabalhador e aceitação permanecem em preparação nesta branch.
+
+## Atualização de ocorrências — UC-15
+
+O detalhe apresenta transições e separa as aceitações do episódio atual das
+registradas anteriormente. A edição envia somente campos alterados, com a
+versão consultada; mudança de estado exige motivo. Conflitos e respostas de
+resultado incerto bloqueiam novo envio até consultar e revisar os dados atuais.
+Responsáveis escolhidos são revalidados e vínculos não alterados não são
+reenviados. O comportamento de retirada automática de trabalhador da obra
+ainda depende da correção de UC-20 no backend.
+
+`tests/e2e/uc-15.spec.js` cobre a interface com API controlada; não comprova
+concorrência real nem persistência após reinício no Atlas.
