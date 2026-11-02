@@ -2,7 +2,7 @@ import { useId, useLayoutEffect, useRef } from 'react';
 import { Button } from './UI';
 
 // Renderizar apenas enquanto a confirmação estiver aberta.
-export default function ConfirmDialog({ title, children, confirmLabel = 'Confirmar', cancelLabel = 'Cancelar', onConfirm, onCancel, busy = false, error, returnFocusRef }) {
+export default function ConfirmDialog({ title, children, confirmLabel = 'Confirmar', cancelLabel = 'Cancelar', confirmVariant = 'danger', onConfirm, onCancel, busy = false, error, returnFocusRef }) {
   const dialog = useRef(null);
   const cancel = useRef(null);
   const titleId = useId();
@@ -37,6 +37,6 @@ export default function ConfirmDialog({ title, children, confirmLabel = 'Confirm
     onCancel={(event) => { event.preventDefault(); if (!busy) onCancel(); }}>
     <header><h2 id={titleId}>{title}</h2></header>
     <div className="modal-body"><div id={descriptionId}>{children}</div>{error && <p role="alert" className="form-error">{error}</p>}</div>
-    <footer><Button ref={cancel} variant="secondary" disabled={busy} onClick={onCancel}>{cancelLabel}</Button><Button variant="danger" loading={busy} onClick={onConfirm}>{busy ? 'Aguarde…' : confirmLabel}</Button></footer>
+    <footer><Button ref={cancel} variant="secondary" disabled={busy} onClick={onCancel}>{cancelLabel}</Button><Button variant={confirmVariant} loading={busy} onClick={onConfirm}>{busy ? 'Aguarde…' : confirmLabel}</Button></footer>
   </dialog>;
 }

@@ -18,6 +18,23 @@
 .marco-card-dependencies ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; }
 .marco-card-dependencies li { color: var(--navy); background: #edf2f8; padding: 4px 9px; border-radius: 6px; max-width: 100%; }
 .marco-card-dependencies .button { margin-top: 10px; }
+.estado-marco-form, .decisoes-marco { margin-top: 24px; }
+.estado-marco-form h3 { margin-top: 8px; }
+.estado-marco-form > .form-hint { margin: 16px 0 24px; }
+.estado-marco-form form > .form-hint { margin-top: 10px; }
+.estado-marco-form .page-actions { margin-top: 24px; }
+.estado-marco-preview, .estado-decisao-transicao { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.estado-marco-preview { border: 1px solid #d3deeb; background: #f4f7fb; padding: 16px; border-radius: 10px; margin-top: 20px; }
+.estado-marco-preview > p { width: 100%; color: var(--muted); font-size: 13px; }
+.estado-dependencia-warning { display: flex; gap: 12px; align-items: start; }
+.estado-dependencia-warning > svg { color: #9b6b11; margin-top: 4px; }
+.estado-pendencias { display: grid; gap: 14px; list-style: none; padding: 18px 0; margin: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.estado-pendencias li { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.estado-pendencias li > strong { min-width: 0; overflow-wrap: anywhere; }
+.estado-warning-motivo { margin-top: 16px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.decisoes-marco h3 { display: flex; align-items: center; gap: 10px; }
+.decisoes-marco > article { padding-top: 20px; margin-top: 20px; border-top: 1px solid var(--border); }
+.estado-decisao-motivo { margin: 12px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .marco-empty-icon { display: block; margin: 20px auto; color: #476b8c; }
 .marco-form-note { display: flex; align-items: center; gap: 12px; padding: 16px; margin-bottom: 24px; border-radius: 10px; background: #edf2f8; color: var(--navy); }
 .marco-form-note svg { flex-shrink: 0; }

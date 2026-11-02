@@ -14,6 +14,7 @@ async function mockApi(page, options = {}) {
     expect(route.request().headers().authorization).toBe('Bearer token-teste');
     if (path === '/api/sessoes/atual') return route.fulfill({ json: { construtora: { id: 'conta', nome: 'Horizonte Construções' } } });
     if (/^\/api\/marcos\/[^/]+\/dependencias$/.test(path)) return route.fulfill({ json: [] });
+    if (/^\/api\/obras\/[^/]+\/mudancas$/.test(path)) return route.fulfill({ json: { mudancas: [] } });
     const match = path.match(/^\/api\/obras\/([^/]+)(?:\/marcos(?:\/([^/]+))?)?$/);
     if (!match) throw new Error(`Endpoint inesperado: ${method} ${path}`);
     const [, obra, id] = match;
@@ -55,7 +56,7 @@ test.describe('FE-UC-05 — criar e consultar marcos', () => {
     await expect(page).toHaveURL(`${base}/${marcoId}?busca=nome%3DAurora`);
     await expect(page.getByRole('heading', { name: 'Fundação', exact: true })).toBeVisible();
     await expect(page.getByText('01/02/2030', { exact: true })).toBeVisible();
-    await expect(page.getByText('A iniciar', { exact: true })).toBeVisible();
+    await expect(page.locator('.section-heading').getByText('A iniciar', { exact: true })).toBeVisible();
     await expect(page.getByRole('link', { name: /Dependências/ })).toHaveAttribute('href', `${base}/${marcoId}/dependencias?busca=nome%3DAurora`);
     await expect(page.getByRole('link', { name: /Avanços e evidências/ })).toHaveAttribute('href', `${base}/${marcoId}/avancos?busca=nome%3DAurora`);
     await page.reload();

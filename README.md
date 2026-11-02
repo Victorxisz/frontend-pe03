@@ -536,3 +536,57 @@ Validação local do UC-06 em 02/11/2026: build aprovado, 14 testes unitários/
 contratuais aprovados e 128 cenários de navegador aprovados, incluindo 25 do
 UC-06; 1 integração real opt-in ignorada. Capturas desktop/mobile e confirmação
 inspecionadas. Execução com Edge e preview separado por E2E_BASE_URL.
+
+## Alterar estado e reabrir marco — UC-07
+
+Contrato verificado em `../backend-pe03/app/mudanças/{routes,service,validacoes}.py`,
+`app/marcos/service.py`, `app/historico/{routes,service}.py`, testes de estado/
+mudanças e RN-04/RN-07/CA-03/CA-06. A implementação usa uma única rota de escrita:
+
+```text
+POST /obras/{obraId}/mudancas
+{alvo:{tipo:"marco",id:marcoId}, campo:"estado", novo_valor, motivo, versao}
+```
+
+- O detalhe mantém a versão consultada. O formulário aceita `a iniciar`,
+  `em andamento` e `concluído`, exige motivo e não envia mudança para o estado
+  atual. Reabrir para qualquer estado anterior preserva os eventos já registrados.
+- Somente `409` com `codigo: DEPENDENCIAS_PENDENTES`, conclusão solicitada e
+  lista válida abre a confirmação com nomes e estados dos pré-requisitos.
+  Cancelar/Escape não reenvia. `Concluir mesmo assim` reenvia o mesmo comando,
+  com a mesma versão e motivo, acrescentando `confirmar_dependencias:true`.
+- Outros `409`, incluindo `DEPENDENCIA_INCONSISTENTE`, bloqueiam novo envio e
+  pedem consulta/revisão. Não há confirmação automática, troca para PATCH nem
+  duas escritas para uma decisão. `422` marca os campos e permite correção;
+  `404`, rede/5xx e respostas inesperadas exigem consulta antes de repetir.
+- Duplo clique é bloqueado. Voltar à aba dispara consulta de versão/estado:
+  se houve mudança externa, o rascunho fica bloqueado até nova consulta explícita.
+  Reconsultar descarta a decisão antiga e o motivo, exigindo revisão consciente.
+- Após `200` com dados coerentes, detalhe, lista e histórico são reconsultados.
+  O estado exibido vem do GET, sem aplicação otimista do valor enviado. Se uma
+  releitura falhar, existe ação de repetir somente as consultas, sem reenviar POST.
+- `GET /obras/{obraId}/mudancas` usa o envelope `{mudancas:[...]}`. O cliente
+  compartilhado de histórico preserva eventos e valida seu contexto. O detalhe
+  mostra as decisões de estado deste marco com antes/depois, motivo, autor e data,
+  inclusive após recarga; não inventa eventos a partir do formulário.
+- A navegação e comparação completas do histórico permanecem no cartão UC-13.
+  O estado da obra é independente do estado do marco.
+
+O formulário mantém a identidade visual existente e mostra a transição antes do
+salvamento. Mensagens por campo seguem a orientação da
+[W3C para notificações de formulários](https://www.w3.org/WAI/tutorials/forms/notifications/),
+e o aviso usa a ação específica `Concluir mesmo assim`, seguindo as recomendações
+de [nomes claros de comandos do NN/G](https://www.nngroup.com/articles/ui-copy/).
+
+`tests/e2e/uc-07.spec.js` cobre os três estados, conclusão/reabertura, motivo,
+versão, confirmação/cancelamento, conflitos, atualização em outra aba, duplo
+clique, falhas HTTP, respostas incompletas e releitura após escrita. A API dos
+cenários é controlada: essa execução não substitui Atlas/reinício ou CT-111 no
+ambiente publicado. O backend e suas transações não foram alterados.
+
+Validação local do UC-07 em 02/11/2026: build aprovado, 14 testes unitários/
+contratuais e suíte completa com 149 cenários de navegador aprovados, incluindo
+21 do UC-07. Um cenário real opt-in ficou ignorado. Foram verificados também
+login/restauração de sessão, obras, imagens, navegação/rolagem, cadastro/consulta
+de marcos e dependências. Capturas de desktop/mobile e do aviso de pendências
+foram inspecionadas. Execução com Edge e preview separado por E2E_BASE_URL.

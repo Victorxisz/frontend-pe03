@@ -14,6 +14,7 @@ async function setup(page, options = {}) {
     const method = route.request().method();
     expect(route.request().headers().authorization).toBe('Bearer token-teste');
     if (url.pathname === '/api/sessoes/atual') return route.fulfill({ json: { construtora: { id: 'conta', nome: 'Horizonte Construções' } } });
+    if (/^\/api\/obras\/[^/]+\/mudancas$/.test(url.pathname)) return route.fulfill({ json: { mudancas: [] } });
     const obra = url.pathname.match(/^\/api\/obras\/([^/]+)(?:\/marcos(?:\/([^/]+))?)?$/);
     if (obra) {
       const [, id, marcoId] = obra;
