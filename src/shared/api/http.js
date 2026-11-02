@@ -35,7 +35,7 @@ export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUn
         .find((value) => typeof value === 'string' && value.trim());
       throw new ApiError(message || 'Não foi possível concluir a solicitação.', response.status, data);
     }
-    if (expectedStatus !== undefined && response.status !== expectedStatus) {
+    if (expectedStatus !== undefined && !(Array.isArray(expectedStatus) ? expectedStatus : [expectedStatus]).includes(response.status)) {
       throw new ApiError('O servidor não confirmou o resultado da solicitação.', 0);
     }
     return data;

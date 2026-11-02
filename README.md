@@ -590,3 +590,32 @@ contratuais e suíte completa com 149 cenários de navegador aprovados, incluind
 login/restauração de sessão, obras, imagens, navegação/rolagem, cadastro/consulta
 de marcos e dependências. Capturas de desktop/mobile e do aviso de pendências
 foram inspecionadas. Execução com Edge e preview separado por E2E_BASE_URL.
+
+## Publicação e linha do tempo — UC-10
+
+Conexão conferida com o código em `../backend-pe03`: o cliente usa `/api`
+no desenvolvimento e o proxy Vite encaminha para `http://127.0.0.1:5000`
+(ou `API_PROXY_TARGET`). Em produção, configurar `VITE_API_BASE_URL` e o
+encaminhamento HTTP apropriado. A configuração não comprova disponibilidade.
+
+Revisão consulta avanço e valida seu marco na obra. Confirmação envia somente
+`{}` e aceita 201/200; autoria, conteúdo e instante vêm do servidor. Consultas
+posteriores de detalhe, publicações, avanços e prévia são independentes da
+confirmação. Falha de releitura permite repetir apenas GET. Resposta perdida
+exige consultar o estado antes de oferecer outra decisão. A linha do tempo
+preserva a ordem da API e apresenta cada avanço publicado uma vez.
+
+Mídias são recuperadas com Bearer em Blob, com liberação das URLs temporárias;
+imagens, vídeos e download de documentos preservam o cartão em caso de falha.
+UC-08 e UC-11 ainda possuem formulários em preparação neste checkout; os links
+usam as rotas React existentes. A prévia continua exclusiva da construtora.
+
+`tests/e2e/uc-10.spec.js` usa API controlada. Persistência após reinício e
+recuperação dos três tipos de mídia no EC2/Cloudinary exigem ambiente integrado.
+
+Validação local de UC-10 em 02/11/2026: build aprovado, 15 testes unitários/
+contratuais e 10 cenários de navegador aprovados no Edge. Cobertura inclui
+cancelamento, duplo clique, resposta perdida, erros 404/422/409/503, falha de
+releitura após confirmação, datas distintas, ordem e arquivo indisponível.
+A porta local 5000 não respondeu na verificação; não foi possível comprovar
+conexão ativa, persistência real ou recuperação via Cloudinary nesta execução.

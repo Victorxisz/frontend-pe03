@@ -100,3 +100,12 @@ test('distingue falha de rede, cancelamento e erro HTTP sem JSON', async () => {
   const unavailable = createHttpClient({ fetcher: async () => new Response('<html>502</html>', { status: 502 }) });
   await assert.rejects(unavailable('/obras'), (error) => error.status === 502 && error.data === null);
 });
+
+ test('aceita somente os status de confirmação declarados', async () => {
+  for (const status of [200, 201]) {
+    const request = createHttpClient({ fetcher: async () => new Response('{}', { status }) });
+    assert.deepEqual(await request('/publicacoes', { method: 'POST', body: {}, expectedStatus: [200, 201] }), {});
+  }
+  const request = createHttpClient({ fetcher: async () => new Response('{}', { status: 202 }) });
+  await assert.rejects(request('/publicacoes', { expectedStatus: [200, 201] }), { status: 0 });
+});
