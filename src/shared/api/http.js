@@ -11,7 +11,7 @@ export class ApiError extends Error {
 }
 
 export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUnauthorized = () => {}, fetcher = (...args) => fetch(...args) } = {}) {
-  return async function request(path, { body, headers, authenticated = true, expectedStatus, ...options } = {}) {
+  return async function request(path, { body, headers, authenticated = true, expectedStatus, responseType = 'json', ...options } = {}) {
     const token = authenticated ? getToken() : null;
     const requestHeaders = new Headers(headers);
     if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
@@ -26,7 +26,8 @@ export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUn
       if (error.name === 'AbortError') throw error;
       throw new ApiError('Não foi possível conectar ao servidor. Tente novamente.', 0);
     }
-    const data = response.status === 204 ? null : await response.json().catch(() => null);
+    const data = response.ok && responseType === 'blob' ? await response.blob()
+      : response.status === 204 ? null : await response.json().catch(() => null);
     if (!response.ok) {
       if (response.status === 401 && token) onUnauthorized(token);
       const detail = data?.erro && typeof data.erro === 'object' ? data.erro : data?.error;

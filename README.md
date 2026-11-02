@@ -148,7 +148,7 @@ dependências são entre marcos. Preservar rascunhos, publicações, versões,
 motivos e confirmações conforme os contratos reais. Tratar conflitos e limpeza
 pendente sem indicar sucesso falso.
 
-Próximas entregas: editar dados descritivos em UC-04, cadastrar marco e registrar
+Próximas entregas: cadastrar marco e registrar
 avanço com mídia até publicação e prévia.
 
 ## Verificação do UC-01
@@ -323,3 +323,95 @@ datas/filtros/HTTP/rotas e 51 cenários de navegador UC-01/02/03 aprovados com
 Chrome. O cenário de autenticação real permaneceu opt-in. No backend, os três
 arquivos de referência somaram 112 testes aprovados e seis cenários Atlas
 omitidos. Banco e respostas do navegador foram simulados nessas execuções.
+
+## Editar dados descritivos da obra — UC-04
+
+O botão Editar obra no resumo abre `/obras/{id}/editar`, preservando a busca
+de UC-03. A tela consulta o cadastro antes de oferecer o formulário. Somente
+nome, cliente de referência, localização em texto livre e descrição são
+editáveis. `ObraDescritivaFields` compartilha os quatro campos com UC-02;
+`descritiva.js` valida textos preenchidos e seleciona apenas as diferenças.
+
+Salvar envia `PATCH /obras/{id}` com os campos descritivos alterados, sem
+tipo, início, prazo, estado, conclusão, alertas ou auditoria. Espaços nas
+extremidades são aparados; ausência de mudanças desabilita o envio. Durante
+o salvamento, campos, cancelamento e botão de salvar ficam bloqueados, com
+proteção adicional contra cliques duplicados. Cancelar retorna ao detalhe
+sem PATCH. Respostas de uma edição abandonada não redirecionam outra página.
+
+O `200` do backend contém ID e os quatro campos descritivos. Essa resposta
+parcial não substitui a obra completa: a tela retorna ao detalhe e consulta
+novamente o cadastro, recuperando planejamento, alertas, conclusão e demais
+dados. O painel também consulta novamente ao retornar. Falha na releitura
+mostra erro de consulta e permite repetir o GET sem repetir o PATCH.
+
+Erros 400 e 404 identificam referência inválida ou obra indisponível; 422
+mostra mensagem/campos e 500 distingue falha de carregamento e de gravação.
+Durante falha na gravação, o formulário preserva os textos digitados e não
+anuncia sucesso. Falha de conexão ou resposta incompleta orienta consultar a
+obra antes de salvar novamente, sem retry automático.
+
+O painel lateral exibe o planejamento apenas para consulta e oferece
+Registrar mudança para `/obras/{id}/historico/nova-mudanca`. Esse é o caminho
+de UC-12, que exige motivo e histórico; seu formulário ainda está em
+preparação, identificado na interface. A edição descritiva funciona de forma
+independente e não implementa um atalho para alterar prazo/situação.
+
+Contrato conferido em `../backend-pe03/app/obras/{routes,service}.py`, nos
+documentos de domínio (RN-07), jornadas (CA-02) e casos de uso (UC-04).
+Testes de referência do backend: `tests/obras/test_edicao.py` e
+`tests/obras/test_edicao_atlas.py` (CT-16/CT-17). Os cenários reais Atlas usam
+coleções temporárias e continuam opt-in, sem serem substituídos pelos mocks.
+
+`tests/e2e/uc-04.spec.js` cobre cada campo, resposta parcial, releitura,
+retorno ao painel, cancelamento, ausência de mudanças, textos vazios,
+carregamento, envio duplicado, erros, falha de releitura e navegação para
+UC-12. Também gera capturas desktop/celular para revisão visual.
+`tests/descritiva.test.js` verifica as diferenças permitidas e a exclusão de
+campos controlados pelo servidor. Executar com `npm run test:all`.
+
+Verificação local em 02/11/2026: build aprovado, 13 testes unitários/rotas e
+74 cenários de navegador UC-01/02/03/04 aprovados com Chrome, incluindo revisão
+visual desktop/celular. A autenticação real permaneceu opt-in. No backend,
+29 testes de edição aprovados com banco simulado; três cenários Atlas omitidos.
+Persistência real no Atlas e CT-111 no EC2 ainda exigem execução integrada.
+
+## Perspectiva ilustrativa do projeto — extensão de UC-02/03/04
+
+Extensão confirmada pelo usuário em 02/11/2026: uma imagem JPEG/PNG opcional
+de como a obra ficará pronta. No cadastro, a seleção tem prévia e participa
+da revisão. Sem imagem, a criação continua JSON; com imagem, usa multipart
+com `cadastro` (JSON textual) e o arquivo `imagem_projeto`. O backend salva a
+referência junto ao cadastro; o frontend não apresenta prévia como imagem
+persistida nem cria a obra antes de tentar enviar a imagem.
+
+Cartões e detalhe exibem a legenda Perspectiva ilustrativa do projeto,
+separada das evidências reais. Conteúdo privado é recuperado por `request`
+com Bearer e convertido em Blob; token e URL assinada não aparecem no `src`
+da imagem. URLs temporárias são liberadas quando a imagem/tela é substituída.
+Falha na imagem mantém os demais dados disponíveis e permite nova consulta.
+Obras antigas ou cadastradas sem imagem continuam com a apresentação textual.
+
+A edição possui um painel próprio para adicionar, substituir ou remover a
+perspectiva. A imagem é salva separadamente dos textos; o PATCH descritivo
+mantém seus quatro campos. Substituir/remover usa o ID da imagem consultada;
+`409` e falhas com resultado indeterminado exigem consultar a imagem atual
+antes de reenviar. Remoção pede confirmação. Limpeza pendente é apresentada
+como pendência, sem anunciar que o arquivo anterior foi definitivamente apagado.
+
+O servidor valida conteúdo e tamanho (padrão 10 MiB, configurável); o navegador
+permite selecionar JPEG/PNG e oferece prévia. Não se aceitam URLs externas ou
+referências de Cloudinary no formulário. Credenciais continuam exclusivamente
+no backend. Ver o [contrato completo](../backend-pe03/docs/05-arquitetura-e-contratos.md#imagem-opcional-do-projeto--extensão-de-uc-020304).
+
+Testes novos: `tests/e2e/imagem-projeto.spec.js` para cadastro, revisão,
+exibição autenticada, recarga, cancelamento, falhas, substituição, confirmação
+de remoção e conflitos; `tests/http.test.js` verifica o transporte binário
+autenticado e erros JSON. São cenários com API controlada; o upload e a
+recuperação com Cloudinary real ainda precisam de validação integrada.
+
+Verificação desta extensão: build aprovado, 14 testes unitários/rotas e
+82 cenários de navegador aprovados (incluindo oito de imagem). No backend,
+348 testes de obras/mídia/cascata/rotas passaram com provedores simulados;
+11 cenários de integração real ficaram opt-in. As novas rotas exigem reiniciar
+o backend. As credenciais Cloudinary devem estar somente no `.env` do servidor.
