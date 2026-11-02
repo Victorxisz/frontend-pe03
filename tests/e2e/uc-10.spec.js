@@ -11,6 +11,7 @@ async function setup(page, options = {}) {
     if (path === '/obras/obra') return route.fulfill({ json: { id: 'obra', nome: 'Casa', localizacao: 'SP', entrega: {}, alertas: [] } });
     if (path === '/obras/obra/marcos/marco') return route.fulfill({ json: { id: 'marco', obra_id: 'obra', nome: 'Fundação' } });
     if (path === '/avancos/avanco') return route.fulfill({ json: { ...draft, estado: state.published ? 'publicado' : 'rascunho' } });
+    if (path === '/avancos/avanco/midias') return route.fulfill({ json: [] });
     if (path === '/marcos/marco/avancos') return route.fulfill({ json: [draft] });
     if (path === '/avancos/avanco/publicacoes') {
       if (route.request().method() === 'POST') {
@@ -49,7 +50,7 @@ test('cancelar revisão e confirmação não publica; rascunho fora da prévia',
   await page.getByRole('button', { name: 'Publicar avanço', exact: true }).click();
   await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
   await page.getByRole('link', { name: 'Cancelar e voltar ao detalhe' }).click();
-  await expect(page.getByRole('heading', { name: 'Detalhe do avanço' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Concretagem revisada' })).toBeVisible();
   await page.goto('/obras/obra/publicacoes'); await expect(page.locator('article')).toHaveCount(0); expect(state.posts).toBe(0);
 });
 test('falha na leitura depois de confirmar repete somente GET', async ({ page }) => {

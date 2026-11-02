@@ -3,6 +3,8 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { publicacoesApi } from '../../publicacoes/api';
 import { avancosApi } from '../api';
+import { marcosApi } from '../../marcos/api';
+import { ApiError } from '../../../shared/api/http';
 import { Button, StatusBadge } from '../../../shared/ui/UI';
 import MediaViewer from '../../../shared/ui/MediaViewer';
 import { formatarDia } from '../../../shared/lib/datas';
@@ -26,7 +28,12 @@ export default function AvancoPage() {
       try {
         const api = avancosApi(request);
         const result = await api.detail(avancoId, controller.signal);
-        const record = result?.avanco || result?.data || result;
+        const record = result?.avanco || (result?.data && typeof result.data === 'object' ? result.data : result);
+        if (obraIdParam) {
+          if (record?.id !== avancoId || !record.marco_id) throw new ApiError('Avanço não encontrado nesta obra.', 404);
+          const marco = await marcosApi(request).detail(obraIdParam, record.marco_id, controller.signal);
+          if (marco.id !== record.marco_id || marco.obra_id !== obraIdParam) throw new ApiError('Avanço não encontrado nesta obra.', 404);
+        }
         if (controller.signal.aborted) return;
         setAvanco(record);
         const embedded = record.midias?.length ? record.midias : record.midias_metadados?.length ? record.midias_metadados : record.evidencias?.length ? record.evidencias : record.midias_ids || record.midia_ids || [];

@@ -3,3 +3,10 @@
 .mudanca-form textarea { min-height: 100px; }
 .mudanca-current { margin-top: 20px; }
 .mudanca-evento { border-top: 1px solid #dce2ea; padding-top: 16px; margin-top: 16px; overflow-wrap: anywhere; }
+
+.historico-evento { margin: 16px 0; overflow-wrap: anywhere; }
+.historico-valores { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+.historico-valores dl { margin: 0; }
+.historico-valores dt { font-weight: 600; }
+.historico-valores dd { margin: 0 0 8px 12px; }
+.historico-links { display: flex; flex-wrap: wrap; gap: 16px; }
