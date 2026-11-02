@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import './marcos.css';
 const MarcosPage = lazy(() => import('./pages/MarcosPage'));
 const NovoMarcoPage = lazy(() => import('./pages/NovoMarcoPage'));
 const MarcoPage = lazy(() => import('./pages/MarcoPage'));

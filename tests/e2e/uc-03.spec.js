@@ -20,6 +20,8 @@ async function mockApi(page, options = {}) {
       if (state.list) return state.list(route, url.searchParams);
       return route.fulfill({ json: { obras, situacao: 'com_resultados', filtros_aplicados: Object.fromEntries(url.searchParams) } });
     }
+    if (/^\/api\/marcos\/[^/]+\/dependencias$/.test(path)) return route.fulfill({ json: [] });
+    if (/^\/api\/obras\/[^/]+\/marcos$/.test(path)) return route.fulfill({ json: [] });
     if (path.startsWith('/api/obras/')) {
       const id = decodeURIComponent(path.slice('/api/obras/'.length));
       state.details.push(id);
@@ -38,6 +40,45 @@ async function cards(page) { await expect(page.getByRole('status')).toHaveText('
 test.describe('FE-UC-03 — lista, filtros e contexto da obra', () => {
   test.skip(process.env.E2E_REAL === '1', 'API controlada; não comprova Atlas/EC2');
   test.use({ timezoneId: 'America/Sao_Paulo' });
+
+  test('entrada na raiz e ações internas preservam a busca para voltar ao painel', async ({ page }) => {
+    await mockApi(page);
+    const search = '?busca=nome%3DAurora';
+    await page.goto(`/obras/casa-aurora${search}#conteudo`);
+    await expect(page).toHaveURL(`/obras/casa-aurora/marcos${search}#conteudo`);
+    await page.getByRole('link', { name: 'Adicionar marco', exact: true }).click();
+    await expect(page).toHaveURL(`/obras/casa-aurora/marcos/novo${search}`);
+    await page.getByRole('main').getByRole('link', { name: 'Painel das Obras', exact: true }).click();
+    await expect(page).toHaveURL('/obras?nome=Aurora');
+  });
+
+  for (const width of [1440, 390]) test(`trocar abas preserva rolagem e espaço de uma seção longa em ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await mockApi(page);
+    await page.route('**/api/obras/casa-aurora/marcos', (route) => route.fulfill({ json: Array.from({ length: 18 }, (_, index) => ({ id: `marco-${index}`, nome: `Entrega ${index}`, descricao: 'Entrega verificável da obra.', estado: 'a iniciar', inicio_previsto: '2030-02-01', fim_previsto: '2030-02-15' })) }));
+    await page.goto('/obras/casa-aurora/marcos?busca=nome%3DAurora');
+    await expect(page.getByRole('article')).toHaveCount(18);
+    const content = page.locator('.obra-tab-content');
+    const originalHeight = await content.evaluate((element) => element.getBoundingClientRect().height);
+    // A posição profunda exige espaço também quando o destino possui pouco conteúdo.
+    await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+    const before = await page.evaluate(() => scrollY);
+    await page.getByRole('navigation', { name: 'Seções da obra' }).getByRole('link', { name: 'Trabalhadores', exact: true }).evaluate((element) => element.click());
+    await expect(page.getByRole('heading', { name: 'Trabalhadores da obra', exact: true })).toBeAttached();
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeCloseTo(before, 0);
+    expect(await content.evaluate((element) => element.getBoundingClientRect().height)).toBeGreaterThanOrEqual(originalHeight);
+    await expect(page).toHaveURL('/obras/casa-aurora/trabalhadores?busca=nome%3DAurora');
+    // Também preservar a posição em um clique comum, com as abas visíveis.
+    await page.locator('.obra-tabs').evaluate((element) => scrollTo(0, element.getBoundingClientRect().top + scrollY - 100));
+    const nearTabs = await page.evaluate(() => scrollY);
+    await page.getByRole('navigation', { name: 'Seções da obra' }).getByRole('link', { name: 'Marcos', exact: true }).click();
+    await expect(page.getByRole('article')).toHaveCount(18);
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeCloseTo(nearTabs, 0);
+    // Fora das abas, a navegação comum continua abrindo no topo.
+    await page.getByRole('main').getByRole('link', { name: 'Painel das Obras', exact: true }).evaluate((element) => element.click());
+    await expect(page).toHaveURL('/obras?nome=Aurora');
+    await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+  });
 
   test('cartões mostram dados da API, estado e atraso separados; layout desktop e mobile', async ({ page }, testInfo) => {
     await mockApi(page);

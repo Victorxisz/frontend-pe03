@@ -18,13 +18,13 @@ export default function EditorImagemProjeto({ obra, disabled, onBusyChange, onSa
   useEffect(() => { active.current = true; return () => { active.current = false; }; }, []);
   const api = obrasApi(request);
   async function execute(action) {
-    if (locked.current || disabled) return;
+    if (locked.current || disabled || (mustRefresh && action !== 'refresh')) return;
     locked.current = true; setSaving(true); onBusyChange(true); setFailure(''); setMessage('');
     try {
       if (action === 'refresh') {
         const current = await api.detail(obra.id);
-        if (!current?.id) throw new Error();
-        if (active.current) { onSaved(current.imagem_projeto || null); setMustRefresh(false); setMessage('Imagem atual consultada. Confira antes de salvar novamente.'); }
+        if (current?.id !== obra.id) throw new Error();
+        if (active.current) { onSaved(current.imagem_projeto || null); setConfirm(false); setMustRefresh(false); setMessage('Imagem atual consultada. Confira antes de salvar novamente.'); }
       } else {
         const result = action === 'remove' ? await api.removeImage(obra.id, obra.imagem_projeto.id) : await api.saveImage(obra.id, file, obra.imagem_projeto?.id || '');
         if (!result || !Object.hasOwn(result, 'imagem_projeto') || (action !== 'remove' && !result.imagem_projeto?.id)) throw new Error();

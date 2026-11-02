@@ -13,7 +13,7 @@ import EditorImagemProjeto from '../components/EditorImagemProjeto';
 function mensagemErro(error, leitura = false) {
   if (error.status === 400) return 'A referência da obra é inválida. Volte ao painel e selecione uma obra.';
   if (error.status === 404) return 'Obra não encontrada. Ela pode ter sido excluída ou não estar disponível.';
-  if (error.status === 500) return leitura ? 'Não foi possível carregar os dados da obra. Tente consultar novamente.' : 'Não foi possível salvar a correção da obra. Seus dados digitados foram mantidos.';
+  if (error.status >= 500) return leitura ? 'Não foi possível carregar os dados da obra. Tente consultar novamente.' : 'Não foi possível confirmar a correção da obra. Seus dados digitados foram mantidos. Consulte a obra antes de tentar salvar novamente.';
   if (!error.status) return leitura ? 'Não foi possível consultar a obra. Confira a conexão e tente novamente.' : 'Não foi possível confirmar a alteração. Seus dados digitados foram mantidos. Consulte a obra antes de tentar salvar novamente.';
   return error.message;
 }
@@ -56,12 +56,12 @@ function EditarObra({ obraId }) {
   function change(campo, value) {
     setDraft((previous) => ({ ...previous, [campo]: value }));
     setErrors((previous) => ({ ...previous, [campo]: '' }));
-    setFailure(null);
+    setFailure((previous) => previous?.uncertain ? previous : null);
   }
   function focusError() { requestAnimationFrame(() => summary.current?.focus()); }
   async function save(event) {
     event.preventDefault();
-    if (locked.current || imageSaving) return;
+    if (locked.current || imageSaving || failure?.uncertain) return;
     const nextErrors = validarDescritiva(draft);
     setErrors(nextErrors);
     setFailure(null);
@@ -78,7 +78,7 @@ function EditarObra({ obraId }) {
       if (active.current) navigate(detailTo, { replace: true, state: { obraAtualizada: obraId } });
     } catch (error) {
       if (!active.current) return;
-      setFailure({ message: mensagemErro(error), uncertain: !error.status });
+      setFailure({ message: mensagemErro(error), uncertain: !error.status || error.status >= 500 });
       if (error.status === 422) {
         const fields = Array.isArray(error.fields) ? error.fields : Object.keys(error.fields || {});
         setErrors(Object.fromEntries(fields.map((campo) => [campo, error.message])));

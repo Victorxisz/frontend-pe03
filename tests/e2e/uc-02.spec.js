@@ -19,6 +19,7 @@ async function setup(page, options = {}) {
       return route.fulfill({ status: 201, json: obra, headers: { Location: '/obras/obra-criada' } });
     }
     if (path === '/api/obras') { state.lists++; return json({ obras: state.obras, situacao: state.obras.length ? 'com_resultados' : 'lista_vazia', filtros_aplicados: {} }); }
+    if (path === '/api/obras/obra-criada/marcos') return json([]);
     if (path === '/api/obras/obra-criada') {
       state.reads++;
       if (options.detail) return options.detail(route);

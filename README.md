@@ -148,7 +148,7 @@ dependências são entre marcos. Preservar rascunhos, publicações, versões,
 motivos e confirmações conforme os contratos reais. Tratar conflitos e limpeza
 pendente sem indicar sucesso falso.
 
-Próximas entregas: cadastrar marco e registrar
+Próximas entregas: dependências, transições de estado e registro de
 avanço com mídia até publicação e prévia.
 
 ## Verificação do UC-01
@@ -415,3 +415,124 @@ Verificação desta extensão: build aprovado, 14 testes unitários/rotas e
 348 testes de obras/mídia/cascata/rotas passaram com provedores simulados;
 11 cenários de integração real ficaram opt-in. As novas rotas exigem reiniciar
 o backend. As credenciais Cloudinary devem estar somente no `.env` do servidor.
+
+## Criar e consultar marcos — UC-05
+
+Contrato conferido em `../backend-pe03/app/marcos/{routes,service,validacoes}.py`,
+`tests/marcos/{test_cadastro,test_consultas}.py` e nas regras RN-03/CA-03.
+Marcos pertencem diretamente à obra, sem entidade etapa e sem percentual
+calculado pela quantidade de entregas.
+
+- Lista: `GET /obras/{obraId}/marcos`, com resposta em array (inclusive `[]`).
+- Detalhe: `GET /obras/{obraId}/marcos/{marcoId}`, inclusive no acesso direto e
+  após recarga. O vínculo `obra_id` e o ID consultado são conferidos antes da
+  exibição. A resposta completa, incluindo `versao`, permanece no estado da consulta.
+- Cadastro: `POST /obras/{obraId}/marcos`, somente com `nome`, `descricao`,
+  `inicio_previsto` e `fim_previsto`. Textos são obrigatórios e enviados sem
+  espaços nas pontas; datas são dias válidos, com fim maior ou igual ao início.
+  Estado inicial `a iniciar` é responsabilidade do servidor.
+- Somente `201` confirma criação: a interface abre o ID retornado, consulta o
+  detalhe e reconsulta a lista. Falha nessa reconsulta possui nova tentativa e
+  não desfaz nem oculta a confirmação do cadastro.
+- Carregamento, lista vazia, falha HTTP/rede e resposta inesperada têm feedback
+  distinto. `422` identifica os campos; `400`, `404` e `500` preservam a mensagem
+  da API. Cancelar o formulário não envia POST. Envios simultâneos são bloqueados.
+- Troca de obra descarta a consulta anterior, aborta requisições e reinicia o
+  formulário. A busca do painel permanece nos links internos.
+- `MarcoSelect` está disponível para os próximos UCs; consulta por obra, limita
+  as opções ao resultado atual e apresenta carregamento, vazio e nova tentativa.
+  O consumidor recebe o ID em `onChange` e deve validar a seleção no seu comando.
+- Dependências e avanços possuem links para as rotas existentes; os comandos
+  dessas áreas continuam para os respectivos cartões.
+
+A interface mantém Inter, azul, fundo claro, cartões arredondados e componentes
+existentes. Prioriza nome, estado e período, com ação de cadastro no estado vazio
+seguindo a orientação sobre [estados vazios do Nielsen Norman Group](https://www.nngroup.com/articles/empty-state-interface-design/).
+
+```powershell
+$env:E2E_BROWSER_CHANNEL = 'msedge' # ou chrome/Chromium instalado
+npx playwright test tests/e2e/uc-05.spec.js
+```
+
+Os 13 cenários de `tests/e2e/uc-05.spec.js` usam API controlada e cobrem array,
+criação, payload, cancelamento, datas iguais/invertidas, erros, recarga, isolamento
+por obra e resposta atrasada. Geram capturas desktop/mobile em `test-results/`.
+Não comprovam persistência Atlas após reinício nem CT-111 no servidor publicado.
+O Python de `../backend-pe03/venv` não pôde ser executado nesta máquina; os testes
+do backend foram consultados, mas não reexecutados nesta entrega.
+
+Validação local em 02/11/2026: build aprovado, 14 testes unitários/contratuais
+aprovados e suíte de navegador com 100 cenários aprovados (incluindo os 13 do
+UC-05) e 1 cenário de integração real ignorado por ser opt-in. Navegador: Edge.
+Nesta máquina, o encerramento automático do servidor Vite pelo Playwright não
+terminou; a execução completa foi concluída com preview iniciado separadamente
+e `E2E_BASE_URL=http://127.0.0.1:4174`. As capturas de lista, cadastro e detalhe
+foram inspecionadas, incluindo largura de 390 px sem rolagem horizontal.
+
+## Limite da verificação de sessão
+
+A restauração em `AuthProvider` aguarda `GET /sessoes/atual` por até 8 segundos,
+incluindo leitura do corpo. Se exceder esse prazo, cancela a consulta, mantém o
+token e apresenta nova tentativa. Respostas atrasadas ou de uma tentativa anterior
+não liberam conteúdo protegido. Desmontagem e navegação cancelam a consulta e
+limpam o temporizador. Respostas 401/403 continuam exigindo novo login.
+Esse limite evita espera indefinida; não reduz o tempo de processamento do
+servidor. Para investigar latência real, medir `/sessoes/atual` no ambiente em uso
+e a conexão do backend com MongoDB. O teste de timeout usa relógio controlado.
+
+## Rolagem nas abas da obra
+
+Trocar as seções da mesma obra preserva a posição vertical da página. A área
+abaixo das abas mantém pelo menos a altura do conteúdo anterior, evitando que
+uma seção curta reduza a página e desloque a leitura. Esse espaço é reiniciado
+ao abrir outra obra. O carregamento dos módulos fica dentro dessa área, mantendo
+cabeçalho e navegação montados. Navegar ao painel ou a um formulário/detalhe
+continua abrindo no topo. Os testes de UC-03 verificam trocas de conteúdo longo
+para curto em desktop e celular, preservação da busca e retorno ao painel.
+
+## Definir e retirar dependências — UC-06
+
+Contrato conferido em `../backend-pe03/app/marcos/{routes,service}.py`,
+`tests/marcos/test_dependencias.py`, RN-04/CA-03 e no cartão frontend UC-06.
+A página valida primeiro o pertencimento do marco à obra pelo detalhe de UC-05;
+somente então consulta os endpoints de dependências, que não recebem obraId.
+
+- `GET /marcos/{marcoId}/dependencias` retorna array e é a fonte dos vínculos.
+  A interface mostra `marco_nome depende de depende_de_nome`, inclusive no detalhe
+  do marco. Respostas com envelope ou referência a outro marco viram erro.
+- Os candidatos vêm de `GET /obras/{obraId}/marcos`. `MarcoSelect` aceita fonte
+  compartilhada e exclusões; oculta o próprio marco e pré-requisitos já escolhidos.
+  A prévia textual mostra a direção da relação antes de adicionar.
+- `POST /marcos/{marcoId}/dependencias` envia somente `{depende_de_id}` e exige
+  `201` com vínculo completo e correspondente à seleção. Em seguida reconsulta
+  vínculos e candidatos; não há representação otimista de uma relação rejeitada.
+- `DELETE /marcos/{marcoId}/dependencias/{dependenciaId}` usa o ID do vínculo,
+  não o marco de destino, e exige `204`. Só remove a relação; os marcos permanecem.
+  A confirmação identifica ambos os nomes e permite Cancelar/Escape antes do envio.
+- `ConfirmDialog` é reutilizável, usa diálogo modal nativo, foco inicial no botão
+  Cancelar, circulação de Tab/Shift+Tab, Escape, fundo inerte e devolução de foco.
+  Se o acionador desaparecer, usa o título da seção como destino de foco.
+  Durante um comando em curso, os botões e Escape não iniciam outra operação.
+- Mensagens de `400`, `404`, `422`, `409` e banco/rede são preservadas. Após falha
+  de comando, a interface pede nova consulta antes de outra alteração, descartando
+  a confirmação anterior. Conflitos não são reenviados automaticamente.
+- Autorreferência, duplicação, ciclos diretos/indiretos e concorrência continuam
+  validados no servidor; o frontend não implementa um grafo de regras.
+
+A composição mantém cores, tipografia e cartões do site, com lista de relações
+junto ao formulário e uma prévia curta. A confirmação segue o
+[padrão de diálogos da W3C](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/),
+e a direção explícita e a filtragem ajudam na
+[prevenção de erros descrita pelo NN/G](https://www.nngroup.com/articles/user-mistakes/).
+
+Os testes de `tests/e2e/uc-06.spec.js` usam API controlada e verificam nomes,
+direção, seleção, recarga, ID de retirada, foco/teclado, cancelamento, conflitos,
+respostas inesperadas, falhas de consulta, candidatos ausentes e troca de contexto.
+As capturas desktop/mobile ficam em `test-results/` (não versionadas).
+Essa verificação não comprova Atlas ou persistência após reinício do servidor;
+o backend foi consultado e preservado nesta entrega.
+
+Validação local do UC-06 em 02/11/2026: build aprovado, 14 testes unitários/
+contratuais aprovados e 128 cenários de navegador aprovados, incluindo 25 do
+UC-06; 1 integração real opt-in ignorada. Capturas desktop/mobile e confirmação
+inspecionadas. Execução com Edge e preview separado por E2E_BASE_URL.

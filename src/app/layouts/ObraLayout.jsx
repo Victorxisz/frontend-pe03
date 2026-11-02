@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Pencil } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../features/auth/AuthProvider';
 import { obrasApi } from '../../features/obras/api';
 import ObraResumo from '../../features/obras/components/ObraResumo';
@@ -37,6 +37,22 @@ export default function ObraLayout() {
       {navigationState?.obraAtualizada === obraId && <p role="status" className="obra-save-success">Dados da obra atualizados.</p>}
       <ImagemProjeto obraId={obraId} imagem={current.obra.imagem_projeto} nome={current.obra.nome} />
       <section className="feature-card obra-cadastro" aria-label="Cadastro da obra"><div className="cadastro-heading"><h2>Dados da obra</h2><Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/editar${search}`}><Pencil size={16} aria-hidden="true" />Editar obra</Link></div><ObraResumo obra={current.obra} /></section>
-      <nav className="obra-tabs" aria-label="Seções da obra">{tabs.map(([path, label]) => <NavLink key={path} to={`/obras/${encodeURIComponent(obraId)}/${path}${search}`}>{label}</NavLink>)}</nav><Outlet context={{ obra: current.obra }} /></>}
+      <ObraSections key={obraId} obraId={obraId} obra={current.obra} search={search} /></>}
+  </>;
+}
+
+function ObraSections({ obraId, obra, search }) {
+  const content = useRef(null);
+  const [minHeight, setMinHeight] = useState(0);
+  function preserveSpace(event) {
+    // Novas abas/janelas não alteram o espaço desta página.
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const height = content.current?.getBoundingClientRect().height || 0;
+    setMinHeight((previous) => Math.max(previous, Math.ceil(height)));
+  }
+  return <><nav className="obra-tabs" aria-label="Seções da obra">{tabs.map(([path, label]) => <NavLink key={path} onClick={preserveSpace} state={{ manterRolagemObra: obraId }} to={`/obras/${encodeURIComponent(obraId)}/${path}${search}`}>{label}</NavLink>)}</nav>
+    <div ref={content} className="obra-tab-content" style={{ minHeight }}>
+      <Suspense fallback={<p role="status">Carregando seção da obra…</p>}><Outlet context={{ obra }} /></Suspense>
+    </div>
   </>;
 }

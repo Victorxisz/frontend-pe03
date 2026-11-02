@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import RequireAuth from '../features/auth/RequireAuth';
 import AppLayout from './layouts/AppLayout';
 import ObraLayout from './layouts/ObraLayout';
@@ -15,6 +15,10 @@ import { routes as historico } from '../features/historico/routes';
 import { routes as simulados } from '../features/simulados/routes';
 
 const LoginPage = lazy(() => import('../features/auth/LoginPage'));
+function ObraIndexRedirect() {
+  const { search, hash } = useLocation();
+  return <Navigate to={{ pathname: 'marcos', search, hash }} replace />;
+}
 export const routes = [
   {
     element: <Suspense fallback={<p className="route-status" role="status">Carregando página…</p>}><Outlet /></Suspense>,
@@ -26,7 +30,7 @@ export const routes = [
         { element: <AppLayout />, children: [
           ...obras,
           { path: 'obras/:obraId', element: <ObraLayout />, children: [
-            { index: true, element: <Navigate to="marcos" replace /> },
+            { index: true, element: <ObraIndexRedirect /> },
             ...marcos, ...avancos, ...publicacoes, ...ocorrencias,
             ...trabalhadores, ...historico, ...simulados,
           ] },

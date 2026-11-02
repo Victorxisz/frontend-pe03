@@ -44,6 +44,7 @@ async function mockApi(page, overrides = {}) {
       if (state.obras) return state.obras(route);
       return json({ obras: [{ id: 'obra-teste', nome: 'Obra protegida', cliente: 'Cliente de teste' }], situacao: 'com_resultados', filtros_aplicados: {} });
     }
+    if (path === '/api/obras/obra-teste/marcos') return json([]);
     if (path === '/api/obras/obra-teste') return json({ id: 'obra-teste', nome: 'Obra protegida', cliente: 'Cliente de teste', estado: 'planejada' });
     throw new Error(`Endpoint inesperado: ${path}`);
   });
@@ -91,6 +92,17 @@ test.describe('FE-UC-01 — navegador com API controlada', () => {
     await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeEnabled();
   });
 
+  for (const body of [{ construtora: account }, { access_token: 'token-teste' }]) {
+    test(`login incompleto não persiste sessão (${Object.keys(body)[0]})`, async ({ page }) => {
+      await mockApi(page, { login: (route) => route.fulfill({ json: body }) });
+      await page.goto('/login');
+      await fillLogin(page);
+      await expect(page.getByRole('alert')).toContainText('Não foi possível confirmar sua sessão');
+      expect(await page.evaluate((key) => sessionStorage.getItem(key), key)).toBeNull();
+      await expect(page).toHaveURL(/\/login$/);
+    });
+  }
+
   test('restauração em andamento oculta conteúdo de negócio', async ({ page }) => {
     let release;
     await seedToken(page);
@@ -104,6 +116,27 @@ test.describe('FE-UC-01 — navegador com API controlada', () => {
     await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toHaveCount(0);
     release();
     await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toBeVisible();
+  });
+
+  test('consulta pendente para após 8 segundos, preserva login e permite nova tentativa', async ({ page }) => {
+    await page.clock.install();
+    await seedToken(page);
+    let pending;
+    const state = await mockApi(page, { current: (route) => { pending = route; } });
+    await page.goto(destination);
+    await expect(page.getByRole('status')).toHaveText('Verificando sessão…');
+    await expect.poll(() => Boolean(pending)).toBe(true);
+    await page.clock.fastForward(8_001);
+    await expect(page.getByRole('alert')).toContainText('o servidor demorou para responder');
+    await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toHaveCount(0);
+    expect(await page.evaluate((key) => sessionStorage.getItem(key), key)).toBe('token-teste');
+    // A resposta antiga não deve liberar a área protegida após o timeout.
+    await pending.fulfill({ json: { construtora: account } }).catch(() => {});
+    await expect(page.getByRole('alert')).toBeVisible();
+    state.current = null;
+    await page.getByRole('button', { name: 'Tentar novamente' }).click();
+    await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toBeVisible();
+    expect(state.logins).toBe(0);
   });
 
   for (const failure of ['expirado']) {

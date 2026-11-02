@@ -124,6 +124,7 @@
 .login-footnote { margin-top: 24px; font-size: 12px; color: var(--muted); }
 .obra-tabs { overflow-x: auto; }
 .obra-tabs a { flex-shrink: 0; }
+.obra-tab-content { display: flow-root; overflow-anchor: none; }
 .skip-link { position: fixed; top: -100px; left: 16px; padding: 12px; background: white; z-index: 100; }
 .skip-link:focus { top: 12px; }
 .topbar .account { margin-left: auto; }
