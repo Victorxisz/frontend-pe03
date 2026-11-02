@@ -1,8 +1,31 @@
 import { Link, NavLink, Outlet, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../features/auth/AuthProvider';
+import { obrasApi } from '../../features/obras/api';
+import ObraResumo from '../../features/obras/components/ObraResumo';
+import { Button, StatusBadge } from '../../shared/ui/UI';
 
 const tabs = [['marcos', 'Marcos'], ['publicacoes', 'Publicações'], ['ocorrencias', 'Ocorrências'], ['trabalhadores', 'Trabalhadores'], ['historico', 'Histórico'], ['simulados', 'Exemplos simulados']];
 export default function ObraLayout() {
   const { obraId } = useParams();
-  return <><Link className="back-link" to="/obras"><ArrowLeft size={15} />Painel das Obras</Link><header className="page-heading"><span className="eyebrow">Acompanhamento da obra</span><h1>Área da obra</h1><p>Marcos, evidências e decisões em um só lugar.</p><p className="record-reference">Referência: {obraId}</p></header><nav className="obra-tabs" aria-label="Seções da obra">{tabs.map(([path, label]) => <NavLink key={path} to={`/obras/${obraId}/${path}`}>{label}</NavLink>)}</nav><Outlet /></>;
+  const { request } = useAuth();
+  const [attempt, setAttempt] = useState(0);
+  const [state, setState] = useState({});
+  useEffect(() => {
+    const controller = new AbortController();
+    setState({});
+    obrasApi(request).detail(obraId, controller.signal)
+      .then((obra) => { if (!controller.signal.aborted) setState({ id: obraId, obra }); })
+      .catch((error) => { if (!controller.signal.aborted) setState({ id: obraId, error }); });
+    return () => controller.abort();
+  }, [request, obraId, attempt]);
+  const current = state.id === obraId ? state : {};
+  return <><Link className="back-link" to="/obras"><ArrowLeft size={15} />Painel das Obras</Link>
+    {!current.obra && !current.error && <p role="status">Carregando obra…</p>}
+    {current.error && <section className="feature-card"><p role="alert" className="form-error">{current.error.status === 404 ? 'Obra não encontrada.' : current.error.message}</p><Button onClick={() => setAttempt((value) => value + 1)}>Consultar novamente</Button></section>}
+    {current.obra && <><header className="page-heading"><span className="eyebrow">Acompanhamento da obra</span><h1>{current.obra.nome}</h1><p>Marcos, evidências e decisões em um só lugar.</p><p className="record-reference">Referência: {obraId}</p></header>
+      <section className="feature-card obra-cadastro" aria-label="Cadastro da obra"><h2>Dados da obra</h2><ObraResumo obra={current.obra} /><StatusBadge status={current.obra.estado} />{current.obra.alertas?.includes('atrasada') && <StatusBadge status="atrasada">Atrasada</StatusBadge>}</section>
+      <nav className="obra-tabs" aria-label="Seções da obra">{tabs.map(([path, label]) => <NavLink key={path} to={`/obras/${obraId}/${path}`}>{label}</NavLink>)}</nav><Outlet /></>}
+  </>;
 }

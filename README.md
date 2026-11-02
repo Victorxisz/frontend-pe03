@@ -126,12 +126,17 @@ verificar o pertencimento dos registros à obra em cada operação.
   a preferência do usuário.
 - Durante a restauração, conteúdo protegido não é montado. Destino protegido
   preserva caminho, consulta e fragmento. Logout aguarda confirmação da API;
-  rede/5xx permitem tentar novamente, sem anunciar saída. Após saída/401, dados
+  rede/5xx permitem tentar novamente, sem anunciar saída. Na restauração,
+  falhas temporárias preservam o token e exibem uma tela de nova tentativa sem
+  revelar conteúdo protegido. Recarregar sem cache (Ctrl + Shift + R) também
+  restaura a sessão. Após saída/401, dados
   protegidos são desmontados; retorno pelo histórico continua exigindo sessão.
   Páginas recuperadas do cache de histórico revalidam a sessão antes de exibir dados.
-- Demais páginas são estruturas identificadas como **Em preparação**.
-  Formulários, detalhes e escritas de negócio ainda precisam ser implementados.
-  O cabeçalho da obra mostra seu ID até existir a consulta do detalhe.
+- UC-02: formulário em `/obras/nova`, com revisão e confirmação, cadastro por
+  `POST /obras` e consulta do detalhe por `GET /obras/{id}` na área da obra.
+  O cabeçalho e os dados do cadastro vêm dessa consulta, inclusive após recarga.
+  Voltar ao painel consulta novamente a listagem. As outras áreas permanecem
+  identificadas como **Em preparação**.
 - Base visual e `UI.jsx` reaproveitados da referência local
   `C:/Users/Victor_ms/Downloads/projeto-agil-vscode/projeto-agil`.
 
@@ -143,7 +148,7 @@ dependências são entre marcos. Preservar rascunhos, publicações, versões,
 motivos e confirmações conforme os contratos reais. Tratar conflitos e limpeza
 pendente sem indicar sucesso falso.
 
-Próxima entrega: criar obra, consultar detalhe, cadastrar marco e registrar
+Próximas entregas: completar filtros de UC-03, cadastrar marco e registrar
 avanço com mídia até publicação e prévia.
 
 ## Verificação do UC-01
@@ -185,7 +190,8 @@ testes**, por ambiente seguro, sem salvá-las no código nem em variáveis `VITE
 Execute `npm run test:e2e`. O cenário real testa senha errada, login, destino,
 recarga, logout e **401 ao reutilizar o token antigo em `/sessoes/atual`**,
 além de `/obras` sem sessão. Ele não cria nem exclui obras; o destino aninhado
-usa a página estrutural de marcos. Traces e screenshots ficam desabilitados
+usa um ID fictício e pode apresentar erro na consulta da obra; os testes de
+autenticação não dependem de uma obra real. Traces e screenshots ficam desabilitados
 nesse modo para não gravar credenciais/tokens. Não compartilhe a conta durante
 a execução, pois o teste encerra a sessão que criou.
 
@@ -201,3 +207,51 @@ de navegador aprovados com Chrome; no backend, 130 testes de autenticação e
 sem execução por ausência de `E2E_EMAIL`, `E2E_PASSWORD` e endereço implantado
 configurados. Portanto, revogação contra a API publicada e aceite no EC2 ainda
 precisam dessa execução; testes controlados não substituem essa evidência.
+
+## Cadastro de obra — UC-02
+
+Contrato conferido em `../backend-pe03/docs/05-arquitetura-e-contratos.md`,
+`app/obras/{routes,service,validacoes}.py` e nos testes de cadastro. O corpo
+contém somente nome, tipo (`casa`/`apartamentos`), cliente de referência,
+localização em texto livre, descrição, início e entrega. Estado e auditoria
+pertencem ao servidor. Não há cadastro de comprador nem consulta de CEP.
+
+O seletor `PrazoEntregaFields` descarta os campos da modalidade anterior.
+Data exata envia apenas modalidade/data; intervalo envia modalidade/início/fim.
+Validação aceita dias existentes em `AAAA-MM-DD`, inclusive intervalo de um
+dia, sem impor relação entre início da obra e entrega. Datas são formatadas
+como dias de calendário sem conversão de fuso.
+
+O envio exige revisão, bloqueia cliques duplicados e só navega ao receber 201
+com ID. A área consulta o detalhe; erro nessa consulta permite repetir somente
+o GET. Erros 422 mostram mensagem/campos e preservam os dados para correção.
+Falhas de persistência, conexão ou resposta incompleta orientam consultar a
+lista antes de repetir, pois o POST não é idempotente. Não há retry automático
+nem cadastro temporário apresentado como salvo. Cancelar retorna ao painel.
+
+`tests/e2e/uc-02.spec.js` cobre CT-05 a CT-10 na camada de interface com API
+controlada: casa/data exata, apartamentos/intervalo de um dia, revisão,
+recarga, nova consulta da lista, alternância repetida, textos vazios, data
+inválida, intervalo invertido, cancelamento, clique duplicado, 422, 500,
+conexão e resposta perdida após gravação, resposta sem ID/status inesperado e
+falha de consulta após criação. `tests/datas.test.js` cobre o calendário.
+
+Executar com `npm run test:all` (use `E2E_BROWSER_CHANNEL=chrome` para Chrome
+instalado). Os testes controlados não comprovam persistência no Atlas após
+reinício nem CT-111 no EC2. Para CT-09 real, o backend fornece
+`python -m pytest tests/obras/test_cadastro_atlas.py --atlas -q`, usando coleções
+temporárias; CT-111 continua dependendo do fluxo completo e da mídia real.
+
+Verificação local de UC-02 em 02/11/2026: build aprovado, 9 testes de
+datas/HTTP/rotas e 26 cenários de navegador UC-01/02 aprovados com Chrome.
+No backend, 79 testes de cadastro/validações aprovados com banco simulado.
+O cenário real de autenticação e o teste de reinício no Atlas foram omitidos
+por serem opt-in. A suíte de navegador foi concluída contra o preview local
+com `E2E_BROWSER_CHANNEL=chrome` e `E2E_BASE_URL=http://127.0.0.1:4173`.
+
+Correção de recarga sem cache: a restauração preserva o token em falhas de
+rede, 5xx ou resposta incompleta e permite nova tentativa. Sessão expirada ou
+revogada continua exigindo login. No backend, a consulta da sessão passou a
+aceitar o login legado sem `CONSTRUTORA_ID`, conforme a compatibilidade já
+oferecida no login; reinicie Flask para aplicar essa alteração. O teste de
+navegador usa `Page.reload` com `ignoreCache: true` para cobrir Ctrl + Shift + R.

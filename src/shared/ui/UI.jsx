@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from "react";
 import { X } from "lucide-react";
+import { formatarDia } from '../lib/datas';
 
 export const statusNames = {
   andamento: "Em andamento",
@@ -10,9 +11,7 @@ export const statusNames = {
   futuro: "Futuro",
 };
 export function formatDate(value) {
-  if (!value) return "—";
-  const date = new Date(value + "T12:00:00");
-  return Number.isNaN(+date) ? value : date.toLocaleDateString("pt-BR");
+  return formatarDia(value);
 }
 export function Button({
   variant = "primary",

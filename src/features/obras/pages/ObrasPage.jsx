@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react';
 import { useAuth } from '../../auth/AuthProvider';
 import { obrasApi } from '../api';
 import { Button, EmptyState } from '../../../shared/ui/UI';
+import { formatarEntrega } from '../../../shared/lib/datas';
 
 export default function ObrasPage() {
   const { request } = useAuth();
@@ -22,6 +23,6 @@ export default function ObrasPage() {
     {state.loading && <p role="status">Carregando obras…</p>}
     {state.error && <div className="feature-card"><p role="alert" className="form-error">{state.error}</p><Button onClick={() => setAttempt((value) => value + 1)}>Tentar novamente</Button></div>}
     {!state.loading && !state.error && !state.obras.length && <div className="feature-card"><EmptyState title="Nenhuma obra cadastrada" description="Suas obras aparecerão aqui após o cadastro." /></div>}
-    <div className="works-grid">{state.obras.map((obra) => <Link className="feature-card work-card" key={obra.id} to={`/obras/${obra.id}/marcos`}><h2>{obra.nome}</h2><p>{obra.cliente}</p><span>Acompanhar obra</span></Link>)}</div>
+    <div className="works-grid">{state.obras.map((obra) => <Link className="feature-card work-card" key={obra.id} to={`/obras/${obra.id}/marcos`}><h2>{obra.nome}</h2><p>{obra.cliente}</p><p>{formatarEntrega(obra.entrega)}</p><p>{obra.estado}{obra.alertas?.includes('atrasada') ? ' · Atrasada' : ''}</p><span>Acompanhar obra</span></Link>)}</div>
   </>;
 }

@@ -16,7 +16,7 @@ async function seedToken(page, value = 'token-teste') {
 }
 
 async function mockApi(page, overrides = {}) {
-  const state = { revoked: false, logins: 0, ...overrides };
+  const state = { revoked: false, logins: 0, restores: 0, ...overrides };
   await page.route('**/api/**', async (route) => {
     const path = new URL(route.request().url()).pathname;
     const json = (body, status = 200) => route.fulfill({ status, json: body });
@@ -30,6 +30,7 @@ async function mockApi(page, overrides = {}) {
     }
     expect(route.request().headers().authorization).toBe('Bearer token-teste');
     if (path === '/api/sessoes/atual') {
+      state.restores++;
       if (state.current) return state.current(route);
       return state.revoked ? json({ erro: 'Sessão revogada' }, 401) : json({ construtora: account });
     }
@@ -43,6 +44,7 @@ async function mockApi(page, overrides = {}) {
       if (state.obras) return state.obras(route);
       return json({ obras: [{ id: 'obra-teste', nome: 'Obra protegida', cliente: 'Cliente de teste' }] });
     }
+    if (path === '/api/obras/obra-teste') return json({ id: 'obra-teste', nome: 'Obra protegida', cliente: 'Cliente de teste', estado: 'planejada' });
     throw new Error(`Endpoint inesperado: ${path}`);
   });
   return state;
@@ -104,7 +106,7 @@ test.describe('FE-UC-01 — navegador com API controlada', () => {
     await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toBeVisible();
   });
 
-  for (const failure of ['expirado', 'rede', 'servidor']) {
+  for (const failure of ['expirado']) {
     test(`falha na restauração: ${failure}`, async ({ page }) => {
       await seedToken(page);
       await mockApi(page, { current: (route) => failure === 'rede' ? route.abort('failed')
@@ -114,6 +116,49 @@ test.describe('FE-UC-01 — navegador com API controlada', () => {
       await expect(page.getByRole('alert')).toContainText('Entre novamente');
       await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toHaveCount(0);
       expect(await page.evaluate((key) => sessionStorage.getItem(key), key)).toBeNull();
+    });
+  }
+
+  test('recarga sem cache mantém sessão e destino sem refazer login', async ({ page, context }) => {
+    const state = await mockApi(page);
+    await page.goto(destination);
+    await fillLogin(page);
+    await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toBeVisible();
+    const cdp = await context.newCDPSession(page);
+    for (let i = 0; i < 2; i++) {
+      const restores = state.restores;
+      await cdp.send('Page.reload', { ignoreCache: true });
+      await expect.poll(() => state.restores).toBeGreaterThan(restores);
+      await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toBeVisible();
+      await expect(page).toHaveURL(destination);
+      expect(await page.evaluate((key) => sessionStorage.getItem(key), key)).toBe('token-teste');
+    }
+    expect(state.logins).toBe(1);
+    expect(state.revoked).toBe(false);
+    await cdp.detach();
+  });
+
+  for (const failure of ['rede', 'servidor', 'resposta-incompleta']) {
+    test(`recarga com ${failure} preserva token, bloqueia dados e permite restaurar`, async ({ page }) => {
+      const state = await mockApi(page);
+      await page.goto('/login');
+      await fillLogin(page);
+      await expect(page.getByRole('heading', { name: 'Obra protegida' })).toBeVisible();
+      state.current = (route) => failure === 'rede' ? route.abort('failed')
+        : route.fulfill({ status: failure === 'servidor' ? 503 : 200, json: {} });
+      await page.reload();
+      await expect(page.getByRole('alert')).toContainText('Não foi possível verificar sua sessão');
+      await expect(page).toHaveURL('/obras');
+      await expect(page.getByRole('heading', { name: 'Obra protegida' })).toHaveCount(0);
+      expect(await page.evaluate((key) => sessionStorage.getItem(key), key)).toBe('token-teste');
+      // Outra recarga durante a falha também deve manter o token.
+      await page.reload();
+      await expect(page.getByRole('alert')).toBeVisible();
+      expect(await page.evaluate((key) => sessionStorage.getItem(key), key)).toBe('token-teste');
+      state.current = null;
+      await page.getByRole('button', { name: 'Tentar novamente' }).click();
+      await expect(page.getByRole('heading', { name: 'Obra protegida' })).toBeVisible();
+      expect(state.logins).toBe(1);
     });
   }
 
