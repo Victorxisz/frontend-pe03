@@ -6,5 +6,6 @@ export default function ObraResumo({ obra }) {
     ['Cliente de referência', obra.cliente], ['Localização', obra.localizacao],
     ['Descrição', obra.descricao], ['Início da obra', formatarDia(obra.inicio)], ['Entrega', formatarEntrega(obra.entrega)],
   ];
+  if (obra.data_conclusao) dados.push(['Conclusão efetiva', formatarDia(obra.data_conclusao)]);
   return <dl className="obra-resumo">{dados.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || '—'}</dd></div>)}</dl>;
 }

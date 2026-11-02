@@ -18,7 +18,7 @@ async function setup(page, options = {}) {
       state.obras.push(obra);
       return route.fulfill({ status: 201, json: obra, headers: { Location: '/obras/obra-criada' } });
     }
-    if (path === '/api/obras') { state.lists++; return json({ obras: state.obras }); }
+    if (path === '/api/obras') { state.lists++; return json({ obras: state.obras, situacao: state.obras.length ? 'com_resultados' : 'lista_vazia', filtros_aplicados: {} }); }
     if (path === '/api/obras/obra-criada') {
       state.reads++;
       if (options.detail) return options.detail(route);
@@ -72,7 +72,7 @@ test.describe('FE-UC-02 — cadastro com API controlada', () => {
       expect(state.reads).toBeGreaterThan(1);
       await page.getByRole('main').getByRole('link', { name: 'Painel das Obras', exact: true }).click();
       await expect(page).toHaveURL('/obras');
-      await expect(page.getByRole('heading', { name: base.nome })).toBeVisible();
+      await expect(page.getByRole('article').getByRole('heading', { name: base.nome })).toBeVisible();
       expect(state.lists).toBeGreaterThan(0);
       expect(state.posts).toHaveLength(1);
     });

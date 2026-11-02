@@ -42,7 +42,7 @@ async function mockApi(page, overrides = {}) {
     }
     if (path === '/api/obras') {
       if (state.obras) return state.obras(route);
-      return json({ obras: [{ id: 'obra-teste', nome: 'Obra protegida', cliente: 'Cliente de teste' }] });
+      return json({ obras: [{ id: 'obra-teste', nome: 'Obra protegida', cliente: 'Cliente de teste' }], situacao: 'com_resultados', filtros_aplicados: {} });
     }
     if (path === '/api/obras/obra-teste') return json({ id: 'obra-teste', nome: 'Obra protegida', cliente: 'Cliente de teste', estado: 'planejada' });
     throw new Error(`Endpoint inesperado: ${path}`);

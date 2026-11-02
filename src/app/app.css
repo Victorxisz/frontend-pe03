@@ -19,6 +19,64 @@
 .work-card:hover, .work-card:focus-visible { box-shadow: 0 3px 12px #18314f0c; }
 .work-card:hover > span, .work-card:focus-visible > span { text-decoration: underline; text-underline-offset: 4px; }
 .work-card > span { display: flex; align-items: center; gap: 8px; color: var(--navy); }
+.obras-heading, .obra-detail-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.obras-heading > .button { margin: 0; flex-shrink: 0; }
+.obras-heading h1 { max-width: 680px; }
+.feature-card.filtros-obras { margin-bottom: 32px; border-top: 3px solid #476b8c; box-shadow: 0 4px 18px #18314f05; }
+.filter-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.filter-heading h2 { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+.filter-heading p { color: var(--muted); font-size: 12px; }
+.filter-primary { display: grid; grid-template-columns: 1.2fr 1.2fr 1fr; gap: 18px; }
+.filter-secondary { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 20px 0; }
+.filter-checkbox { display: inline-flex; gap: 10px; align-items: center; min-height: 44px; font-weight: 500; cursor: pointer; }
+.filter-checkbox input { width: 18px; height: 18px; accent-color: var(--navy); }
+.filter-dates { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.filter-dates summary { padding: 17px 0; cursor: pointer; color: var(--navy); font-weight: 600; }
+.filter-date-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-bottom: 22px; }
+.filter-date-grid fieldset { border: 0; padding: 0; min-width: 0; }
+.filter-date-grid legend { font-weight: 600; margin-bottom: 5px; }
+.filter-date-grid .form-hint { margin-bottom: 15px; }
+.filter-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+.results-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.results-heading h2 { font-size: 21px; letter-spacing: -0.5px; }
+.results-heading p { font-size: 13px; color: var(--muted); }
+.applied-filters { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: -4px 0 24px; }
+.applied-filters > span { color: var(--muted); font-size: 12px; margin-right: 4px; }
+.filter-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 7px 11px; border: 1px solid #bfcede; border-radius: 8px; background: #edf3f9; color: var(--navy); font-size: 12px; max-width: 100%; overflow-wrap: anywhere; text-align: left; }
+.filter-chip:hover { background: #dce9f5; border-color: #829fbd; }
+.filter-chip svg { flex-shrink: 0; }
+.obras-loading { display: grid; justify-items: center; gap: 14px; color: var(--muted); padding: 60px 24px; background: #f1f4f7; border-radius: var(--radius); }
+.busca-error { border-left: 4px solid #a32d31; margin-bottom: 24px; }
+.busca-error h2 { font-size: 18px; }
+.busca-error p { margin: 12px 0; }
+.busca-error a { text-decoration: underline; text-underline-offset: 3px; }
+.obra-situacao { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.obra-situacao .status-badge { color: #415977; font-weight: 600; padding: 7px 10px; }
+.obra-situacao .status-planejada { background: #edf2f8; border-color: #d3deeb; }
+.obra-situacao .status-em-andamento { color: #22518a; background: #eaf3ff; border-color: #bfd7f2; }
+.obra-situacao .status-concluida-obra { color: #17624f; background: #e5f5ee; border-color: #b4dacb; }
+.obra-situacao .status-suspensa { color: #715119; background: #fbf2db; border-color: #e5d4a2; }
+.obra-alerta { display: inline-flex; gap: 6px; align-items: center; padding: 6px 9px; border-radius: 7px; background: #fff0ed; color: #9c3527; font-size: 11px; font-weight: 600; }
+.work-card { position: relative; gap: 22px; }
+.work-card:focus-within { border-color: #476b8c; box-shadow: 0 3px 12px #18314f12; }
+.work-card-top { display: flex; flex-direction: column; gap: 15px; }
+.work-type { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 12px; }
+.work-card h3 { font-size: 21px; line-height: 1.4; letter-spacing: -0.5px; overflow-wrap: anywhere; }
+.work-card h3 a { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.work-card h3 a svg { flex-shrink: 0; align-self: center; }
+.work-card h3 a::after { position: absolute; inset: 0; content: ''; border-radius: var(--radius); }
+.work-card h3 a:focus-visible { outline: none; }
+.work-card:has(a:focus-visible) { outline: 2px solid var(--navy); outline-offset: 3px; }
+.work-client { margin-top: 12px; font-size: 14px; overflow-wrap: anywhere; }
+.work-client > span, .work-deadline p > span { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+.work-deadline { display: flex; gap: 12px; align-items: center; padding: 16px; border-radius: 10px; background: #f4f6f8; color: var(--navy); }
+.work-deadline > svg { flex-shrink: 0; }
+.work-deadline p { font-size: 13px; line-height: 1.5; }
+.work-card-foot { justify-content: space-between; border-top: 1px solid var(--border); padding-top: 18px; font-size: 12px; font-weight: 600; }
+.obra-detail-heading .obra-situacao { flex-shrink: 0; }
+.obras-results .empty-state .button { margin-top: 22px; }
+@media (max-width: 900px) { .filter-primary { grid-template-columns: 1fr 1fr; } .filter-primary > :last-child { grid-column: 1 / -1; } .filter-date-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .obras-heading, .obra-detail-heading { align-items: flex-start; flex-direction: column; } .filter-heading { align-items: flex-start; flex-direction: column; gap: 8px; } .filter-primary { grid-template-columns: 1fr; } .filter-secondary { gap: 0; } .results-heading { align-items: flex-start; flex-direction: column; gap: 8px; } .filtros-obras { padding: 20px; } }
 .section-heading { display: grid; gap: 12px; margin-bottom: 24px; }
 .section-heading p { color: var(--muted); max-width: 680px; }
 .feature-card { border: 1px solid var(--border); border-radius: var(--radius); background: white; padding: 24px; }
