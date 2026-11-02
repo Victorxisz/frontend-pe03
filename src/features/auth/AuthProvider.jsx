@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { createHttpClient } from '../../shared/api/http';
 import { authApi } from './api';
 
@@ -15,23 +16,56 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(Boolean(token.current));
   const [sessionError, setSessionError] = useState('');
   const client = useMemo(() => {
-    const clear = () => { token.current = null; storage.write(null); setUser(null); };
+    const clear = () => { token.current = null; storage.write(null); setUser(null); setLoading(false); };
     const request = createHttpClient({
       baseUrl: import.meta.env.VITE_API_BASE_URL || '/api',
       getToken: () => token.current,
-      onUnauthorized: clear,
+      onUnauthorized: (rejectedToken) => {
+        // Uma resposta atrasada de uma sessão antiga não encerra um novo login.
+        if (token.current !== rejectedToken) return;
+        clear();
+        setSessionError('Sua sessão expirou ou foi encerrada. Entre novamente.');
+      },
     });
     return { request, api: authApi(request), clear };
   }, []);
 
   useEffect(() => {
-    let active = true;
-    if (!token.current) return;
-    client.api.current()
-      .then((data) => { if (active) setUser(data.construtora); })
-      .catch((error) => { if (active) { client.clear(); setSessionError(error.message); } })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
+    let controller;
+    async function restore() {
+      controller?.abort();
+      controller = new AbortController();
+      const { signal } = controller;
+      const restoringToken = token.current;
+      if (!restoringToken) { setLoading(false); return; }
+      setLoading(true);
+      try {
+        const data = await client.api.current(signal);
+        if (!signal.aborted && token.current === restoringToken) setUser(data.construtora);
+      } catch (error) {
+        if (signal.aborted) return;
+        if (token.current === restoringToken) {
+          client.clear();
+          setSessionError(`Não foi possível restaurar a sessão. ${error.message} Entre novamente.`);
+        }
+      } finally {
+        if (!signal.aborted) setLoading(false);
+      }
+    }
+    // Retirar dados do snapshot do histórico e validar antes de reexibi-los.
+    const hide = () => {
+      controller?.abort();
+      flushSync(() => { setUser(null); setLoading(true); });
+    };
+    const show = (event) => { if (event.persisted) void restore(); };
+    void restore();
+    window.addEventListener('pagehide', hide);
+    window.addEventListener('pageshow', show);
+    return () => {
+      controller?.abort();
+      window.removeEventListener('pagehide', hide);
+      window.removeEventListener('pageshow', show);
+    };
   }, [client]);
 
   async function login(credentials) {
@@ -43,8 +77,9 @@ export function AuthProvider({ children }) {
   }
   async function logout() {
     // Só abandonar a sessão após o servidor confirmar sua revogação.
+    const leavingToken = token.current;
     await client.api.logout();
-    client.clear();
+    if (token.current === leavingToken) { client.clear(); setSessionError(''); }
   }
   return <AuthContext.Provider value={{ user, loading, sessionError, login, logout, request: client.request }}>{children}</AuthContext.Provider>;
 }

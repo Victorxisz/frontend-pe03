@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef } from "react";
-import { X, FolderOpen } from "lucide-react";
+import { X } from "lucide-react";
 
 export const statusNames = {
   andamento: "Em andamento",
@@ -20,6 +20,8 @@ export function Button({
   icon: Icon,
   children,
   type = "button",
+  loading = false,
+  disabled = false,
   ...props
 }) {
   return (
@@ -27,8 +29,10 @@ export function Button({
       type={type}
       className={`button button-${variant} ${className}`}
       {...props}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
     >
-      {Icon && <Icon size={16} />} {children}
+      {loading ? <span className="button-spinner" aria-hidden="true" /> : Icon && <Icon size={16} aria-hidden="true" />} {children}
     </button>
   );
 }
@@ -55,7 +59,6 @@ export function EmptyState({
 }) {
   return (
     <div className="empty-state">
-      <FolderOpen size={28} />
       <h3>{title}</h3>
       {description && <p>{description}</p>}
       {children}

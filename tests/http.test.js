@@ -45,3 +45,46 @@ test('não define Content-Type ao enviar FormData', async () => {
   } });
   await request('/marcos/123/avancos', { method: 'POST', body: form });
 });
+
+test('preserva envelopes e normaliza campos/códigos sem converter objetos em mensagem', async () => {
+  for (const data of [
+    { erro: { message: 'Campos inválidos', code: 'VALIDACAO', fields: { email: 'Inválido' } } },
+    { error: { message: 'Campos inválidos', code: 'VALIDACAO', fields: { email: 'Inválido' } } },
+    { mensagem: 'Campos inválidos', codigo: 'VALIDACAO', campos: { email: 'Inválido' } },
+  ]) {
+    const request = createHttpClient({ fetcher: async () => new Response(JSON.stringify(data), { status: 422 }) });
+    await assert.rejects(request('/construtora/login/'), (error) => {
+      assert.equal(error.message, 'Campos inválidos');
+      assert.equal(error.status, 422);
+      assert.deepEqual(error.data, data);
+      assert.equal(error.code, 'VALIDACAO');
+      assert.deepEqual(error.fields, { email: 'Inválido' });
+      return true;
+    });
+  }
+});
+
+test('não envia token em login público e informa o token rejeitado no 401 autenticado', async () => {
+  let rejected;
+  const request = createHttpClient({ getToken: () => 'antigo', onUnauthorized: (token) => { rejected = token; }, fetcher: async (_, options) => {
+    assert.equal(options.cache, 'no-store');
+    return new Response('{}', { status: 401 });
+  } });
+  await assert.rejects(request('/obras'));
+  assert.equal(rejected, 'antigo');
+  const publicRequest = createHttpClient({ getToken: () => 'antigo', onUnauthorized: () => assert.fail('Login não invalida sessão'), fetcher: async (_, options) => {
+    assert.equal(options.headers.has('Authorization'), false);
+    return new Response('{}', { status: 401 });
+  } });
+  await assert.rejects(publicRequest('/construtora/login/', { method: 'POST', authenticated: false, body: {} }));
+});
+
+test('distingue falha de rede, cancelamento e erro HTTP sem JSON', async () => {
+  const offline = createHttpClient({ fetcher: async () => { throw new TypeError('Failed to fetch'); } });
+  await assert.rejects(offline('/obras'), (error) => error instanceof ApiError && error.status === 0);
+  const aborted = new DOMException('Cancelado', 'AbortError');
+  const cancelled = createHttpClient({ fetcher: async () => { throw aborted; } });
+  await assert.rejects(cancelled('/obras'), (error) => error === aborted);
+  const unavailable = createHttpClient({ fetcher: async () => new Response('<html>502</html>', { status: 502 }) });
+  await assert.rejects(unavailable('/obras'), (error) => error.status === 502 && error.data === null);
+});
