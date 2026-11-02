@@ -14,6 +14,8 @@ export default function AvancoPage() {
   const [avanco, setAvanco] = useState(null);
   const [midias, setMidias] = useState([]);
   const [publicacoes, setPublicacoes] = useState([]);
+  const [mediaError, setMediaError] = useState('');
+  const [publicationError, setPublicationError] = useState('');
   const [error, setError] = useState('');
   const [retry, setRetry] = useState(0);
   const loadContent = useCallback((id, signal) => avancosApi(request).mediaContent(id, signal), [request]);
@@ -29,8 +31,12 @@ export default function AvancoPage() {
         setAvanco(record);
         const embedded = record.midias?.length ? record.midias : record.midias_metadados?.length ? record.midias_metadados : record.evidencias?.length ? record.evidencias : record.midias_ids || record.midia_ids || [];
         if (!embedded.length || embedded.some((media) => typeof media !== 'object')) {
-          const mediaResult = await api.listMedia(avancoId, controller.signal);
-          setMidias(Array.isArray(mediaResult) ? mediaResult : mediaResult?.midias || mediaResult?.data || []);
+          try {
+            const mediaResult = await api.listMedia(avancoId, controller.signal);
+            if (!controller.signal.aborted) setMidias(Array.isArray(mediaResult) ? mediaResult : mediaResult?.midias || mediaResult?.data || []);
+          } catch (cause) {
+            if (!controller.signal.aborted) setMediaError(cause.message || 'Não foi possível carregar as mídias.');
+          }
         } else setMidias(embedded);
 
         const obraId = obraIdParam || record.obra_id || record.obra?.id;
@@ -40,7 +46,7 @@ export default function AvancoPage() {
             setAvanco((current) => ({ ...current, ...published }));
             setPublicacoes(await publicacoesApi(request).publications(avancoId, controller.signal));
           } catch (cause) {
-            if (cause?.name !== 'AbortError' && cause?.status !== 404 && !controller.signal.aborted) throw cause;
+            if (cause?.name !== 'AbortError' && !controller.signal.aborted) setPublicationError(cause.message || 'Não foi possível carregar os dados de publicação.');
           }
         }
       } catch (cause) {
@@ -61,8 +67,8 @@ export default function AvancoPage() {
     <header className="section-heading"><span className="eyebrow">{avanco.tipo || 'Registro de trabalho'}</span><h2>{avanco.descricao || 'Detalhe do avanço'}</h2><p>Data do trabalho: {formatarDia(avanco.data)}</p><div className="page-actions"><StatusBadge status={avanco.estado || avanco.status}>{avanco.estado || avanco.status || 'Estado não informado'}</StatusBadge>{obraId && marcoId && <Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/marcos/${encodeURIComponent(marcoId)}/avancos${search}`}>Voltar à lista</Link>}</div></header>
     <dl className="avanco-facts"><div><dt>Registro</dt><dd>{avanco.registro || avanco.registrado_em || 'Não informado'}</dd></div><div><dt>Autoria</dt><dd>{avanco.autoria || avanco.autor || avanco.criado_por || 'Não informada'}</dd></div><div><dt>Marco</dt><dd>{avanco.marco_titulo || avanco.marco?.titulo || marcoId || 'Não informado'}</dd></div></dl>
     <section className="avanco-media-grid" aria-label="Mídias do avanço">{mediaObjects.map((media, index) => <MediaViewer key={media.id || media._id || index} media={media} loadContent={loadContent} />)}</section>
-    {mediaObjects.length === 0 && <p className="form-error" role="alert">Este avanço não retornou mídias. Confira novamente; uma falha ao abrir arquivo não significa ausência de anexo.</p>}
-    {obraId && <><h3>Publicação</h3><p>{avanco.estado === 'rascunho' ? 'Rascunho · ainda não publicado' : 'Estado da publicação consultado'}</p>{avanco.estado === 'rascunho' ? <nav><Link to={`${base}/editar${search}`}>Editar rascunho</Link> · <Link to={`${base}/publicar${search}`}>Revisar e publicar</Link></nav> : <nav><Link to={`${base}/corrigir${search}`}>Corrigir publicação</Link> · <Link to={`${base}/versoes${search}`}>Consultar versões</Link></nav>}
+    {mediaError ? <p className="form-error" role="alert">{mediaError}</p> : mediaObjects.length === 0 && <p>Este avanço não retornou mídias.</p>}
+    {obraId && <><h3>Publicação</h3>{publicationError ? <p className="form-error" role="alert">{publicationError}</p> : <p>{avanco.estado === 'rascunho' ? 'Rascunho · ainda não publicado' : 'Estado da publicação consultado'}</p>}{avanco.estado === 'rascunho' ? <nav><Link to={`${base}/editar${search}`}>Editar rascunho</Link> · <Link to={`${base}/publicar${search}`}>Revisar e publicar</Link></nav> : <nav><Link to={`${base}/corrigir${search}`}>Corrigir publicação</Link> · <Link to={`${base}/versoes${search}`}>Consultar versões</Link></nav>}
       {publicacoes.map((item) => <article className="feature-card" key={item.id}><p>{item.descricao}</p><p>{item.autor} · {item.instante}</p></article>)}
       <p><Link to={`/obras/${encodeURIComponent(obraId)}/publicacoes${search}`}>Linha do tempo</Link></p></>}
   </section>;
