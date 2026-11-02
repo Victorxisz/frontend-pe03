@@ -130,3 +130,24 @@
 @media (max-width: 720px) { .topbar nav { display: none; } .account > span { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
 @media (max-width: 400px) { .account > span { display: none; } .topbar-inner { gap: 12px; } }
 @media (prefers-reduced-motion: reduce) { .work-card { transition: none; } }
+.avanco-form { display: grid; gap: 22px; max-width: 900px; }
+.avanco-form .page-actions { margin-top: 2px; }
+.media-picker { border: 1px dashed #adbed0; border-radius: 12px; background: #f7f9fc; padding: 18px; }
+.media-picker input[type="file"] { max-width: 100%; font-size: 13px; }
+.media-file-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 8px; }
+.media-file-list li { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border: 1px solid var(--border); border-radius: 9px; padding: 8px 10px; background: #fff; }
+.media-file-list li > span { overflow-wrap: anywhere; }
+.media-file-list li small { color: var(--muted); }
+.media-file-list .button { margin-left: auto; }
+.avanco-list { display: grid; gap: 14px; }
+.avanco-list-item h3 { margin: 12px 0 8px; }
+.avanco-list-item h3 a { color: var(--navy); }
+.avanco-list-item p { margin-top: 4px; color: var(--muted); font-size: 12px; }
+.avanco-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; margin: 0 0 28px; }
+.avanco-facts > div { padding: 16px; background: #f4f6f8; border-radius: 10px; }
+.avanco-facts dt { color: var(--muted); font-size: 11px; margin-bottom: 7px; }
+.avanco-facts dd { margin: 0; overflow-wrap: anywhere; }
+.avanco-media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); gap: 18px; }
+.avanco-media { display: grid; gap: 10px; align-content: start; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+.avanco-media h3 { font-size: 15px; overflow-wrap: anywhere; }
+.avanco-media img, .avanco-media video { display: block; width: 100%; max-height: 420px; object-fit: contain; background: #f2f4f6; border-radius: 8px; }
