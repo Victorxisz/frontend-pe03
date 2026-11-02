@@ -48,6 +48,7 @@ async function setup(page, options = {}) {
       return route.fulfill({ status: 201, json: state.obra, headers: { Location: '/obras/obra-teste' } });
     }
     if (path === '/api/obras') return route.fulfill({ json: { obras: [state.obra], situacao: 'com_resultados', filtros_aplicados: {} } });
+    if (path === '/api/obras/obra-teste/marcos') return route.fulfill({ json: [] });
     if (path === '/api/obras/obra-teste') {
       expect(route.request().method()).toBe('GET');
       return route.fulfill({ json: state.obra });
@@ -176,6 +177,24 @@ test.describe('Imagem do projeto — API controlada', () => {
     await expect(page.getByRole('button', { name: 'Salvar imagem do projeto', exact: true })).toBeDisabled();
     expect(state.puts).toEqual(['imagem-1']);
     expect(state.obra.imagem_projeto.id).toBe('imagem-1');
+  });
+
+  test('reconsulta após conflito descarta confirmação de remoção da imagem anterior', async ({ page }) => {
+    const state = await setup(page, { obra: { ...base, imagem_projeto: image() } });
+    await openEdit(page);
+    await page.getByRole('button', { name: 'Remover imagem do projeto', exact: true }).click();
+    await page.route('**/api/obras/obra-teste/imagem-projeto', async (route) => {
+      state.obra = { ...base, imagem_projeto: image('imagem-concorrente') };
+      await route.fulfill({ status: 409, json: { mensagem: 'Imagem alterada' } });
+    }, { times: 1 });
+    await page.getByRole('button', { name: 'Confirmar remoção da imagem', exact: true }).click();
+    await page.getByRole('button', { name: 'Consultar imagem atual', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Imagem atual consultada' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Confirmar remoção da imagem', exact: true })).toHaveCount(0);
+    await page.getByRole('button', { name: 'Remover imagem do projeto', exact: true }).click();
+    await page.getByRole('button', { name: 'Confirmar remoção da imagem', exact: true }).click();
+    await expect(page.getByRole('status').filter({ hasText: 'Imagem removida da obra.' })).toBeVisible();
+    expect(state.deletes).toEqual([{ imagem_atual: 'imagem-concorrente' }]);
   });
 
   test('indisponibilidade de conteúdo não oculta os dados da obra e permite reconsulta', async ({ page }) => {

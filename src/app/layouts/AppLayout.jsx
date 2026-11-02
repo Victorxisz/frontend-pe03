@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Brand from '../../shared/ui/Brand';
@@ -9,8 +9,15 @@ export default function AppLayout() {
   const { user, logout } = useAuth();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  const { pathname, state } = useLocation();
+  const previousPath = useRef(null);
+  useEffect(() => {
+    const obraPath = state?.manterRolagemObra
+      ? `/obras/${encodeURIComponent(state.manterRolagemObra)}/` : null;
+    const sameObraTab = obraPath && previousPath.current?.startsWith(obraPath) && pathname.startsWith(obraPath);
+    if (!sameObraTab) window.scrollTo(0, 0);
+    previousPath.current = pathname;
+  }, [pathname, state]);
   async function leave() {
     setBusy(true); setError('');
     try { await logout(); } catch (failure) { setError(`Não foi possível confirmar a saída. ${failure.message} Tente sair novamente.`); }

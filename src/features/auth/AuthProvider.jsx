@@ -35,31 +35,42 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let controller;
+    let disposed = false;
     async function restore() {
       controller?.abort();
-      controller = new AbortController();
-      const { signal } = controller;
+      const attemptController = new AbortController();
+      controller = attemptController;
+      const { signal } = attemptController;
       const restoringToken = token.current;
       if (!restoringToken) { setLoading(false); return; }
       setLoading(true);
       setRestoreError('');
+      let timedOut = false;
+      // Limitar também a espera pelo corpo da resposta, sem encerrar o login.
+      const timeout = window.setTimeout(() => {
+        timedOut = true;
+        attemptController.abort();
+      }, 8_000);
       try {
         const data = await client.api.current(signal);
         if (!data?.construtora?.id) throw new Error('Resposta de sessão incompleta.');
-        if (!signal.aborted && token.current === restoringToken) setUser(data.construtora);
+        if (!disposed && controller === attemptController && !signal.aborted && token.current === restoringToken) setUser(data.construtora);
       } catch (error) {
-        if (signal.aborted) return;
+        if (disposed || controller !== attemptController || (signal.aborted && !timedOut)) return;
         if (token.current === restoringToken) {
           if (error.status === 401 || error.status === 403) {
             client.clear();
             setSessionError('Sua sessão expirou ou foi encerrada. Entre novamente.');
           } else {
             setUser(null);
-            setRestoreError('Não foi possível verificar sua sessão. Confira a conexão e tente novamente.');
+            setRestoreError(timedOut
+              ? 'Não foi possível verificar sua sessão: o servidor demorou para responder. Tente novamente.'
+              : 'Não foi possível verificar sua sessão. Confira a conexão e tente novamente.');
           }
         }
       } finally {
-        if (!signal.aborted) setLoading(false);
+        window.clearTimeout(timeout);
+        if (!disposed && controller === attemptController && (!signal.aborted || timedOut)) setLoading(false);
       }
     }
     // Retirar dados do snapshot do histórico e validar antes de reexibi-los.
@@ -72,6 +83,7 @@ export function AuthProvider({ children }) {
     window.addEventListener('pagehide', hide);
     window.addEventListener('pageshow', show);
     return () => {
+      disposed = true;
       controller?.abort();
       window.removeEventListener('pagehide', hide);
       window.removeEventListener('pageshow', show);
@@ -80,6 +92,9 @@ export function AuthProvider({ children }) {
 
   async function login(credentials) {
     const result = await client.api.login(credentials);
+    if (typeof result?.access_token !== 'string' || !result.access_token.trim() || !result.construtora?.id) {
+      throw new Error('Não foi possível confirmar sua sessão. Tente entrar novamente.');
+    }
     token.current = result.access_token;
     storage.write(result.access_token);
     setSessionError('');

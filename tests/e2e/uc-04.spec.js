@@ -16,6 +16,7 @@ async function setup(page, overrides = {}) {
       state.lists++;
       return route.fulfill({ json: { obras: [state.obra], situacao: 'com_resultados', filtros_aplicados: {} } });
     }
+    if (path === '/api/obras/obra-teste/marcos') return route.fulfill({ json: [] });
     if (path === '/api/obras/obra-teste' && route.request().method() === 'GET') {
       state.reads++;
       if (state.get) return state.get(route);
@@ -154,17 +155,22 @@ test.describe('FE-UC-04 — edição descritiva', () => {
     });
   }
 
-  for (const status of [400, 404, 422, 500, 0]) {
+  for (const status of [400, 404, 422, 500, 503, 0]) {
     test(`PATCH ${status} preserva o que foi digitado sem anunciar sucesso`, async ({ page }) => {
       const state = await setup(page, { patch: (route) => status ? route.fulfill({ status, json: { mensagem: 'Localização inválida', campos: status === 422 ? ['localizacao'] : [] } }) : route.abort('failed') });
       await openEdit(page);
       await page.getByLabel('Localização', { exact: true }).fill('Localização corrigida');
       await save(page);
-      await expect(page.getByRole('alert')).toContainText(status === 400 ? 'referência da obra é inválida' : status === 404 ? 'Obra não encontrada' : status === 422 ? 'Localização inválida' : status === 500 ? 'Não foi possível salvar' : 'Não foi possível confirmar');
+      await expect(page.getByRole('alert')).toContainText(status === 400 ? 'referência da obra é inválida' : status === 404 ? 'Obra não encontrada' : status === 422 ? 'Localização inválida' : 'Não foi possível confirmar');
       await expect(page.getByLabel('Localização', { exact: true })).toHaveValue('Localização corrigida');
       await expect(page).toHaveURL(editPath);
       await expect(page.getByText('Dados da obra atualizados.', { exact: true })).toHaveCount(0);
       if (status === 422) await expect(page.getByLabel('Localização', { exact: true })).toHaveAttribute('aria-invalid', 'true');
+      if (!status || status >= 500) {
+        await page.getByLabel('Nome da obra', { exact: true }).fill('Outro nome');
+        await expect(page.getByRole('button', { name: 'Salvar alterações', exact: true })).toBeDisabled();
+        await expect(page.getByRole('link', { name: 'Consultar obra', exact: true })).toBeVisible();
+      }
       expect(state.obra).toEqual(obra);
       expect(state.patches).toHaveLength(1);
     });
