@@ -148,7 +148,7 @@ dependências são entre marcos. Preservar rascunhos, publicações, versões,
 motivos e confirmações conforme os contratos reais. Tratar conflitos e limpeza
 pendente sem indicar sucesso falso.
 
-Próximas entregas: completar filtros de UC-03, cadastrar marco e registrar
+Próximas entregas: editar dados descritivos em UC-04, cadastrar marco e registrar
 avanço com mídia até publicação e prévia.
 
 ## Verificação do UC-01
@@ -255,3 +255,71 @@ revogada continua exigindo login. No backend, a consulta da sessão passou a
 aceitar o login legado sem `CONSTRUTORA_ID`, conforme a compatibilidade já
 oferecida no login; reinicie Flask para aplicar essa alteração. O teste de
 navegador usa `Page.reload` com `ignoreCache: true` para cobrir Ctrl + Shift + R.
+
+## Listar, filtrar e consultar obras — UC-03
+
+`/obras` oferece nome, cliente de referência, os quatro estados do contrato,
+alerta `atrasada` e limites de entrega/registro. A aplicação envia cada filtro
+uma vez e omite vazios; textos são enviados literalmente, sem criar regex.
+O botão Aplicar filtros permite combinar critérios antes de consultar. A URL
+registra a busca aplicada; recarga, histórico do navegador e o botão de volta
+no detalhe permitem retomá-la. Os chips representam `filtros_aplicados` da API
+e permitem remover um critério; Limpar filtros reinicia a busca.
+
+Nome/cliente têm correspondência parcial literal sem distinção de caixa no
+servidor. Os filtros combinam por interseção. Limites de data são inclusivos;
+entrega estimada considera o fim do intervalo e registro considera o dia UTC.
+O frontend valida dias existentes e intervalos, mas não filtra, reordena ou
+recalcula os resultados recebidos. Estado e alerta aparecem separados; datas
+passadas não criam um alerta local. A conclusão vem de `data_conclusao`, sem
+inventar valores para registros legados.
+
+A tela diferencia `lista_vazia`, `sem_resultados`, carregamento e erro. Erros
+422 exibem mensagem e campos associados. URLs com filtros repetidos são
+sinalizadas antes da consulta; aplicar novamente normaliza os parâmetros,
+sem mandar filtros repetidos à API. Falhas de conexão/500 permitem nova
+tentativa sem representar uma lista vazia. Respostas incompletas também são
+tratadas como erro.
+
+`ObraLayout` consulta `GET /obras/{id}`, mostra os dados do cadastro e mantém
+as abas de cada UC. O parâmetro de navegação `busca` preserva a volta aos
+filtros mesmo após recarregar o detalhe e não é enviado à API. O cadastro fica
+disponível aos componentes filhos por `useOutletContext().obra`, sem outra
+consulta ou contexto global. Respostas antigas são canceladas e ignoradas;
+ao trocar de obra, o cabeçalho anterior deixa de aparecer imediatamente.
+Erros 400/404/500 exibem estado próprio sem manter as áreas da obra anterior.
+
+Contratos consultados: `../backend-pe03/docs/02-dominio-e-regras.md` (RN-02),
+`docs/04-jornadas-e-aceite.md` (CA-02), `docs/08-casos-de-uso-mvp.md` (UC-03),
+`app/obras/{routes,service}.py` e `app/dominio/obras.py`. Testes de referência:
+`tests/obras/test_consultas.py`, `test_filtro_alertas.py` e
+`tests/mudancas/test_mudancas.py`. Esses caminhos de contrato/testes são
+relativos ao backend.
+
+O design mantém a identidade visual existente: ação principal contrastante,
+filtros agrupados, datas em seção expansível, cartões clicáveis com cliente e
+prazo, contagem de resultados e feedback explícito de carregamento/erro.
+Estado usa etiquetas com texto e cor; atraso tem indicador próprio e ícone,
+sem depender apenas da cor. Layout verificado em desktop e celular, com foco
+de teclado visível e mensagens associadas aos campos.
+
+Referências de design consultadas em 02/11/2026:
+
+- [NN/g — User Intent Affects Filter Design](https://www.nngroup.com/articles/applying-filters/): aplicação conjunta dos critérios de busca.
+- [NN/g — Visibility of System Status](https://www.nngroup.com/articles/visibility-system-status/): feedback de carregamento e do resultado das ações.
+- [GOV.UK — Tag](https://design-system.service.gov.uk/components/tag/): indicadores de estado informativos, separados das ações.
+- [GOV.UK — Details](https://design-system.service.gov.uk/components/details/): revelar opções adicionais mantendo a área principal mais simples.
+- [GOV.UK — Error summary](https://design-system.service.gov.uk/components/error-summary/): resumo com foco e associação aos campos com erro.
+
+`tests/e2e/uc-03.spec.js` cobre filtros isolados/combinados, omissão de vazios,
+parâmetros únicos, chips, estados vazios, navegação/recarga, conclusão retornada
+e legada, erros e respostas fora de ordem, mesmo quando o transporte ignora o
+cancelamento. `tests/filtros-obras.test.js` cobre serialização, repetição e datas.
+Esses cenários usam API controlada. O aceite integrado CT-111 no EC2 e os testes
+de persistência/transações reais no Atlas continuam exigindo execução própria.
+
+Verificação local de UC-03 em 02/11/2026: build aprovado, 12 testes de
+datas/filtros/HTTP/rotas e 51 cenários de navegador UC-01/02/03 aprovados com
+Chrome. O cenário de autenticação real permaneceu opt-in. No backend, os três
+arquivos de referência somaram 112 testes aprovados e seis cenários Atlas
+omitidos. Banco e respostas do navegador foram simulados nessas execuções.
