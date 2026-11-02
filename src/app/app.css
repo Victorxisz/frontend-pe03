@@ -3,7 +3,10 @@
 .page-heading > .button { margin-top: 24px; }
 .works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 24px; }
 .work-card { display: grid; gap: 20px; }
+.work-card { transition: border-color 140ms ease, box-shadow 140ms ease; }
 .work-card:hover { border-color: var(--navy); }
+.work-card:hover, .work-card:focus-visible { box-shadow: 0 3px 12px #18314f0c; }
+.work-card:hover > span, .work-card:focus-visible > span { text-decoration: underline; text-underline-offset: 4px; }
 .work-card > span { display: flex; align-items: center; gap: 8px; color: var(--navy); }
 .section-heading { display: grid; gap: 12px; margin-bottom: 24px; }
 .section-heading p { color: var(--muted); max-width: 680px; }
@@ -18,4 +21,6 @@
 .skip-link { position: fixed; top: -100px; left: 16px; padding: 12px; background: white; z-index: 100; }
 .skip-link:focus { top: 12px; }
 .topbar .account { margin-left: auto; }
-@media (max-width: 720px) { .topbar nav, .topbar .brand .eyebrow { display: none; } .account > span { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+@media (max-width: 720px) { .topbar nav { display: none; } .account > span { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+@media (max-width: 400px) { .account > span { display: none; } .topbar-inner { gap: 12px; } }
+@media (prefers-reduced-motion: reduce) { .work-card { transition: none; } }

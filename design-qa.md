@@ -39,3 +39,30 @@ O resultado abaixo aprova a base visual do login e o escopo de inicialização;
 não representa aprovação de todos os fluxos do MVP ou de acessibilidade completa.
 
 final result: passed
+
+## Revisão solicitada em 02/11/2026
+
+A revisão atual substitui a direção visual inicial: marca tipográfica em lugar
+da régua, títulos em Inter, menos ícones decorativos, cantos menos arredondados
+e login com ação principal clara. Saída passa a ter texto visível. Botões têm
+feedback de hover/pressão em 140 ms e indicador apenas durante processamento;
+`prefers-reduced-motion` desativa deslocamentos e rotação. Não há animações
+automáticas de entrada nem atraso artificial no envio.
+
+Referências consultadas:
+
+- [NN/g — The Role of Animation and Motion in UX](https://www.nngroup.com/articles/animation-purpose-ux/):
+  movimento breve e discreto para comunicar resposta e mudança de estado.
+- [NN/g — Icon Usability](https://www.nngroup.com/articles/icon-usability/):
+  ícones ambíguos precisam de rótulos; decoração não deve atrapalhar tarefas.
+- [W3C — Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html):
+  respeitar preferências que desativam animação não essencial.
+
+Verificação: build, 8 testes HTTP/rotas e 13 cenários de navegador aprovados.
+Também conferidos foco por teclado, hover com deslocamento de 1 px e ausência
+de movimento/transição com preferência reduzida. Capturas locais em
+`test-results/login-desktop.png`, `login-mobile.png`, `painel-desktop.png` e
+`painel-mobile.png` (pasta ignorada pelo Git). Painel usa dados fictícios.
+O teste de conta real continua dependente do ambiente integrado.
+Essas referências orientam as escolhas; não foi medido aumento de retenção
+ou atenção neste produto, o que exigiria observação de usuários reais.

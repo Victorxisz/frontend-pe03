@@ -1,10 +1,8 @@
 @import "@fontsource-variable/inter";
-@import "@fontsource-variable/fraunces";
 :root {
-  --font-serif: "Fraunces Variable", "Fraunces", Georgia, serif;
   --font-sans: "Inter Variable", "Inter", sans-serif;
   --ink: #171e27;
-  --muted: #78818b;
+  --muted: #606b76;
   --navy: #18314f;
   --border: #e9eaeb;
   --bg: #fbfaf9;
@@ -71,8 +69,8 @@ p {
 h1,
 h2,
 h3 {
-  font-family: var(--font-serif);
-  font-weight: 400;
+  font-family: var(--font-sans);
+  font-weight: 600;
   letter-spacing: -0.035em;
 }
 h1 {
@@ -128,22 +126,25 @@ small,
   align-items: center;
   gap: 9px;
   padding: 10px 15px;
-  border-radius: 10px;
+  min-height: 44px;
+  border-radius: 7px;
   border: 1px solid transparent;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.3;
   white-space: nowrap;
   transition:
-    background 0.15s,
-    box-shadow 0.15s;
+    background-color 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
 }
 .button-primary {
   background: var(--navy);
   color: white;
   box-shadow: 0 1px 3px #18314f20;
 }
-.button-primary:hover {
+.button-primary:hover:not(:disabled) {
   background: #244563;
 }
 .button-secondary {
@@ -151,8 +152,8 @@ small,
   border-color: var(--border);
   color: var(--ink);
 }
-.button-secondary:hover,
-.button-ghost:hover {
+.button-secondary:hover:not(:disabled),
+.button-ghost:hover:not(:disabled) {
   background: #f3f4f5;
 }
 .button-ghost {
@@ -165,6 +166,9 @@ small,
   border-color: #f2d6d0;
 }
 .icon-button {
+  min-height: 44px;
+  min-width: 44px;
+  transition: background-color 140ms ease, transform 140ms ease;
   border: 1px solid var(--border);
   background: #fff;
   border-radius: 9px;
@@ -174,9 +178,35 @@ small,
   padding: 8px;
   color: var(--muted);
 }
-.icon-button:hover {
+.icon-button:hover:not(:disabled) {
   background: #f1f4f6;
   color: var(--ink);
+}
+.button:active:not(:disabled),
+.icon-button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+@media (hover: hover) and (pointer: fine) {
+  .button:hover:not(:disabled),
+  .icon-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+  .button:hover:active:not(:disabled),
+  .icon-button:hover:active:not(:disabled) {
+    transform: translateY(1px) scale(0.98);
+  }
+}
+.button-spinner {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: button-spin 700ms linear infinite;
+}
+@keyframes button-spin {
+  to { transform: rotate(360deg); }
 }
 .status-badge {
   display: inline-flex;
@@ -270,13 +300,8 @@ textarea {
 }
 .empty-state {
   padding: 64px 24px;
-  border: 1px dashed #dce1e5;
-  border-radius: 18px;
   text-align: center;
   color: var(--muted);
-}
-.empty-state svg {
-  margin-bottom: 15px;
 }
 .empty-state h3 {
   color: var(--ink);
@@ -348,23 +373,26 @@ textarea {
 }
 .brand {
   display: flex;
-  align-items: center;
-  gap: 11px;
-  flex-shrink: 0;
-}
-.brand-icon {
-  width: 34px;
-  height: 34px;
-  border-radius: 11px;
-  background: var(--navy);
-  color: white;
-  display: grid;
-  place-items: center;
+  flex-shrink: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
 }
 .brand-name {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 21px;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.055em;
+  line-height: 1.15;
+  color: var(--navy);
+  white-space: nowrap;
+}
+.brand-name strong {
+  font-weight: 750;
+}
+.brand-description {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.015em;
 }
 .topnav {
   display: flex;
@@ -610,6 +638,19 @@ textarea {
   .page-heading {
     padding-bottom: 28px;
     margin-bottom: 28px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .icon-button {
+    transition: none;
+  }
+  .button,
+  .icon-button {
+    transform: none !important;
+  }
+  .button-spinner {
+    animation: none;
   }
 }
 .topbar {
