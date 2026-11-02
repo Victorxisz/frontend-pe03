@@ -20,8 +20,9 @@ function Revisao({ obraId, avancoId, search, request }) {
     setBusy(true); setRefreshError(false);
     try {
       const detail = await api.detail(obraId, avancoId);
-      await Promise.all([api.publications(avancoId), api.list(detail.marco_id), api.preview(obraId)]);
-      state.retry();
+      const [publications] = await Promise.all([api.publications(avancoId), api.list(detail.marco_id), api.preview(obraId)]);
+      if (!publications.length) throw new Error('Publicação indisponível na consulta atual.');
+      setConfirmed(publications[0]);
     } catch { setRefreshError(true); } finally { setBusy(false); }
   }
   async function publish() {

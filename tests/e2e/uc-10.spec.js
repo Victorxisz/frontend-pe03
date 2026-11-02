@@ -90,3 +90,17 @@ test('preserva ordem original mesmo com datas de trabalho diferentes e mídia in
   await expect(page.getByText(/Falha ao recuperar este arquivo/)).toBeVisible();
   await expect(page.locator('article')).toHaveCount(2);
 });
+
+test('releitura mostra conteúdo corrigido no cartão sem repetir publicação', async ({ page }) => {
+  const state = await setup(page, { failPreview: true }); await page.goto(`${base}/publicar`); await confirm(page);
+  await expect(page.getByText('A publicação foi confirmada, mas a visualização não pôde ser atualizada.')).toBeVisible();
+  const latest = { id: 'avanco', avanco_id: 'avanco', marco_id: 'marco', marco: { id: 'marco', nome: 'Fundação' }, estado: 'publicado', descricao: 'Conteúdo corrigido por outra aba', data: '2030-01-01', midias: [], editado: true, autor: 'autor-servidor', instante: '2030-02-10T12:00:00Z' };
+  await page.route('**/api/avancos/avanco', route => route.fulfill({ json: latest }));
+  await page.route('**/api/avancos/avanco/publicacoes', route => route.fulfill({ json: { publicacoes: [latest] } }));
+  await page.route('**/api/obras/obra/previa', route => route.fulfill({ json: { atualizacoes: [latest] } }));
+  await page.getByRole('button', { name: 'Atualizar visualização' }).click();
+  await expect(page.locator('article')).toContainText(latest.descricao);
+  await expect(page.locator('article')).not.toContainText('Concretagem revisada');
+  await expect(page.getByText('A publicação foi confirmada, mas a visualização não pôde ser atualizada.')).toHaveCount(0);
+  expect(state.posts).toBe(1);
+});

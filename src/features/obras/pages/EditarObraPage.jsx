@@ -109,7 +109,7 @@ function EditarObra({ obraId }) {
       </div>
       <aside className="feature-card obra-edit-planning" aria-label="Planejamento atual"><span className="eyebrow">Planejamento atual</span><h2>{state.obra.nome}</h2><ObraSituacao obra={state.obra} /><dl className="obra-resumo">
         <div><dt>Tipo de obra</dt><dd>{state.obra.tipo === 'apartamentos' ? 'Apartamentos' : 'Casa'}</dd></div><div><dt>Início da obra</dt><dd>{formatarDia(state.obra.inicio)}</dd></div><div><dt>Prazo de entrega</dt><dd>{formatarEntrega(state.obra.entrega)}</dd></div>{state.obra.data_conclusao && <div><dt>Conclusão efetiva</dt><dd>{formatarDia(state.obra.data_conclusao)}</dd></div>}
-      </dl><div className="edit-planning-note"><h3>Precisa mudar prazo ou situação?</h3><p>Essas mudanças exigem motivo e registro no histórico.</p><Link className="button button-secondary" to={changeTo} aria-disabled={saving || undefined} onClick={(event) => saving && event.preventDefault()}>Registrar mudança<ArrowUpRight size={16} aria-hidden="true" /></Link><p className="form-hint">O formulário de replanejamento está em preparação.</p></div></aside>
+      </dl><div className="edit-planning-note"><h3>Precisa mudar prazo ou situação?</h3><p>Essas mudanças exigem motivo e registro no histórico.</p><Link className="button button-secondary" to={changeTo} aria-disabled={saving || undefined} onClick={(event) => saving && event.preventDefault()}>Registrar mudança<ArrowUpRight size={16} aria-hidden="true" /></Link><p className="form-hint">Altere entrega ou estado com controle de versão e motivo.</p></div></aside>
     </div>}
   </>;
 }

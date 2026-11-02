@@ -353,8 +353,8 @@ obra antes de salvar novamente, sem retry automático.
 
 O painel lateral exibe o planejamento apenas para consulta e oferece
 Registrar mudança para `/obras/{id}/historico/nova-mudanca`. Esse é o caminho
-de UC-12, que exige motivo e histórico; seu formulário ainda está em
-preparação, identificado na interface. A edição descritiva funciona de forma
+de UC-12, que exige motivo, versão e histórico; o formulário compartilhado
+permite alterar entrega/estado da obra e período/estado dos marcos. A edição descritiva funciona de forma
 independente e não implementa um atalho para alterar prazo/situação.
 
 Contrato conferido em `../backend-pe03/app/obras/{routes,service}.py`, nos
@@ -665,3 +665,76 @@ aprovados; 21 cenários UC-10/11 validados no Edge. Na execução conjunta, um
 cenário encontrou ERR_NETWORK_CHANGED do navegador e passou na repetição
 isolada; os outros 20 passaram. A suíte UC-11 isolada também passou com seus
 11 cenários. Não foram executadas integrações reais Atlas/Cloudinary/EC2.
+
+## Replanejar, concluir e reabrir obra/marco — UC-12
+
+Contrato consultado em `../backend-pe03/app/mudanças/{service,validacoes}.py`,
+`app/dominio/obras.py`, serviços de obra/marco, histórico e testes CT-52–59/
+CT-27–28; regras RN-01/RN-02/RN-07 e CA-06.
+
+- `/obras/{id}/historico/nova-mudanca` consulta alvo e versão antes da decisão.
+  Permite entrega/estado da obra e período previsto/estado do marco, com valor
+  atual em leitura e motivo obrigatório. O detalhe do marco oferece Replanejar
+  período do marco; a edição descritiva continua separada do replanejamento.
+- Única escrita: `POST /obras/{id}/mudancas` com alvo, campo, novo_valor,
+  motivo e versão. Não envia antes, autor, instante ou conclusão. A modalidade
+  de entrega é enviada completa e sem campos da modalidade anterior. Datas
+  reais, ordem e limites iguais são verificados; alerta e conclusão vêm da API.
+- O aviso de dependências foi extraído de UC-07 em `ConfirmacaoDependencias`.
+  Só DEPENDENCIAS_PENDENTES coerente para conclusão de marco abre confirmação;
+  confirmar reenvia o mesmo comando com `confirmar_dependencias:true`.
+  Cancelar/Escape não reenvia. Nenhuma escrita usa os PATCH legados.
+- Após 200, reconsulta alvo, resumo da obra, listas de obras/marcos e histórico.
+  O contexto do layout recebe somente a obra consultada por GET, atualizando
+  o cabeçalho sem desmontar o formulário. Leitura parcial permite nova consulta
+  sem repetir POST; eventos visuais vêm exclusivamente do histórico retornado.
+- Repetição com valor igual é permitida com motivo, deixando explícito que não
+  cria evento. Concluir/reabrir conserva o antes/depois retornado, inclusive
+  a conclusão anterior; o dia UTC é gerado no servidor.
+- Conflitos 409 releem o alvo e bloqueiam o formulário, preservando intenção e
+  motivo separados do valor atual. Revisar intenção com versão atual consulta
+  novamente e libera revisão manual, sem reenviar. Retorno à aba revalida a
+  versão. Rede/timeout/400/404/500 também exigem consulta; 422 permite corrigir
+  campos. Trocar alvo/campo cancela consultas anteriores e descarta a decisão.
+- O leitor mínimo mostra antes/depois, campos, motivo, autoria e instante do
+  alvo escolhido. Navegação completa do histórico permanece no UC-13.
+
+`tests/e2e/uc-12.spec.js` usa API controlada para modalidades, período, conclusão/
+reabertura, repetição, dependências, duas abas, versão obsoleta, validação,
+cancelamento, erros, resposta perdida e releitura após 200. Capturas desktop/
+mobile ficam em `test-results/`. `tests/mudanca.test.js` verifica datas,
+estados permitidos, normalização e comparação independente da ordem JSON.
+
+Backend: 81 testes de mudanças/estado de obra/marco aprovados com banco simulado;
+13 cenários Atlas opt-in ignorados. Persistência/transações em Atlas e CT-111
+no ambiente publicado continuam exigindo execução integrada própria.
+
+Validação local de UC-12 em 02/11/2026: build aprovado e 17 testes unitários/
+contratuais aprovados. Foram validados 16 cenários de UC-12 no Edge, incluindo
+resposta atrasada do histórico; também passaram 21 cenários de UC-07 e 24 de
+UC-04, incluindo acesso ao novo formulário. Capturas desktop/mobile foram
+inspecionadas, sem rolagem horizontal a 390 px. Os testes usam APIs controladas
+e não comprovam persistência real no Atlas ou disponibilidade do EC2.
+
+## Ajustes da revisão de UC-10/11/12
+
+- UC-10: após a releitura, o cartão usa a publicação retornada pelo GET, inclusive
+  se outra aba corrigiu o conteúdo. A confirmação continua separada da falha de
+  leitura; repetir a visualização não publica novamente.
+- UC-11: detalhe, versão atual e publicação precisam concordar em descrição,
+  data e composição de mídias antes de liberar o editor. Retenção e caminhos
+  de acesso não representam alterações de conteúdo. Antes do PATCH, reconsulta
+  o conjunto e compara conteúdo e número da versão revisada; divergência bloqueia
+  o envio e exige Recarregar e revisar. Também detecta correções que restauraram
+  o texto original. A consulta prévia não é uma precondição atômica: o contrato
+  atual do PATCH não recebe a versão do cliente; o controle transacional durante
+  a escrita permanece no backend. Não foi acrescentado um campo não suportado.
+- UC-12: a versão revisada fica separada da versão exibida. Atualizar consultas
+  não altera a base da intenção; uma versão diferente exige revisão explícita.
+  Após um POST confirmado, usa sua versão como base e detecta novas mudanças
+  concorrentes encontradas nas consultas seguintes.
+
+Validação dos ajustes: build aprovado, 19 testes unitários/contratuais e 43
+cenários de navegador UC-10/11/12 aprovados no Edge, com API controlada. Foram
+adicionados seis cenários de regressão e dois testes de consistência. Não foram
+executadas integrações reais com Atlas/Cloudinary/EC2 nesta revisão.

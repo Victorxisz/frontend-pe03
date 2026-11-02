@@ -121,3 +121,50 @@ test('alterar somente data envia apenas data e motivo', async ({ page }) => {
   await expect(page.getByText('Correção confirmada pelo servidor.', { exact: true })).toBeVisible();
   expect(state.patches).toEqual([{ data: '2030-01-03', motivo: 'Data conferida' }]);
 });
+
+function corrigirEmOutraAba(state, descricao = 'Conteúdo novo de outra aba') {
+  const before = structuredClone(state.content);
+  state.content.descricao = descricao;
+  state.versions.forEach(v => v.atual = false);
+  state.versions.push({ numero: state.versions.length + 1, atual: true, conteudo: structuredClone(state.content), autor_original: 'engenheiro-original', origem_simulada: { perfil: 'engenheiro' }, correcao: { antes: before, depois: structuredClone(state.content), autor: 'outra-construtora', instante: '2030-02-01T10:00:00Z', motivo: 'Correção concorrente', campos: ['descricao'], diferencas_texto: [{ tipo: 'substituido', antes: before.descricao, depois: descricao }] } });
+}
+
+test('detalhe antigo com cadeia nova exige consulta consistente antes de editar', async ({ page }) => {
+  const state = await setup(page); let changed = false;
+  await page.route('**/api/avancos/avanco', async route => {
+    if (route.request().method() !== 'GET' || changed) return route.fallback();
+    const old = { id: 'avanco', marco_id: 'marco', estado: 'publicado', ...structuredClone(state.content) };
+    corrigirEmOutraAba(state); changed = true;
+    return route.fulfill({ json: old });
+  });
+  await page.goto(`${base}/corrigir`);
+  await expect(page.getByText(/A publicação foi alterada durante a consulta/)).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Descrição', exact: true })).toHaveCount(0);
+  expect(state.patches).toHaveLength(0);
+  await page.getByRole('button', { name: 'Recarregar e revisar' }).click();
+  await expect(page.getByRole('textbox', { name: 'Descrição', exact: true })).toHaveValue('Conteúdo novo de outra aba');
+  await expect(page.getByRole('article', { name: 'Versão 2', exact: true })).toContainText('Conteúdo novo de outra aba');
+  await edit(page, 'Nova correção revisada'); await page.getByRole('button', { name: 'Salvar correção' }).click();
+  await expect(page.getByText('Correção confirmada pelo servidor.', { exact: true })).toBeVisible();
+  expect(state.patches).toHaveLength(1);
+});
+
+test('correção concorrente após abrir editor bloqueia PATCH e preserva intenção até releitura', async ({ page }) => {
+  const state = await setup(page); await page.goto(`${base}/corrigir`); await edit(page, 'Intenção digitada');
+  corrigirEmOutraAba(state);
+  await page.getByRole('button', { name: 'Salvar correção' }).click();
+  await expect(page.getByText(/A publicação foi alterada durante a consulta/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Salvar correção' })).toBeDisabled();
+  await expect(page.getByRole('textbox', { name: 'Descrição', exact: true })).toHaveValue('Intenção digitada');
+  expect(state.patches).toHaveLength(0);
+  await page.getByRole('button', { name: 'Recarregar e revisar' }).click();
+  await expect(page.getByRole('textbox', { name: 'Descrição', exact: true })).toHaveValue('Conteúdo novo de outra aba');
+});
+
+test('texto restaurado em outra aba ainda exige revisão da nova versão', async ({ page }) => {
+  const state = await setup(page); await page.goto(`${base}/corrigir`); await edit(page);
+  corrigirEmOutraAba(state); corrigirEmOutraAba(state, 'Parede branca');
+  await page.getByRole('button', { name: 'Salvar correção' }).click();
+  await expect(page.getByRole('button', { name: 'Recarregar e revisar' })).toBeVisible();
+  expect(state.patches).toHaveLength(0);
+});
