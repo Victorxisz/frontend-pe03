@@ -81,3 +81,11 @@ contexto quando o usuário confirmar mudanças de escopo ou localização.
 - `docs/cartoes-trello-frontend.md` contém os 21 cartões, contratos consultados,
   propostas de interface, dependências e a divergência acima. É planejamento,
   não evidência de implementação ou execução dos testes do frontend.
+
+## Localização verificada nesta máquina em 02/11/2026
+
+O backend está acessível em `../backend-pe03`. Para esta instalação, consultar
+esse repositório para contratos e testes do produto. UC-10 foi conferido em
+`app/publicacoes/`, `app/avancos/previa.py`, `app/avancos/service.py` e nos testes
+de publicações/prévia. O proxy de desenvolvimento aponta por padrão para
+`http://127.0.0.1:5000`; a presença do código não comprova servidor ativo.
