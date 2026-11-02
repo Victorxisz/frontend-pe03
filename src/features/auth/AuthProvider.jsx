@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import { flushSync } from 'react-dom';
 import { createHttpClient } from '../../shared/api/http';
 import { authApi } from './api';
+import { Button } from '../../shared/ui/UI';
 
 const AuthContext = createContext(null);
 const key = 'pe03:access-token';
@@ -15,8 +16,10 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(Boolean(token.current));
   const [sessionError, setSessionError] = useState('');
+  const [restoreError, setRestoreError] = useState('');
+  const [restoreAttempt, setRestoreAttempt] = useState(0);
   const client = useMemo(() => {
-    const clear = () => { token.current = null; storage.write(null); setUser(null); setLoading(false); };
+    const clear = () => { token.current = null; storage.write(null); setUser(null); setLoading(false); setRestoreError(''); };
     const request = createHttpClient({
       baseUrl: import.meta.env.VITE_API_BASE_URL || '/api',
       getToken: () => token.current,
@@ -39,14 +42,21 @@ export function AuthProvider({ children }) {
       const restoringToken = token.current;
       if (!restoringToken) { setLoading(false); return; }
       setLoading(true);
+      setRestoreError('');
       try {
         const data = await client.api.current(signal);
+        if (!data?.construtora?.id) throw new Error('Resposta de sessão incompleta.');
         if (!signal.aborted && token.current === restoringToken) setUser(data.construtora);
       } catch (error) {
         if (signal.aborted) return;
         if (token.current === restoringToken) {
-          client.clear();
-          setSessionError(`Não foi possível restaurar a sessão. ${error.message} Entre novamente.`);
+          if (error.status === 401 || error.status === 403) {
+            client.clear();
+            setSessionError('Sua sessão expirou ou foi encerrada. Entre novamente.');
+          } else {
+            setUser(null);
+            setRestoreError('Não foi possível verificar sua sessão. Confira a conexão e tente novamente.');
+          }
         }
       } finally {
         if (!signal.aborted) setLoading(false);
@@ -66,7 +76,7 @@ export function AuthProvider({ children }) {
       window.removeEventListener('pagehide', hide);
       window.removeEventListener('pageshow', show);
     };
-  }, [client]);
+  }, [client, restoreAttempt]);
 
   async function login(credentials) {
     const result = await client.api.login(credentials);
@@ -81,7 +91,9 @@ export function AuthProvider({ children }) {
     await client.api.logout();
     if (token.current === leavingToken) { client.clear(); setSessionError(''); }
   }
-  return <AuthContext.Provider value={{ user, loading, sessionError, login, logout, request: client.request }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, loading, sessionError, login, logout, request: client.request }}>{restoreError
+    ? <main className="route-status"><p role="alert">{restoreError}</p><Button onClick={() => { setRestoreError(''); setLoading(true); setRestoreAttempt((value) => value + 1); }}>Tentar novamente</Button></main>
+    : children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
