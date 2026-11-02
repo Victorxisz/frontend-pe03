@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, ArrowRight, Building2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useAuth } from '../../auth/AuthProvider';
 import { obrasApi } from '../api';
 import { Button, EmptyState } from '../../../shared/ui/UI';
@@ -22,6 +22,6 @@ export default function ObrasPage() {
     {state.loading && <p role="status">Carregando obras…</p>}
     {state.error && <div className="feature-card"><p role="alert" className="form-error">{state.error}</p><Button onClick={() => setAttempt((value) => value + 1)}>Tentar novamente</Button></div>}
     {!state.loading && !state.error && !state.obras.length && <div className="feature-card"><EmptyState title="Nenhuma obra cadastrada" description="Suas obras aparecerão aqui após o cadastro." /></div>}
-    <div className="works-grid">{state.obras.map((obra) => <Link className="feature-card work-card" key={obra.id} to={`/obras/${obra.id}/marcos`}><Building2 size={24} /><h2>{obra.nome}</h2><p>{obra.cliente}</p><span>Acompanhar obra <ArrowRight size={15} /></span></Link>)}</div>
+    <div className="works-grid">{state.obras.map((obra) => <Link className="feature-card work-card" key={obra.id} to={`/obras/${obra.id}/marcos`}><h2>{obra.nome}</h2><p>{obra.cliente}</p><span>Acompanhar obra</span></Link>)}</div>
   </>;
 }

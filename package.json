@@ -3,12 +3,16 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "engines": { "node": ">=22.12" },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "test:e2e": "playwright test",
+    "test:all": "npm test && npm run test:e2e"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
@@ -19,6 +23,7 @@
     "react-router-dom": "^7.18.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@vitejs/plugin-react": "^6.1.2",
     "vite": "^8.3.5"
   }
