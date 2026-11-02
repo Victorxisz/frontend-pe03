@@ -26,8 +26,9 @@ export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUn
       if (error.name === 'AbortError') throw error;
       throw new ApiError('Não foi possível conectar ao servidor. Tente novamente.', 0);
     }
-    const data = response.ok && responseType === 'blob' ? await response.blob()
-      : response.status === 204 ? null : await response.json().catch(() => null);
+    // Erros continuam sendo lidos como JSON mesmo quando a operação esperava bytes.
+    const data = response.status === 204 ? null : responseType === 'blob' && response.ok
+      ? await response.blob() : await response.json().catch(() => null);
     if (!response.ok) {
       if (response.status === 401 && token) onUnauthorized(token);
       const detail = data?.erro && typeof data.erro === 'object' ? data.erro : data?.error;
