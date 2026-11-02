@@ -1,0 +1,3 @@
+.ocorrencia-form, .ocorrencia-card { margin-top: 18px; overflow-wrap: anywhere; }
+.ocorrencia-card + .ocorrencia-card { margin-top: 16px; }
+.ocorrencia-card .page-actions { gap: 18px; }

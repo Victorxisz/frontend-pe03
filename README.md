@@ -759,3 +759,17 @@ navegador UC-01/02/03 aprovados no Edge com API controlada. O novo teste de JWT
 inválido falhou antes do ajuste e passou após a correção. Um cenário de login
 real permaneceu opt-in, sem execução; Atlas/Cloudinary/EC2 não foram validados
 nesta revisão.
+
+## Registro de ocorrências — UC-14
+
+A aba Ocorrências lista e consulta os registros da obra. O cadastro aceita
+marco, responsável vinculado e até cinco evidências opcionais; sem arquivos usa
+JSON e, com arquivos, multipart. A data e a autoria vêm do servidor. Uma falha
+de conexão, timeout ou 5xx deixa o resultado incerto e orienta consultar a
+lista antes de um novo envio. A tela não cria aceitação automaticamente.
+
+`tests/e2e/uc-14.spec.js` usa API controlada para verificar cadastro, consulta,
+vínculos, erros e resposta perdida. Os testes de backend usam banco em memória
+e provedor simulado por padrão; persistência após reinício no Atlas e mídia real
+exigem os testes opt-in e ambiente exclusivo descritos no backend. As telas de
+cadastro de trabalhador e aceitação permanecem em preparação nesta branch.
