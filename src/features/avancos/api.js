@@ -1,6 +1,19 @@
 export const avancosApi = (request) => ({
   list: (marcoId, signal) => request(`/marcos/${encodeURIComponent(marcoId)}/avancos`, { signal }),
   detail: (id, signal) => request(`/avancos/${encodeURIComponent(id)}`, { signal }),
+  update: (id, { data, descricao, midiasManter, midias = [] }) => {
+    const path = `/avancos/${encodeURIComponent(id)}`;
+    if (midias.length) {
+      const body = new FormData();
+      if (data !== undefined) body.append('data', data);
+      if (descricao !== undefined) body.append('descricao', descricao);
+      body.append('midias_manter', JSON.stringify(midiasManter));
+      midias.forEach((file) => body.append('midias', file, file.name));
+      return request(path, { method: 'PATCH', body, expectedStatus: 200 });
+    }
+    return request(path, { method: 'PATCH', body: { ...(data !== undefined ? { data } : {}), ...(descricao !== undefined ? { descricao } : {}), ...(midiasManter !== undefined ? { midias_manter: midiasManter } : {}) }, expectedStatus: 200 });
+  },
+  deleteDraft: (id) => request(`/avancos/${encodeURIComponent(id)}`, { method: 'DELETE', expectedStatus: [204], returnResponse: true }),
   listMedia: (id, signal) => request(`/avancos/${encodeURIComponent(id)}/midias`, { signal }),
   create: (marcoId, { data, descricao, midias }, key) => {
     const body = new FormData();

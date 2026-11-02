@@ -1,9 +1,10 @@
 export class ApiError extends Error {
-  constructor(message, status, data) {
+  constructor(message, status, data, headers) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.data = data;
+    this.headers = headers;
     const detail = data?.erro && typeof data.erro === 'object' ? data.erro : data?.error;
     this.code = data?.codigo ?? data?.code ?? detail?.codigo ?? detail?.code;
     this.fields = data?.campos ?? data?.fields ?? data?.errors ?? detail?.campos ?? detail?.fields;
@@ -11,7 +12,7 @@ export class ApiError extends Error {
 }
 
 export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUnauthorized = () => {}, fetcher = (...args) => fetch(...args) } = {}) {
-  return async function request(path, { body, headers, authenticated = true, expectedStatus, responseType = 'json', ...options } = {}) {
+  return async function request(path, { body, headers, authenticated = true, expectedStatus, responseType = 'json', returnResponse = false, ...options } = {}) {
     const token = authenticated ? getToken() : null;
     const requestHeaders = new Headers(headers);
     if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
@@ -34,11 +35,11 @@ export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUn
       const detail = data?.erro && typeof data.erro === 'object' ? data.erro : data?.error;
       const message = [data?.erro, data?.mensagem, data?.msg, data?.message, data?.error, detail?.mensagem, detail?.message, detail?.msg]
         .find((value) => typeof value === 'string' && value.trim());
-      throw new ApiError(message || 'Não foi possível concluir a solicitação.', response.status, data);
+      throw new ApiError(message || 'Não foi possível concluir a solicitação.', response.status, data, response.headers);
     }
     if (expectedStatus !== undefined && !(Array.isArray(expectedStatus) ? expectedStatus : [expectedStatus]).includes(response.status)) {
       throw new ApiError('O servidor não confirmou o resultado da solicitação.', 0);
     }
-    return data;
+    return returnResponse ? { status: response.status, headers: response.headers, data } : data;
   };
 }
