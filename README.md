@@ -607,8 +607,8 @@ preserva a ordem da API e apresenta cada avanço publicado uma vez.
 
 Mídias são recuperadas com Bearer em Blob, com liberação das URLs temporárias;
 imagens, vídeos e download de documentos preservam o cartão em caso de falha.
-UC-08 e UC-11 ainda possuem formulários em preparação neste checkout; os links
-usam as rotas React existentes. A prévia continua exclusiva da construtora.
+O cadastro de evidências depende de UC-08. Correção e versões foram integradas
+em UC-11, descrita abaixo; os links usam as rotas React existentes. A prévia continua exclusiva da construtora.
 
 `tests/e2e/uc-10.spec.js` usa API controlada. Persistência após reinício e
 recuperação dos três tipos de mídia no EC2/Cloudinary exigem ambiente integrado.
@@ -619,3 +619,49 @@ cancelamento, duplo clique, resposta perdida, erros 404/422/409/503, falha de
 releitura após confirmação, datas distintas, ordem e arquivo indisponível.
 A porta local 5000 não respondeu na verificação; não foi possível comprovar
 conexão ativa, persistência real ou recuperação via Cloudinary nesta execução.
+
+## Corrigir publicação e comparar versões — UC-11
+
+Contratos conferidos em `../backend-pe03/app/avancos/{correcoes,versoes,validacoes}.py`,
+`routes.py`, `app/historico/service.py` e nos testes CT-46 a CT-51.
+
+- O editor consulta avanço, marco da obra, publicação e cadeia de versões antes
+  de permitir correção. Descrição, data, mídias mantidas e novos arquivos são
+  editáveis; motivo e alteração efetiva são obrigatórios. Pelo menos uma mídia
+  deve permanecer. Alterar a data é opcional.
+- `PATCH /avancos/{id}` envia apenas diferenças e motivo. Sem arquivo novo usa
+  JSON; com arquivos usa multipart, `midias` repetido e `midias_manter` como JSON
+  textual quando alterado. Autor, instante e cadeia anterior não são enviados.
+  O frontend não remove arquivos históricos.
+- `200` confirma a operação; detalhe, publicação, versões, prévia e histórico
+  são reconsultados. Falha posterior mantém a confirmação e permite repetir
+  somente GET. A resposta não substitui a publicação por um estado otimista.
+- Duplo clique é bloqueado. Erros 422 preservam o formulário para correção;
+  conflito, falha de rede, timeout ou resposta inesperada exigem consultar o
+  estado real antes de outra decisão. A consulta descarta o formulário antigo.
+- `ComparacaoVersoes` apresenta a cadeia retornada, sem reconstruir auditoria:
+  versão inicial, atual, conteúdo anterior/novo, campos, motivo, autoria e instante.
+  Diferenças igual/inserido/removido/substituído são texto React seguro.
+- Origem simulada, autor original, publicador e autor da correção são separados;
+  a prévia mantém indicação de edição mesmo na restauração do texto original.
+- Mídia histórica não retida ou com conteúdo nulo apresenta metadados sem
+  download/requisição. Retenção não garante disponibilidade remota: falha de
+  recuperação mantém a versão e oferece nova tentativa. HISTORICO_INDISPONIVEL
+  é apresentado como falha de integridade, nunca como lista vazia.
+
+Testes de navegador: `tests/e2e/uc-11.spec.js` usa API controlada e cobre duas
+correções/recarga, HTML seguro, motivos/alterações obrigatórios, cancelamento,
+retenção, erros, resposta perdida, falha de releitura, upload multipart,
+diferenças e mudança somente de data. Capturas desktop/mobile ficam em
+`test-results/` e foram inspecionadas. Recuperação real Cloudinary/EC2 e
+persistência após reinício do MongoDB continuam exigindo ambiente integrado.
+
+Backend: 60 testes de correção/versões aprovados com provedores simulados;
+3 cenários Atlas ignorados por serem opt-in. Nenhum contrato do backend foi
+alterado. O cadastro/edição de rascunhos continua nos UCs 08/09.
+
+Validação final local em 02/11/2026: build e 15 testes unitários/contratuais
+aprovados; 21 cenários UC-10/11 validados no Edge. Na execução conjunta, um
+cenário encontrou ERR_NETWORK_CHANGED do navegador e passou na repetição
+isolada; os outros 20 passaram. A suíte UC-11 isolada também passou com seus
+11 cenários. Não foram executadas integrações reais Atlas/Cloudinary/EC2.
