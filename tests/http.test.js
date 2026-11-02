@@ -2,6 +2,18 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHttpClient, ApiError } from '../src/shared/api/http.js';
 
+test('recupera imagem com Bearer em blob e preserva erros JSON', async () => {
+  const request = createHttpClient({ getToken: () => 'token', fetcher: async (_, options) => {
+    assert.equal(options.headers.get('Authorization'), 'Bearer token');
+    return new Response(new Uint8Array([1, 2, 3]), { headers: { 'Content-Type': 'image/png' } });
+  } });
+  const blob = await request('/obras/123/imagem-projeto/456/conteudo', { responseType: 'blob' });
+  assert.equal(blob.type, 'image/png');
+  assert.equal(blob.size, 3);
+  const failure = createHttpClient({ fetcher: async () => new Response('{"mensagem":"Imagem indisponível"}', { status: 503 }) });
+  await assert.rejects(failure('/imagem', { responseType: 'blob' }), { status: 503, message: 'Imagem indisponível' });
+});
+
 test('envia JSON com Bearer token e preserva resposta 204', async () => {
   const request = createHttpClient({ baseUrl: '/api/', getToken: () => 'token', fetcher: async (url, options) => {
     assert.equal(url, '/api/obras/123');

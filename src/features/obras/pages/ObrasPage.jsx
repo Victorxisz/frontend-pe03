@@ -7,6 +7,7 @@ import { Button, EmptyState } from '../../../shared/ui/UI';
 import { formatarEntrega } from '../../../shared/lib/datas';
 import FiltrosObras from '../components/FiltrosObras';
 import ObraSituacao from '../components/ObraSituacao';
+import ImagemProjeto from '../components/ImagemProjeto';
 import { lerFiltros, nomesFiltros, parametrosFiltros, textoFiltro } from '../filtros';
 
 export default function ObrasPage() {
@@ -49,6 +50,7 @@ export default function ObrasPage() {
       {data?.situacao === 'lista_vazia' && <div className="feature-card"><EmptyState title="Nenhuma obra cadastrada" description="Comece cadastrando uma casa ou um empreendimento de apartamentos."><Link className="button button-primary" to="/obras/nova"><Plus size={16} aria-hidden="true" />Cadastrar primeira obra</Link></EmptyState></div>}
       {data?.situacao === 'sem_resultados' && <div className="feature-card"><EmptyState title="Nenhuma obra encontrada" description="Nenhuma obra corresponde aos filtros aplicados. Ajuste os critérios ou limpe a busca."><Button variant="secondary" onClick={() => apply({})}>Limpar filtros</Button></EmptyState></div>}
       {data && <div className="works-grid">{data.obras.map((obra) => <article className="feature-card work-card" key={obra.id}>
+        <ImagemProjeto obraId={obra.id} imagem={obra.imagem_projeto} nome={obra.nome} compact />
         <div className="work-card-top"><span className="work-type">{obra.tipo === 'casa' ? <House size={17} aria-hidden="true" /> : <Building2 size={17} aria-hidden="true" />}{obra.tipo === 'casa' ? 'Casa' : obra.tipo === 'apartamentos' ? 'Apartamentos' : 'Obra residencial'}</span><ObraSituacao obra={obra} /></div>
         <div><h3><Link to={`/obras/${encodeURIComponent(obra.id)}/marcos${search ? `?busca=${encodeURIComponent(search)}` : ''}`}>{obra.nome}<ArrowUpRight size={20} aria-hidden="true" /></Link></h3><p className="work-client"><span>Cliente de referência</span>{obra.cliente}</p></div>
         <div className="work-deadline"><CalendarDays size={18} aria-hidden="true" /><p><span>Prazo de entrega</span>{formatarEntrega(obra.entrega)}</p></div>
