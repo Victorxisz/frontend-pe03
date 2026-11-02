@@ -171,6 +171,21 @@ test.describe('FE-UC-01 — navegador com API controlada', () => {
     await cdp.detach();
   });
 
+  test('JWT inválido na restauração permite novo login e preserva o destino', async ({ page }) => {
+    await seedToken(page);
+    const state = await mockApi(page, { current: route => route.fulfill({ status: 422, json: { msg: 'Not enough segments' } }) });
+    await page.goto(destination);
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.getByRole('alert')).toContainText('Entre novamente');
+    expect(await page.evaluate(key => sessionStorage.getItem(key), key)).toBeNull();
+    await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toHaveCount(0);
+    state.current = null;
+    await fillLogin(page);
+    await expect(page).toHaveURL(destination);
+    await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toBeVisible();
+    expect(state.logins).toBe(1);
+  });
+
   for (const failure of ['rede', 'servidor', 'resposta-incompleta']) {
     test(`recarga com ${failure} preserva token, bloqueia dados e permite restaurar`, async ({ page }) => {
       const state = await mockApi(page);
