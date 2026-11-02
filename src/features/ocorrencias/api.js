@@ -30,5 +30,9 @@ export const ocorrenciasApi = request => ({
     const result = await request(`/obras/${enc(obraId)}/ocorrencias`, { method: 'POST', body, signal, expectedStatus: 201 });
     try { return conferir(result, obraId); } catch { throw new ApiError('Confirmação incompleta. Consulte a lista antes de reenviar.', 0); }
   },
+  update: async (obraId, id, dados, signal) => {
+    const result = await request(`/ocorrencias/${enc(id)}`, { method: 'PATCH', body: dados, signal, expectedStatus: 200 });
+    try { return conferir(result, obraId, id); } catch { throw new ApiError('Resposta incompleta. Consulte a ocorrência antes de tentar novamente.', 0); }
+  },
   media: (id, signal) => request(`/midias/${enc(id)}/conteudo`, { signal, responseType: 'blob', expectedStatus: 200 }),
 });
