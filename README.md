@@ -475,7 +475,8 @@ A restauração em `AuthProvider` aguarda `GET /sessoes/atual` por até 8 segund
 incluindo leitura do corpo. Se exceder esse prazo, cancela a consulta, mantém o
 token e apresenta nova tentativa. Respostas atrasadas ou de uma tentativa anterior
 não liberam conteúdo protegido. Desmontagem e navegação cancelam a consulta e
-limpam o temporizador. Respostas 401/403 continuam exigindo novo login.
+limpam o temporizador. Respostas 401/403 e 422 de JWT inválido nessa consulta
+exigem novo login. O 422 de validação dos formulários não encerra a sessão.
 Esse limite evita espera indefinida; não reduz o tempo de processamento do
 servidor. Para investigar latência real, medir `/sessoes/atual` no ambiente em uso
 e a conexão do backend com MongoDB. O teste de timeout usa relógio controlado.
@@ -738,3 +739,23 @@ Validação dos ajustes: build aprovado, 19 testes unitários/contratuais e 43
 cenários de navegador UC-10/11/12 aprovados no Edge, com API controlada. Foram
 adicionados seis cenários de regressão e dois testes de consistência. Não foram
 executadas integrações reais com Atlas/Cloudinary/EC2 nesta revisão.
+
+## Revisão de UC-01/02/03 em 02/11/2026
+
+Conferidos os contratos de sessão, cadastro e filtros em `../backend-pe03`.
+Foi reproduzido um bloqueio de UC-01: o Flask-JWT-Extended responde 422 para
+JWT inválido, e o frontend preservava esse token como se a falha fosse
+temporária, impedindo novo login. `AuthProvider` agora descarta o token rejeitado
+na restauração, orienta entrar novamente e preserva o destino protegido. Rede,
+timeout e 5xx continuam permitindo nova tentativa sem apagar o token.
+
+O teste de UC-02 que bloqueia cliques duplicados agora aguarda a chegada do POST
+e a preparação da resposta controlada antes de conferir a contagem e liberá-la.
+A revisão de UC-03 não encontrou necessidade de alteração funcional em filtros,
+contexto da obra, alerta de atraso ou descarte de respostas antigas.
+
+Validação: build e 19 testes unitários/contratuais aprovados; 58 cenários de
+navegador UC-01/02/03 aprovados no Edge com API controlada. O novo teste de JWT
+inválido falhou antes do ajuste e passou após a correção. Um cenário de login
+real permaneceu opt-in, sem execução; Atlas/Cloudinary/EC2 não foram validados
+nesta revisão.

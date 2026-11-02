@@ -149,9 +149,12 @@ test.describe('FE-UC-02 — cadastro com API controlada', () => {
     await expect(page.getByRole('button', { name: 'Salvando…' })).toBeDisabled();
     await expect(page.getByRole('button', { name: 'Cancelar', exact: true })).toBeDisabled();
     await expect(page.getByRole('status')).toHaveText('Salvando obra…');
-    expect(state.posts).toHaveLength(1);
+    // O estado visual pode mudar antes de o transporte entregar o POST ao mock.
+    await expect.poll(() => state.posts.length).toBe(1);
+    await expect.poll(() => typeof release).toBe('function');
     release();
     await expect(page.getByRole('heading', { name: base.nome })).toBeVisible();
+    expect(state.posts).toHaveLength(1);
   });
 
   test('422 exibe mensagem e campos, preserva valores e permite correção', async ({ page }) => {

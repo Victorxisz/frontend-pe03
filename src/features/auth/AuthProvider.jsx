@@ -58,7 +58,9 @@ export function AuthProvider({ children }) {
       } catch (error) {
         if (disposed || controller !== attemptController || (signal.aborted && !timedOut)) return;
         if (token.current === restoringToken) {
-          if (error.status === 401 || error.status === 403) {
+          // GET /sessoes/atual não valida um formulário: 422 é a rejeição de JWT
+          // inválido pelo Flask-JWT-Extended. Preservá-lo impediria novo login.
+          if (error.status === 401 || error.status === 403 || error.status === 422) {
             client.clear();
             setSessionError('Sua sessão expirou ou foi encerrada. Entre novamente.');
           } else {
