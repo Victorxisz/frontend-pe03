@@ -11,7 +11,7 @@ export class ApiError extends Error {
 }
 
 export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUnauthorized = () => {}, fetcher = (...args) => fetch(...args) } = {}) {
-  return async function request(path, { body, headers, authenticated = true, expectedStatus, responseType = 'json', ...options } = {}) {
+  return async function request(path, { body, headers, authenticated = true, expectedStatus, responseType = 'json', includeResponse = false, ...options } = {}) {
     const token = authenticated ? getToken() : null;
     const requestHeaders = new Headers(headers);
     if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
@@ -39,6 +39,6 @@ export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUn
     if (expectedStatus !== undefined && !(Array.isArray(expectedStatus) ? expectedStatus : [expectedStatus]).includes(response.status)) {
       throw new ApiError('O servidor não confirmou o resultado da solicitação.', 0);
     }
-    return data;
+    return includeResponse ? { status: response.status, data } : data;
   };
 }

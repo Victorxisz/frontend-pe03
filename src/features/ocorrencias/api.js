@@ -1,20 +1,34 @@
 import { ApiError } from '../../shared/api/http';
+
 const enc = encodeURIComponent;
+
 function conferir(item, obraId, ocorrenciaId) {
-  if (!item || typeof item.id !== 'string' || !item.id || item.obra_id !== obraId || (ocorrenciaId && item.id !== ocorrenciaId)) throw new ApiError('Ocorrência não encontrada nesta obra.', 404);
-  if (typeof item.titulo !== 'string' || typeof item.descricao !== 'string' || typeof item.estado !== 'string' || !Array.isArray(item.midias) || !Array.isArray(item.aceitacoes) || !Array.isArray(item.aceitacoes_do_estado_atual) || typeof item.autor !== 'string' || typeof item.data_registro !== 'string' || !Number.isInteger(item.versao) || !Number.isInteger(item.episodio)) throw new Error('Resposta de ocorrência incompleta. Consulte novamente.');
+  if (!item || typeof item.id !== 'string' || !item.id || item.obra_id !== obraId || (ocorrenciaId && item.id !== ocorrenciaId)) {
+    throw new ApiError('Ocorrência não encontrada nesta obra.', 404);
+  }
+  if (typeof item.titulo !== 'string' || typeof item.descricao !== 'string' || typeof item.estado !== 'string'
+    || !Array.isArray(item.midias) || !Array.isArray(item.aceitacoes) || !Array.isArray(item.aceitacoes_do_estado_atual)
+    || typeof item.autor !== 'string' || typeof item.data_registro !== 'string'
+    || !Number.isInteger(item.versao) || !Number.isInteger(item.episodio)) {
+    throw new Error('Resposta de ocorrência incompleta. Consulte novamente.');
+  }
   return item;
 }
+
 export const ocorrenciasApi = request => ({
   list: async (obraId, signal) => {
     const data = await request(`/obras/${enc(obraId)}/ocorrencias`, { signal, expectedStatus: 200 });
     if (!Array.isArray(data?.ocorrencias)) throw new Error('Não foi possível interpretar a lista de ocorrências.');
     return data.ocorrencias.map(item => conferir(item, obraId));
   },
-  detail: async (obraId, id, signal) => conferir(await request(`/ocorrencias/${enc(id)}`, { signal, expectedStatus: 200 }), obraId, id),
+  detail: async (obraId, id, signal) => conferir(
+    await request(`/ocorrencias/${enc(id)}`, { signal, expectedStatus: 200 }), obraId, id,
+  ),
   workers: async (obraId, signal) => {
     const data = await request(`/trabalhadores/obra/${enc(obraId)}/`, { signal, expectedStatus: 200 });
-    if (!Array.isArray(data) || !data.every(item => typeof item.id === 'string' && typeof item.nome === 'string' && Array.isArray(item.obras))) throw new Error('Não foi possível interpretar os trabalhadores.');
+    if (!Array.isArray(data) || !data.every(item => typeof item.id === 'string' && typeof item.nome === 'string' && Array.isArray(item.obras))) {
+      throw new Error('Não foi possível interpretar os trabalhadores.');
+    }
     return data.filter(item => item.obras.includes(obraId));
   },
   create: async (obraId, dados, arquivos, signal) => {
@@ -28,11 +42,27 @@ export const ocorrenciasApi = request => ({
       arquivos.forEach(file => body.append('midias', file, file.name));
     }
     const result = await request(`/obras/${enc(obraId)}/ocorrencias`, { method: 'POST', body, signal, expectedStatus: 201 });
-    try { return conferir(result, obraId); } catch { throw new ApiError('Confirmação incompleta. Consulte a lista antes de reenviar.', 0); }
+    try { return conferir(result, obraId); }
+    catch { throw new ApiError('Confirmação incompleta. Consulte a lista antes de reenviar.', 0); }
   },
   update: async (obraId, id, dados, signal) => {
     const result = await request(`/ocorrencias/${enc(id)}`, { method: 'PATCH', body: dados, signal, expectedStatus: 200 });
-    try { return conferir(result, obraId, id); } catch { throw new ApiError('Resposta incompleta. Consulte a ocorrência antes de tentar novamente.', 0); }
+    try { return conferir(result, obraId, id); }
+    catch { throw new ApiError('Resposta incompleta. Consulte a ocorrência antes de tentar novamente.', 0); }
   },
   media: (id, signal) => request(`/midias/${enc(id)}/conteudo`, { signal, responseType: 'blob', expectedStatus: 200 }),
+  acceptances: (id, signal) => request(`/ocorrencias/${enc(id)}/aceitacoes`, { signal, expectedStatus: 200 }),
+  accept: (id, body, key) => request(`/ocorrencias/${enc(id)}/aceitacoes`, {
+    method: 'POST', body, headers: { 'Idempotency-Key': key }, expectedStatus: [200, 201], includeResponse: true,
+  }),
 });
+
+export function resumirErroAceitacao(error) {
+  if (error?.status === 0 || error?.status === 500 || error?.status === 503) return 'Não foi possível confirmar a gravação. Reenvie esta mesma decisão para consultar o resultado sem duplicá-la.';
+  if (error?.status === 409) return `${error.message} Consulte o estado e o histórico antes de decidir novamente. A decisão não foi reenviada com outra chave.`;
+  if (error?.status === 422) return `${error.message} Revise a justificativa e a medida compensatória.`;
+  if (error?.status === 415) return 'O servidor não aceitou o formato enviado.';
+  if (error?.status === 400) return 'A referência da ocorrência ou o conteúdo enviado é inválido.';
+  if (error?.status === 404) return 'Ocorrência não encontrada.';
+  return error?.message || 'Não foi possível registrar a aceitação.';
+}

@@ -50,6 +50,7 @@ export default function AvancoPage() {
         if (obraId) {
           try {
             const published = await publicacoesApi(request).detail(obraId, avancoId, controller.signal);
+            if (controller.signal.aborted) return;
             setAvanco((current) => ({ ...current, ...published }));
             setPublicacoes(await publicacoesApi(request).publications(avancoId, controller.signal));
           } catch (cause) {
