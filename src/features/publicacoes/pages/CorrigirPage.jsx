@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { publicacoesApi } from '../api';
+import { conferirLeitura, mesmoConteudo, leituraDesatualizada } from '../consistencia';
 import { historicoApi } from '../../historico/api';
 import { Button, Field } from '../../../shared/ui/UI';
 import { diaValido } from '../../../shared/lib/datas';
@@ -21,6 +22,7 @@ function Editor({ obraId, avancoId, search, request }) {
     const detail = await api.detail(obraId, avancoId, signal);
     const [chain, publications] = await Promise.all([api.versions(avancoId, signal), api.publications(avancoId, signal)]);
     if (detail.estado !== 'publicado' || !chain.versoes.length || !publications.length) throw new Error('Somente publicações podem ser corrigidas.');
+    conferirLeitura(detail, chain, publications[0]);
     return { detail, chain, publication: publications[0] };
   }
   function install(value) {
@@ -60,6 +62,9 @@ function Editor({ obraId, avancoId, search, request }) {
     const controller = new AbortController(); operation.current = controller;
     const timeout = setTimeout(() => controller.abort(), 60000);
     try {
+      const latest = await read(controller.signal);
+      if (!active.current) return;
+      if (!mesmoConteudo(loaded.detail, latest.detail) || loaded.chain.versoes.at(-1).numero !== latest.chain.versoes.at(-1).numero) throw leituraDesatualizada();
       await api.correct(avancoId, { ...changes, motivo: motivo.trim() }, files, controller.signal);
       clearTimeout(timeout);
       if (!active.current) return;

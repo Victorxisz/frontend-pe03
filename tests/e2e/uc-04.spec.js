@@ -16,6 +16,7 @@ async function setup(page, overrides = {}) {
       state.lists++;
       return route.fulfill({ json: { obras: [state.obra], situacao: 'com_resultados', filtros_aplicados: {} } });
     }
+    if (path === '/api/obras/obra-teste/mudancas' && route.request().method() === 'GET') return route.fulfill({ json: { mudancas: [] } });
     if (path === '/api/obras/obra-teste/marcos') return route.fulfill({ json: [] });
     if (path === '/api/obras/obra-teste' && route.request().method() === 'GET') {
       state.reads++;
@@ -95,7 +96,8 @@ test.describe('FE-UC-04 — edição descritiva', () => {
     await page.getByRole('link', { name: 'Registrar mudança', exact: true }).click();
     await expect(page).toHaveURL('/obras/obra-teste/historico/nova-mudanca');
     await expect(page.getByRole('heading', { name: 'Registrar mudança', exact: true })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Esta área está em preparação' })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'Campo da mudança' })).toHaveValue('entrega');
+    await expect(page.locator('.mudanca-current')).toContainText('01/11/2025');
     expect(state.patches).toHaveLength(0);
   });
 

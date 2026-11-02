@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { AlertTriangle, ArrowRight, RefreshCw } from 'lucide-react';
+import { ArrowRight, RefreshCw } from 'lucide-react';
 import { Button, Field } from '../../../shared/ui/UI';
-import ConfirmDialog from '../../../shared/ui/ConfirmDialog';
+import ConfirmacaoDependencias, { dependenciasPendentes } from './ConfirmacaoDependencias';
 import { useAuth } from '../../auth/AuthProvider';
 import { historicoApi } from '../../historico/api';
 import { marcosApi } from '../api';
@@ -61,8 +61,8 @@ export default function EstadoMarcoForm({ obraId, marco, disabled, onStart, onAp
       await onApplied();
     } catch (error) {
       if (!active.current) return;
-      const dependencies = error.data?.dependencias;
-      if (error.status === 409 && error.code === 'DEPENDENCIAS_PENDENTES' && command.novo_valor === 'concluído' && Array.isArray(dependencies) && dependencies.length && dependencies.every((item) => typeof item?.id === 'string' && typeof item.nome === 'string' && typeof item.estado === 'string')) {
+      const dependencies = dependenciasPendentes(error, command);
+      if (dependencies) {
         setWarning({ command, dependencies });
       } else {
         setWarning(null); setFailure(error);
@@ -99,10 +99,6 @@ export default function EstadoMarcoForm({ obraId, marco, disabled, onStart, onAp
       {estado !== marco.estado && <div className="estado-marco-preview"><MarcoEstado estado={marco.estado} /><ArrowRight size={18} aria-hidden="true" /><MarcoEstado estado={estado} />{reopening && <p>Esta alteração reabre o marco e preserva a conclusão anterior no histórico.</p>}</div>}
       <div className="page-actions"><Button type="submit" loading={saving} disabled={frozen || estado === marco.estado}>{saving ? 'Salvando decisão…' : reopening ? 'Reabrir marco' : 'Salvar estado'}</Button>{(blocked || !versionValid) && <Button icon={RefreshCw} variant="secondary" disabled={saving || disabled} onClick={onRefresh}>Consultar marco atualizado</Button>}</div>
     </form>
-    {warning && <ConfirmDialog title="Concluir com pré-requisitos pendentes?" confirmLabel="Concluir mesmo assim" confirmVariant="primary" returnFocusRef={heading} busy={saving} onCancel={() => setWarning(null)} onConfirm={() => void send({ ...warning.command, confirmar_dependencias: true })}>
-      <div className="estado-dependencia-warning"><AlertTriangle size={24} aria-hidden="true" /><p><strong>{marco.nome}</strong> depende de entregas que ainda não foram concluídas:</p></div>
-      <ul className="estado-pendencias">{warning.dependencies.map((item) => <li key={item.id}><strong>{item.nome}</strong><MarcoEstado estado={item.estado} /></li>)}</ul>
-      <p>Você pode concluir este marco mesmo assim. Essa decisão e o motivo serão registrados.</p><p className="estado-warning-motivo"><strong>Motivo:</strong> {warning.command.motivo}</p>
-    </ConfirmDialog>}
+    {warning && <ConfirmacaoDependencias warning={warning} nome={marco.nome} busy={saving} heading={heading} onCancel={() => setWarning(null)} onConfirm={command => void send(command)} />}
   </section>;
 }

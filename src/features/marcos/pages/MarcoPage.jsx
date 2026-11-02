@@ -45,6 +45,8 @@ function MarcoDetalhe({ obraId, marcoId }) {
   const created = state?.marcoCriado === marcoId && state?.obraId === obraId;
   const refreshed = useMarcos(obraId, undefined, created);
   const base = `/obras/${encodeURIComponent(obraId)}/marcos`;
+  const changeParams = new URLSearchParams(search);
+  changeParams.set('alvo', 'marco'); changeParams.set('marcoId', marcoId); changeParams.set('campo', 'periodo_previsto');
   return <section className="feature-page" aria-busy={loading}>
     <Link className="back-link" to={`${base}${search}`}><ArrowLeft size={15} aria-hidden="true" />Marcos da obra</Link>
     {created && <p className="obra-save-success" role="status">Marco criado com sucesso.</p>}
@@ -56,6 +58,7 @@ function MarcoDetalhe({ obraId, marcoId }) {
     {readback?.loading && <p role="status">Atualizando marco, lista e histórico…</p>}
     {readback?.error && <section className="feature-card dependencia-error" role="alert"><h3>Consulta dos dados atuais incompleta</h3><p>{readback.error}</p><Button variant="secondary" onClick={() => void reload()}>Reconsultar marco e histórico</Button></section>}
     {marco && <><header className="section-heading marcos-heading"><div><span className="eyebrow">Entrega da obra</span><h2>{marco.nome}</h2></div><MarcoEstado estado={marco.estado} /></header><section className="feature-card"><h3>Planejamento da entrega</h3><dl className="obra-resumo"><div><dt>Início previsto</dt><dd>{formatarDia(marco.inicio_previsto)}</dd></div><div><dt>Fim previsto</dt><dd>{formatarDia(marco.fim_previsto)}</dd></div><div className="form-full"><dt>Descrição</dt><dd>{marco.descricao}</dd></div></dl><p className="record-reference">Referência: {marco.id}</p></section>
+      <p><Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/historico/nova-mudanca?${changeParams}`}>Replanejar período do marco</Link></p>
       <EstadoMarcoForm key={`${marco.versao}:${epoch}`} obraId={obraId} marco={marco} disabled={Boolean(readback?.loading || readback?.error)} onStart={() => setReadback((previous) => previous ? { ...previous, confirmed: false } : null)} onApplied={() => reload(true)} onRefresh={() => void reload()} />
       {(!readback || readback.history) && <DecisoesEstadoMarco events={readback?.history} obraId={obraId} marcoId={marcoId} />}
       <DependenciasResumo key={`${marcoId}:${epoch}`} marcoId={marcoId} to={`${base}/${encodeURIComponent(marcoId)}/dependencias${search}`} />
