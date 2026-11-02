@@ -7,4 +7,5 @@ export const obrasApi = (request) => ({
   },
   detail: (id, signal) => request(`/obras/${encodeURIComponent(id)}`, { signal }),
   create: (body) => request('/obras', { method: 'POST', body, expectedStatus: 201 }),
+  update: (id, body) => request(`/obras/${encodeURIComponent(id)}`, { method: 'PATCH', body, expectedStatus: 200 }),
 });

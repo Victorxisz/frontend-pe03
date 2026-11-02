@@ -6,15 +6,14 @@ import { Button, Field } from '../../../shared/ui/UI';
 import { diaValido } from '../../../shared/lib/datas';
 import PrazoEntregaFields from '../components/PrazoEntregaFields';
 import ObraResumo from '../components/ObraResumo';
+import ObraDescritivaFields from '../components/ObraDescritivaFields';
+import { validarDescritiva } from '../descritiva';
 
 const initial = { nome: '', tipo: '', cliente: '', localizacao: '', descricao: '', inicio: '', entrega: { modalidade: '' } };
 const labels = { nome: 'Nome da obra', cliente: 'Cliente de referência', localizacao: 'Localização', descricao: 'Descrição', inicio: 'Início da obra' };
 
 function validar(dados) {
-  const errors = {};
-  for (const campo of ['nome', 'cliente', 'localizacao', 'descricao']) {
-    if (!dados[campo].trim()) errors[campo] = 'Preencha este campo.';
-  }
+  const errors = validarDescritiva(dados);
   if (!['casa', 'apartamentos'].includes(dados.tipo)) errors.tipo = 'Escolha casa ou apartamentos.';
   if (!diaValido(dados.inicio)) errors.inicio = 'Informe um dia existente.';
   const entrega = dados.entrega;
@@ -98,9 +97,9 @@ export default function NovaObraPage() {
         {saving && <p role="status">Salvando obra…</p>}
       </> : <form onSubmit={revisar} noValidate>
         <div className="form-grid">
-          {field('nome')}
+          <ObraDescritivaFields value={dados} onChange={change} errors={errors} />
           <Field label="Tipo de obra"><select aria-label="Tipo de obra" aria-describedby={errors.tipo ? 'tipo-erro' : undefined} required value={dados.tipo} onChange={(event) => change('tipo', event.target.value)} aria-invalid={Boolean(errors.tipo)}><option value="">Selecione o tipo</option><option value="casa">Casa</option><option value="apartamentos">Apartamentos</option></select>{errors.tipo && <small id="tipo-erro" className="field-error">{errors.tipo}</small>}</Field>
-          {field('cliente')}{field('localizacao')}{field('descricao', 'text', true)}{field('inicio', 'date')}
+          {field('inicio', 'date')}
           <PrazoEntregaFields value={dados.entrega} onChange={(value) => change('entrega', value)} errors={errors} />
         </div>
         <div className="page-actions"><Button type="submit">Revisar cadastro</Button><Link className="button button-secondary" to="/obras">Cancelar</Link></div>

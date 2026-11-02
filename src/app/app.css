@@ -9,6 +9,24 @@
 .obra-resumo dt { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
 .obra-resumo dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .obra-cadastro { margin-bottom: 24px; }
+.cadastro-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.obra-edit-grid { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr); gap: 24px; align-items: start; }
+.back-link.obra-edit-back { color: var(--navy); background: #e8f0f8; border-color: #b8cce0; }
+.back-link.obra-edit-back:hover { background: #d7e5f3; border-color: #829fbd; }
+.back-link.obra-edit-back[aria-disabled="true"] { opacity: 0.5; cursor: wait; }
+.obra-edit-form > h2 { display: flex; align-items: center; gap: 10px; font-size: 20px; margin-bottom: 10px; }
+.descritiva-edit-fields { margin: 24px 0; border: 0; padding: 0; min-width: 0; }
+.obra-edit-form .page-actions { margin-top: 24px; }
+.obra-edit-planning h2 { margin: 12px 0 18px; font-size: 23px; overflow-wrap: anywhere; }
+.obra-edit-planning .obra-resumo { grid-template-columns: 1fr; }
+.edit-planning-note { border-top: 1px solid var(--border); padding-top: 20px; }
+.edit-planning-note h3 { font-size: 15px; margin-bottom: 10px; }
+.edit-planning-note > p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.edit-planning-note .button { margin: 16px 0 10px; }
+.edit-save-hint { margin-top: 16px; }
+.obra-save-success { margin-bottom: 20px; padding: 14px 18px; border: 1px solid #b4dacb; border-radius: 10px; background: #e5f5ee; color: #17624f; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 900px) { .obra-edit-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .obra-resumo { grid-template-columns: 1fr; } }
 .page-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .page-heading > .button { margin-top: 24px; }
