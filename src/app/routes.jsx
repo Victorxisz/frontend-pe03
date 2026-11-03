@@ -12,7 +12,6 @@ import { routes as publicacoes } from '../features/publicacoes/routes';
 import { routes as ocorrencias } from '../features/ocorrencias/routes';
 import { routes as trabalhadores } from '../features/trabalhadores/routes';
 import { routes as historico } from '../features/historico/routes';
-import { routes as simulados } from '../features/simulados/routes';
 
 const LoginPage = lazy(() => import('../features/auth/LoginPage'));
 function ObraIndexRedirect() {
@@ -32,7 +31,7 @@ export const routes = [
           { path: 'obras/:obraId', element: <ObraLayout />, children: [
             { index: true, element: <ObraIndexRedirect /> },
             ...marcos, ...avancos, ...publicacoes, ...ocorrencias,
-            ...trabalhadores, ...historico, ...simulados,
+            ...trabalhadores, ...historico,
           ] },
         ] },
       ] },

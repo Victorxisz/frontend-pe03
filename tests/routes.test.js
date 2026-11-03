@@ -21,7 +21,6 @@ test('rotas de negócio são protegidas e caminhos estáticos não viram IDs', a
       ['/obras/123/ocorrencias/456/aceitacoes', 'ocorrencias/:ocorrenciaId/aceitacoes'],
       ['/obras/123/trabalhadores/novo', 'trabalhadores/novo'],
       ['/obras/123/historico/nova-mudanca', 'historico/nova-mudanca'],
-      ['/obras/123/simulados', 'simulados'],
     ];
     for (const [path, expected] of cases) {
       const matches = matchRoutes(routes, path);
@@ -30,6 +29,7 @@ test('rotas de negócio são protegidas e caminhos estáticos não viram IDs', a
     }
     assert.equal(matchRoutes(routes, '/login').at(-1).route.path, 'login');
     assert.equal(matchRoutes(routes, '/obras/123/desconhecida').at(-1).route.path, '*');
+    assert.equal(matchRoutes(routes, '/obras/123/simulados').at(-1).route.path, '*');
   } finally {
     await server.close();
   }
