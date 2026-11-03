@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '../../shared/ui/UI';
@@ -39,7 +39,7 @@ export default function LoginPage() {
         {(error || sessionError) && <p role="alert" className="form-error">{error || sessionError}</p>}
         <Button type="submit" className="login-submit" loading={busy}>{busy ? 'Entrando…' : 'Entrar'}</Button>
       </form>
-      <p className="login-footnote">Acesso exclusivo à conta da construtora.</p>
+      <p className="login-footnote">Acesso exclusivo à conta da construtora. <Link to="/cadastro">Cadastrar construtora</Link></p>
     </section>
     </div>
   </main>;

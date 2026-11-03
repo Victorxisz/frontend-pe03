@@ -109,3 +109,19 @@ test('distingue falha de rede, cancelamento e erro HTTP sem JSON', async () => {
   const request = createHttpClient({ fetcher: async () => new Response('{}', { status: 202 }) });
   await assert.rejects(request('/publicacoes', { expectedStatus: [200, 201] }), { status: 0 });
 });
+
+
+test('renova acesso expirado uma vez e repete o pedido com o novo token', async () => {
+  let token = 'antigo'; let calls = 0; let renewals = 0;
+  const request = createHttpClient({ getToken: () => token, refreshAccess: async rejected => { assert.equal(rejected, 'antigo'); renewals++; token = 'novo'; return token; }, fetcher: async (_, options) => {
+    calls++; if (options.headers.get('Authorization') === 'Bearer antigo') return new Response('{"msg":"Token has expired"}', { status: 401 });
+    assert.equal(options.headers.get('Authorization'), 'Bearer novo'); return new Response('{"ok":true}', { status: 200 });
+  } });
+  assert.deepEqual(await request('/obras'), { ok: true }); assert.equal(calls, 2); assert.equal(renewals, 1);
+});
+
+test('não repete uma requisição antiga após troca de sessão', async () => {
+  let token = 'antigo'; let calls = 0;
+  const request = createHttpClient({ getToken: () => token, refreshAccess: async () => { token = 'outro-usuario'; return null; }, fetcher: async () => { calls++; return new Response('{"msg":"Token has expired"}', { status: 401 }); } });
+  await assert.rejects(request('/obras', { method: 'POST', body: {} }), { status: 401 }); assert.equal(calls, 1);
+});

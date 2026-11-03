@@ -10,6 +10,7 @@ async function setup(page) {
     if (path === '/obras') return route.fulfill({ json: { obras: [{ id: 'obra', nome: 'Casa A' }, { id: 'outra', nome: 'Casa B' }] } });
     if (path.startsWith('/obras/') && path.endsWith('/ocorrencias')) return state.refreshFail ? route.fulfill({ status: 503, json: { mensagem: 'Erro de leitura' } }) : route.fulfill({ json: { ocorrencias: state.retained && path === '/obras/obra/ocorrencias' ? [{ id: 'oc', responsavel_id: 'pessoa' }] : [] } });
     if (path.startsWith('/trabalhadores/obra/')) { const id = path.split('/')[3]; return route.fulfill({ json: state.item?.obras.includes(id) ? [state.item] : [] }); }
+    if (path.startsWith('/trabalhadores/cargo/')) return route.fulfill({ json: state.item ? [state.item] : [] });
     if (path.startsWith('/trabalhadores/nome/')) return route.fulfill({ json: state.item ? [state.item] : [] });
     if (path === '/trabalhadores/pessoa/') {
       if (req.method() === 'GET') return state.item ? route.fulfill({ json: state.item }) : route.fulfill({ status: 404, json: { erro: 'Trabalhador não encontrado' } });
@@ -112,4 +113,14 @@ test('servidor antigo com atribuição remanescente não é apresentado como int
   await page.getByRole('dialog').getByRole('button', { name: 'Salvar vínculos' }).click();
   await expect(page.getByText(/Ocorrências ainda apontam para este trabalhador/)).toBeVisible(); await expect(page.getByRole('button', { name: 'Salvar alterações' })).toBeDisabled();
   expect(state.patches).toEqual([{ obras: ['outra'] }]);
+});
+
+
+test('busca trabalhadores pelo cargo usando a rota da construtora', async ({ page }) => {
+  const state = await setup(page); await page.goto(base);
+  await page.getByLabel('Pesquisar por').selectOption('cargo');
+  await page.getByLabel('Cargo na construtora').fill('Pedreira');
+  await page.getByRole('button', { name: 'Buscar na construtora' }).click();
+  await expect(page.getByText('Vinculado a esta obra')).toBeVisible();
+  expect(state.reads).toContain('GET /trabalhadores/cargo/Pedreira/');
 });

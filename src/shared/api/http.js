@@ -10,8 +10,8 @@ export class ApiError extends Error {
   }
 }
 
-export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUnauthorized = () => {}, fetcher = (...args) => fetch(...args) } = {}) {
-  return async function request(path, { body, headers, authenticated = true, expectedStatus, responseType = 'json', includeResponse = false, ...options } = {}) {
+export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUnauthorized = () => {}, refreshAccess = null, fetcher = (...args) => fetch(...args) } = {}) {
+  return async function request(path, { body, headers, authenticated = true, expectedStatus, responseType = 'json', includeResponse = false, _renewed = false, ...options } = {}) {
     const token = authenticated ? getToken() : null;
     const requestHeaders = new Headers(headers);
     if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
@@ -30,6 +30,19 @@ export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUn
     const data = response.status === 204 ? null : responseType === 'blob' && response.ok
       ? await response.blob() : await response.json().catch(() => null);
     if (!response.ok) {
+      if (response.status === 401 && token && refreshAccess && !_renewed && data?.msg === 'Token has expired') {
+        const renewal = refreshAccess(token);
+        const signal = options.signal;
+        let abort;
+        const cancelled = signal && new Promise((_, reject) => {
+          abort = () => reject(new DOMException('Operação cancelada', 'AbortError'));
+          if (signal.aborted) abort(); else signal.addEventListener('abort', abort, { once: true });
+        });
+        let renewed;
+        try { renewed = await (cancelled ? Promise.race([renewal, cancelled]) : renewal); }
+        finally { if (abort) signal.removeEventListener('abort', abort); }
+        if (renewed && getToken() === renewed && !signal?.aborted) return request(path, { body, headers, authenticated, expectedStatus, responseType, includeResponse, ...options, _renewed: true });
+      }
       if (response.status === 401 && token) onUnauthorized(token);
       const detail = data?.erro && typeof data.erro === 'object' ? data.erro : data?.error;
       const message = [data?.erro, data?.mensagem, data?.msg, data?.message, data?.error, detail?.mensagem, detail?.message, detail?.msg]
