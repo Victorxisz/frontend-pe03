@@ -673,7 +673,7 @@ UC-01/03 e obra existente. UC-19 implementa formulário/API/seleção reutilizad
 
 **1. Contexto e cobertura**
 
-Confirmado: corrigir cadastro, substituir vínculos e excluir pessoa preservando obras e decisões. Cobre **F-20, RN-08, CA-10**. Nesta conversa foi confirmado: **retirar um vínculo limpa a atribuição somente nas ocorrências da obra retirada; excluir cadastro limpa todas as atribuições dessa pessoa, preservando responsável anterior e histórico.** O primeiro comportamento ainda não está implementado no backend local; não fechar essa parte do cartão como integrada.
+Confirmado: corrigir cadastro, substituir vínculos e excluir pessoa preservando obras e decisões. Cobre **F-20, RN-08, CA-10**. Nesta conversa foi confirmado: **retirar um vínculo limpa a atribuição somente nas ocorrências da obra retirada; excluir cadastro limpa todas as atribuições dessa pessoa, preservando responsável anterior e histórico.** A correção está no commit `5edd370` da branch `MatheusHermida` do backend; a integração depende da implantação dessa versão. Testes de concorrência e persistência foram executados no Atlas com coleções temporárias.
 
 **2. Arquivos previstos**
 
@@ -685,7 +685,7 @@ Confirmado: corrigir cadastro, substituir vínculos e excluir pessoa preservando
 
 - Carregar `GET /trabalhadores/{id}/`; editar somente `nome`, `email`, `telefone`, `cargo` e `obras`, conforme `PATCH /trabalhadores/{id}/`. Campo omitido é preservado. `ativo`, data, autoria e construtora não são editáveis nesse contrato.
 - Selecionar obras existentes e explicar que `obras` substitui a lista inteira: obras omitidas são retiradas. Permitir `[]`; não excluir pessoa porque ficou sem vínculo. Validar IDs pela seleção e mostrar `422` com `obras` ausentes retornadas; nenhuma parte da edição deve ser apresentada como salva quando a API rejeita o conjunto.
-- Proposta de interface: revisar os vínculos retirados antes de salvar, informando que ocorrências nessas obras ficarão sem responsável e preservarão a atribuição anterior. **Esse aviso depende da correção efetiva do backend; até lá a ação não satisfaz o requisito confirmado.** Não limpar ocorrências por PATCHs adicionais do React, pois isso quebraria a atomicidade da operação.
+- Proposta de interface: revisar os vínculos retirados antes de salvar, informando que ocorrências nessas obras ficarão sem responsável e preservarão a atribuição anterior. Esse comportamento depende da versão corrigida do backend; a interface verifica a releitura das ocorrências. Não limpar ocorrências por PATCHs adicionais do React, pois isso quebraria a atomicidade da operação.
 - Após `200` de edição (`mensagem`/`id`), reconsultar detalhe, listas das obras envolvidas e ocorrências afetadas. Não anunciar contagem de desatribuições no PATCH: a resposta atual não a fornece.
 - Manter caminho de acesso ao trabalhador sem obras. Proposta: pesquisa por nome usando `/trabalhadores/nome/{termo}/`, identificada como busca da construtora, e acesso ao detalhe existente para relink. Não inventar `GET /trabalhadores` nem confundir resultados dessa busca com a equipe da obra atual.
 - Para excluir, consultar nome/cargo/vínculos e explicar perda do cadastro e limpeza das atribuições, mantendo ocorrências/autorias/aceitações. Cancelar/Escape não envia DELETE. Confirmar usa `DELETE /trabalhadores/{id}/`, **sem corpo de confirmação obrigatório**.
@@ -693,15 +693,15 @@ Confirmado: corrigir cadastro, substituir vínculos e excluir pessoa preservando
 
 **4. Pronto quando**
 
-Dados corrigidos persistem; lista de vínculos é substituída integralmente e pode ficar vazia sem apagar cadastro. Cancelar exclusão não envia DELETE; confirmar remove a pessoa e preserva os problemas e suas decisões. **Após correção do backend**, retirar obra A limpa atribuição em A e preserva a de B; excluir pessoa limpa ambas, guardando responsável anterior. Formulário de ocorrência aberto antes da mudança não restaura atribuição antiga por gravação obsoleta.
+Dados corrigidos persistem; lista de vínculos é substituída integralmente e pode ficar vazia sem apagar cadastro. Cancelar exclusão não envia DELETE; confirmar remove a pessoa e preserva os problemas e suas decisões. Com o backend corrigido, retirar obra A limpa atribuição em A e preserva a de B; excluir pessoa limpa ambas, guardando responsável anterior. Formulário de ocorrência aberto antes da mudança não restaura atribuição antiga por gravação obsoleta.
 
 **5. Testes relacionados**
 
-CT-96 a CT-101, CT-99 para cancelamento/exclusão e CT-100 para cascata de obra. Backend: `tests/trabalhadores/test_manutencao.py`, `test_rotas.py`, `test_responsaveis.py`, `test_persistencia_atlas.py`. **Atenção:** testes atuais de `test_responsaveis.py` exigem manutenção da atribuição ao desvincular; precisam ser atualizados à nova decisão, não citados como evidência de que ela já funciona. **FE-UC-20 proposto:** A/B, lista vazia, relink por busca, contagem do DELETE e ocorrência aberta em outra aba durante desvinculação/exclusão.
+CT-96 a CT-101, CT-99 para cancelamento/exclusão e CT-100 para cascata de obra. Backend: `tests/trabalhadores/test_manutencao.py`, `test_rotas.py`, `test_responsaveis.py`, `test_persistencia_atlas.py`. Os testes de `test_responsaveis.py` foram atualizados e executados em memória e em coleções temporárias no Atlas. **FE-UC-20 proposto:** A/B, lista vazia, relink por busca, contagem do DELETE e ocorrência aberta em outra aba durante desvinculação/exclusão.
 
 **6. Dependências**
 
-UC-19/03 e UC-14/15 para observar os efeitos. **Bloqueio de backend:** implementar limpeza transacional de atribuição na retirada de vínculos, preservar `responsavel_anterior`/histórico e garantir proteção contra formulários obsoletos, inclusive na exclusão. Código consultado não incrementa a versão da ocorrência na limpeza; a equipe do backend precisa definir/aplicar o controle coerente com UC-15. Reconciliar README, P-10, matriz e testes. Edição descritiva pode avançar; nenhum efeito pendente deve ser fingido no navegador.
+UC-19/03 e UC-14/15 para observar os efeitos. A correção transacional de UC-20 no backend precisa ser incorporada e implantada junto ao frontend. Persistência e concorrência em MongoDB real foram verificadas em coleções temporárias; a versão corrigida precisa ser implantada.
 
 ## [Frontend][UC-21] Consultar dados simulados do comprador e do engenheiro
 

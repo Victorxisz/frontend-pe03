@@ -89,3 +89,11 @@ esse repositório para contratos e testes do produto. UC-10 foi conferido em
 `app/publicacoes/`, `app/avancos/previa.py`, `app/avancos/service.py` e nos testes
 de publicações/prévia. O proxy de desenvolvimento aponta por padrão para
 `http://127.0.0.1:5000`; a presença do código não comprova servidor ativo.
+
+## UC-20 — revisão posterior
+
+A correção de desvinculação e exclusão está no commit `5edd370` da branch
+`MatheusHermida` de `../backend-pe03`: a limpeza é transacional e incrementa
+a versão da ocorrência. O frontend verifica as ocorrências após a releitura.
+Cenários de concorrência e persistência foram executados no Atlas com coleções
+temporárias em 02/11/2026; a integração depende dessa versão implantada.

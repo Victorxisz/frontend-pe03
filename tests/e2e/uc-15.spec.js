@@ -87,3 +87,15 @@ test('correção de texto e transição podem ser enviadas juntas', async ({ pag
   await page.getByRole('button', { name: 'Salvar alterações' }).click(); await expect(page.getByText('Ocorrência atualizada com sucesso.')).toBeVisible();
   expect(state.patches).toEqual([{ versao: 1, alteracoes: { titulo: 'Fachada reparada' }, transicao: { estado: 'resolvida', motivo: 'Inspeção concluída' } }]);
 });
+
+test('formulário antigo não restaura responsável removido sem mudança de versão', async ({ page }) => {
+  const state = await setup(page); await page.goto(`${base}/editar`);
+  await expect(page.getByRole('combobox', { name: 'Responsável', exact: true })).toHaveValue('ana');
+  state.item = { ...state.item, responsavel_id: null, responsavel_anterior: { id: 'ana', nome: 'Ana' } };
+  state.workers = state.workers.filter(w => w.id !== 'ana');
+  await page.getByRole('textbox', { name: 'Descrição', exact: true }).fill('Texto atualizado');
+  await page.getByRole('button', { name: 'Salvar alterações' }).click();
+  await expect(page.getByText('Ocorrência atualizada com sucesso.')).toBeVisible();
+  expect(state.patches).toEqual([{ versao: 1, alteracoes: { descricao: 'Texto atualizado' } }]);
+  await expect(page.getByText('Responsável atual: Não atribuído')).toBeVisible(); await expect(page.getByText(/Responsável anterior \(histórico\): Ana/)).toBeVisible();
+});
