@@ -9,7 +9,7 @@ import { Button } from '../../shared/ui/UI';
 import ObraSituacao from '../../features/obras/components/ObraSituacao';
 import ImagemProjeto from '../../features/obras/components/ImagemProjeto';
 
-const tabs = [['marcos', 'Marcos'], ['publicacoes', 'Publicações'], ['ocorrencias', 'Ocorrências'], ['trabalhadores', 'Trabalhadores'], ['historico', 'Histórico'], ['simulados', 'Exemplos simulados']];
+const tabs = [['marcos', 'Marcos'], ['publicacoes', 'Publicações'], ['ocorrencias', 'Ocorrências'], ['trabalhadores', 'Trabalhadores'], ['historico', 'Histórico']];
 export default function ObraLayout() {
   const { obraId } = useParams();
   const { search, state: navigationState } = useLocation();

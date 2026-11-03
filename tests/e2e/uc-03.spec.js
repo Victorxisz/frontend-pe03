@@ -22,6 +22,7 @@ async function mockApi(page, options = {}) {
     }
     if (/^\/api\/marcos\/[^/]+\/dependencias$/.test(path)) return route.fulfill({ json: [] });
     if (/^\/api\/obras\/[^/]+\/marcos$/.test(path)) return route.fulfill({ json: [] });
+    if (/^\/api\/trabalhadores\/obra\/[^/]+\/$/.test(path)) return route.fulfill({ json: [] });
     if (path.startsWith('/api/obras/')) {
       const id = decodeURIComponent(path.slice('/api/obras/'.length));
       state.details.push(id);
@@ -46,6 +47,7 @@ test.describe('FE-UC-03 — lista, filtros e contexto da obra', () => {
     const search = '?busca=nome%3DAurora';
     await page.goto(`/obras/casa-aurora${search}#conteudo`);
     await expect(page).toHaveURL(`/obras/casa-aurora/marcos${search}#conteudo`);
+    await expect(page.getByRole('navigation', { name: 'Seções da obra' }).getByRole('link', { name: 'Exemplos simulados' })).toHaveCount(0);
     await page.getByRole('link', { name: 'Adicionar marco', exact: true }).click();
     await expect(page).toHaveURL(`/obras/casa-aurora/marcos/novo${search}`);
     await page.getByRole('main').getByRole('link', { name: 'Painel das Obras', exact: true }).click();

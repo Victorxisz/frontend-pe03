@@ -47,8 +47,7 @@ documentação já está implementada. Explicitar divergências relevantes.
 - Jornada central: criar obra, definir marcos, registrar avanço com evidências,
   publicar atualização e acompanhar mudanças e ocorrências com histórico persistente.
 - Apenas a conta da construtora é funcional no MVP. Trabalhadores são cadastros
-  sem login; comprador e engenheiro aparecem em exemplos simulados, identificados
-  como tais e sem formulários de interação real.
+  sem login; comprador e engenheiro não possuem fluxo funcional.
 - Obra aceita data exata ou intervalo estimado. Marcos pertencem diretamente à
   obra, sem entidade intermediária de etapa. Dependências pendentes geram aviso
   e confirmação para concluir um marco.
@@ -78,7 +77,7 @@ contexto quando o usuário confirmar mudanças de escopo ou localização.
   `responsavel_id` e guardar `responsavel_anterior`; essa política foi confirmada
   e já está implementada. Revisar também o controle de concorrência das ocorrências:
   a limpeza consultada não incrementa sua versão, apesar de a matriz dizer isso.
-- `docs/cartoes-trello-frontend.md` contém os 21 cartões, contratos consultados,
+- `docs/cartoes-trello-frontend.md` contém os 20 cartões, contratos consultados,
   propostas de interface, dependências e a divergência acima. É planejamento,
   não evidência de implementação ou execução dos testes do frontend.
 

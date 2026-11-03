@@ -81,7 +81,6 @@ src/
     ocorrencias/
     trabalhadores/
     historico/
-    simulados/
 ```
 
 Cada funcionalidade declara suas rotas em `routes.jsx`, carrega páginas sob
@@ -105,7 +104,6 @@ representa o prefixo `/obras/:obraId`.
 | Ocorrências | `…/ocorrencias`, `…/ocorrencias/nova`, `…/ocorrencias/:ocorrenciaId`, `…/ocorrencias/:ocorrenciaId/editar`, `…/ocorrencias/:ocorrenciaId/aceitacoes` |
 | Trabalhadores | `…/trabalhadores`, `…/trabalhadores/novo`, `…/trabalhadores/:trabalhadorId`, `…/trabalhadores/:trabalhadorId/editar` |
 | Histórico | `…/historico`, `…/historico/nova-mudanca`, `…/historico/:mudancaId` |
-| Simulados | `…/simulados` |
 
 `/` encaminha a `/obras`; `/obras/:obraId` abre os marcos. Rotas de negócio
 exigem sessão e preservam o destino ao encaminhar ao login. Endereços
@@ -961,3 +959,15 @@ sobrescrita, mas não é uma garantia atômica de concorrência.
 
 `tests/e2e/uc-20.spec.js` usa API controlada. O backend foi testado em
 coleções temporárias no Atlas, inclusive concorrência e releitura após reinício.
+
+## Verificação do escopo atual — 03/11/2026
+
+O frontend cobre os 20 casos de uso do escopo atual. As seções da obra são
+Marcos, Publicações, Ocorrências, Trabalhadores e Histórico. Publicações antigas
+mantêm a identificação de origem e a comparação das correções por compatibilidade.
+
+Build e 30 testes unitários aprovados. Na regressão de navegador com API
+controlada, 330 cenários passaram inicialmente e 1 foi ignorado. Duas falhas de
+fixture na navegação entre abas foram corrigidas adicionando a resposta de equipe
+ausente. A repetição dos 64 cenários de UC-03/17/18 passou, incluindo essas duas
+correções e os rótulos de exclusão de registros legados.

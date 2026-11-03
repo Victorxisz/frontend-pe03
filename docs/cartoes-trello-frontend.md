@@ -1,6 +1,6 @@
 # Cartões Trello para implementar o frontend
 
-Base conferida em 01/11/2026. São 21 cartões, um por caso de uso de UC-01 a UC-21, com os nomes preservados. As descrições são destinadas à implementação posterior em React integrado ao Flask. Nenhuma funcionalidade foi implementada nesta tarefa.
+Base conferida em 01/11/2026. São 20 cartões, um por caso de uso de UC-01 a UC-20, com os nomes preservados. As descrições são destinadas à implementação posterior em React integrado ao Flask. Nenhuma funcionalidade foi implementada nesta tarefa.
 
 ## Perguntas, respostas e bloqueios
 
@@ -367,7 +367,7 @@ CT-41 a CT-45; CT-109 a CT-111 para integração. Backend: `tests/avancos/test_p
 
 **6. Dependências**
 
-UC-08 e contexto UC-03/05. UC-11 complementa edição/versões e UC-21 a apresentação de exemplos. A aprovação da Cloudinary está confirmada; disponibilidade real e upload/recuperação no EC2 continuam critérios de aceite.
+UC-08 e contexto UC-03/05. UC-11 complementa edição/versões a apresentação das versões. A aprovação da Cloudinary está confirmada; disponibilidade real e upload/recuperação no EC2 continuam critérios de aceite.
 
 ## [Frontend][UC-11] Corrigir atualização publicada
 
@@ -387,7 +387,7 @@ Confirmado: corrigir publicação com motivo preservando conteúdo anterior, cam
 - Enviar `PATCH /avancos/{id}` com campos efetivamente alterados (`descricao`, `data`, `midias_manter`) e `motivo`; novos arquivos exigem multipart e os mesmos nomes de UC-09. Não exigir mudança de data: o contrato a permite, enquanto texto/mídia são o fluxo central do UC.
 - Motivo deve ser preenchido e deve existir alteração efetiva. Preservar ao menos uma mídia; deixar claro quais atuais serão mantidas. Arquivos antigos de versões ficam retidos pelo servidor, não são apagados pelo React.
 - Mostrar `correcao.campos` e diferenças textuais retornadas (`igual`, `inserido`, `removido`, `substituido`, com `antes`/`depois`). Renderizar como texto seguro, sem HTML arbitrário. Não gerar auditoria nem recalcular uma cadeia substituta no cliente.
-- Preservar autoria original e mostrar a autoria da correção separadamente. Em origem simulada de engenheiro, indicar “Simulado” e “Editado pela construtora”, com texto anterior e alterações destacadas.
+- Preservar autoria original e mostrar a autoria da correção separadamente, com texto anterior e alterações destacadas. Metadados de origem de publicações antigas continuam legíveis por compatibilidade.
 - Mídia histórica com `retida:false`/`conteudo:null` mostra metadados e indisponibilidade. `retida:true` não prova acesso remoto; tratar erro ao abrir. `409 HISTORICO_INDISPONIVEL` é falha de integridade, não histórico vazio.
 - Cancelar não envia PATCH. Após `200`, atualizar detalhe, versões, prévia e histórico. Em `409`, recarregar e revisar; em `422`, corrigir campos; em falha/timeout, conferir estado real antes de reenviar uma correção não idempotente.
 
@@ -401,7 +401,7 @@ CT-46 a CT-51. Backend: `tests/avancos/test_correcao_publicada.py`, `test_versoe
 
 **6. Dependências**
 
-UC-08/09/10; exemplo pré-carregado de engenheiro para CT-50. UC-11 implementa primeiro o leitor/comparador reutilizado por UC-13/21. Nenhuma rota adicional de versão, PUT de publicação ou limpeza de histórico é necessária.
+UC-08/09/10. UC-11 implementa primeiro o leitor/comparador reutilizado por UC-13. Nenhuma rota adicional de versão, PUT de publicação ou limpeza de histórico é necessária.
 
 ## [Frontend][UC-12] Alterar prazo ou situação de obra/marco
 
@@ -598,7 +598,7 @@ Cancelar preserva dados e não envia DELETE. Confirmar remove o conjunto correto
 
 **5. Testes relacionados**
 
-CT-79 a CT-85, CT-100 e CT-106. Backend: `tests/test_exclusao_cascata.py`, `app/exclusoes.py`, `app/obras/exclusoes.py`, `app/marcos/exclusoes.py`. **FE-UC-17 proposto:** cancelamento sem DELETE, pendência com GET posterior `404`, corpo sem campos extras e cache de histórico descartado.
+CT-79 a CT-85 e CT-100. Backend: `tests/test_exclusao_cascata.py`, `app/exclusoes.py`, `app/obras/exclusoes.py`, `app/marcos/exclusoes.py`. **FE-UC-17 proposto:** cancelamento sem DELETE, pendência com GET posterior `404`, corpo sem campos extras e cache de histórico descartado.
 
 **6. Dependências**
 
@@ -703,40 +703,6 @@ CT-96 a CT-101, CT-99 para cancelamento/exclusão e CT-100 para cascata de obra.
 
 UC-19/03 e UC-14/15 para observar os efeitos. A correção transacional de UC-20 no backend precisa ser incorporada e implantada junto ao frontend. Persistência e concorrência em MongoDB real foram verificadas em coleções temporárias; a versão corrigida precisa ser implantada.
 
-## [Frontend][UC-21] Consultar dados simulados do comprador e do engenheiro
-
-**1. Contexto e cobertura**
-
-Confirmado: apresentar exemplos pré-carregados, somente leitura, contextualizados e visivelmente simulados. Cobre **F-17, F-18, RN-10, CA-08**, além de CA-05 para edição do exemplo de engenheiro. Backend possui consulta e procedimento de carga. Proposta: usar a aba existente e componentes de leitura reutilizáveis nos detalhes.
-
-**2. Arquivos previstos**
-
-- Existentes: `src/features/simulados/pages/SimuladosPage.jsx`, rotas do módulo, detalhe de marco/avanço e páginas de publicações/versões.
-- Proposta: `src/features/simulados/api.js`, `src/features/simulados/components/ExemplosSimulados.jsx`, `tests/e2e/uc-21.spec.js`.
-- Reutilizar mídia/avanço de UC-08, atualização de UC-10 e comparação de UC-11.
-
-**3. Fazer**
-
-- Consultar `GET /obras/{obraId}/feedback-simulado`. Mostrar `aviso`, `simulado`, `somente_leitura`, `feedbacks`, `avancos_simulados` e totais pertinentes. Marcar os exemplos individualmente como simulados, além do aviso da seção.
-- Apresentar avaliação, compreensão e dúvida com origem fictícia, `alvo.rotulo`, tipo de alvo e conteúdo retornado; não inventar nota/escala, persona autenticada ou texto para preencher ausência.
-- Usar somente filtros implementados: `tipo` (`avaliacao`, `compreensao`, `duvida`), `alvo` (`obra`, `marco`, `atualizacao`), `marco_id`, `avanco_id`, `secao` (`comprador`, `engenheiro`). São possibilidades da API, não obrigação de criar um painel com todos os filtros.
-- Em detalhe de marco/atualização, aplicar o ID do contexto. `marco_id` seleciona exemplos daquele marco, não todos os exemplos de suas atualizações; `avanco_id` seleciona a atualização exata. `tipo`/`alvo` só filtram feedback do comprador; usar `secao` para pedir uma lista específica.
-- Para engenheiro, apresentar origem simulada e estado real do avanço, sem sessão própria. Se houver correção pela construtora, usar `editado_pela_construtora`, `correcao` e `comparacao` para abrir as versões de UC-11, mantendo autoria original/texto anterior.
-- Mostrar vazio real quando não houver exemplos. Tratar `400`, `404 ALVO_FORA_DA_OBRA`/`ALVO_FORA_DO_MARCO`, `422 FILTRO_INVALIDO`/`FILTRO_DESCONHECIDO` e falhas de consulta sem trocar por conteúdo inventado. Exemplos inconsistentes omitidos pela API não devem ser reconstruídos a partir de cache.
-- Não oferecer criar/editar feedback, comentar, aceitar como comprador nem login desses perfis. Métodos de escrita nessa rota retornam `405 INTERACAO_NAO_DISPONIVEL`; a interface é de leitura.
-
-**4. Pronto quando**
-
-Os três tipos de feedback aparecem no alvo correto e sempre identificados como simulação. Exemplo de engenheiro corrigido distingue origem de autoria da edição e abre comparação real. Ausência de carga mostra vazio; exclusão do alvo retira exemplos dependentes após reconsulta. Não há formulário de interação real desses perfis.
-
-**5. Testes relacionados**
-
-CT-102 a CT-106 e CT-50. Backend: `tests/test_dados_simulados.py`, `app/simulados/routes.py`/`service.py`; carga em `scripts/carregar_dados_demonstracao.py`. **FE-UC-21 proposto:** filtro de contexto exato, selo persistente na comparação, ausência de formulário/POST e exemplos excluídos saindo do cache.
-
-**6. Dependências**
-
-UC-03/05/08/10/11 e carga prévia executada pelo responsável do backend. Não carregar exemplos fabricados no bundle para substituir a API. Exemplo de engenheiro sem mídia válida pode ser legível, mas não satisfaz CT-50 de correção; preparar um avanço publicado com mídia recuperável. UC-17/18 validam a remoção dos exemplos associados.
-
 ## Ordem sugerida de implementação
 
 Esta ordem segue dependências de fluxo; não é uma estimativa de prazo nem uma nova redução do MVP.
@@ -747,7 +713,7 @@ Esta ordem segue dependências de fluxo; não é uma estimativa de prazo nem uma
 4. **UC-11 → UC-13.** Correção publicada e comparação primeiro; histórico unificado reutiliza esses componentes e os eventos de UC-07/12.
 5. **UC-19 → UC-14 → UC-15 → UC-16.** Equipe habilita seleção de responsável; ocorrência sem opcionais pode começar antes de UC-19. A mesma base atende transições e aceitações sem duplicar componentes.
 6. **UC-20**, com correção de backend iniciada desde o primeiro ciclo, em paralelo ao trabalho de frontend independente. Não aguardar esta posição para comunicar o bloqueio. Edição de dados pode ser integrada antes; desvinculação só fecha com a regra confirmada e os testes ajustados.
-7. **UC-21 → UC-17 → UC-18.** Preparar exemplos e validar as exclusões sobre registros descartáveis completos, incluindo versões, aceitações e dados simulados. O tratamento de rascunhos já vem de UC-09.
+7. **UC-17 → UC-18.** Validar as exclusões sobre registros descartáveis completos, incluindo versões e aceitações. O tratamento de rascunhos já vem de UC-09.
 8. **Encerrar CT-111 nos próprios cartões:** executar no EC2 o percurso UC-01 → UC-02 → UC-05 → UC-08 → UC-10 → UC-12 → UC-14 → UC-16; acrescentar consulta UC-03/13, correção UC-11 e os demais desvios de cada cartão. Recarregar/reiniciar, abrir mídia real, registrar evidências e confirmar ausência de segredos no cliente. Não encerrar cartão pela existência de mocks ou de um teste de API isolado.
 
 UC-03 pode ser validado inicialmente com obras já persistidas e revalidado depois de UC-02. A ordem é sugerida e não impõe um único responsável ou trabalho simultâneo da equipe.
