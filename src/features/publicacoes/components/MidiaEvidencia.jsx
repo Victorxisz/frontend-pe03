@@ -19,6 +19,6 @@ export default function MidiaEvidencia({ midia }) {
       : !state.url ? <p role="status">Carregando arquivo…</p>
       : <>{midia.mime?.startsWith('image/') ? <img style={{ maxWidth: '100%', maxHeight: 420 }} src={state.url} alt={midia.nome || 'Evidência da obra'} onError={() => setState({ error: true })} />
         : midia.mime?.startsWith('video/') ? <video style={{ maxWidth: '100%' }} src={state.url} controls onError={() => setState({ error: true })} /> : null}
-        <p><a href={state.url} download={midia.nome}>Baixar {midia.nome || 'arquivo'}</a></p></>}
+        <p className="page-actions action-toolbar"><a className="button button-secondary" href={state.url} download={midia.nome}>Baixar {midia.nome || 'arquivo'}</a></p></>}
   </figure>;
 }

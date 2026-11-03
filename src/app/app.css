@@ -48,6 +48,10 @@
 @media (max-width: 900px) { .obra-edit-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .obra-resumo { grid-template-columns: 1fr; } }
 .page-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+/* Reservar espaço para o contorno de foco entre campos e ações. */
+:where(form) > .page-actions { margin-top: 24px; }
+:where(form) > .button { margin-top: 24px; }
+.page-actions > * { min-width: 0; max-width: 100%; }
 .page-heading > .button { margin-top: 24px; }
 .works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 24px; }
 .work-card { display: grid; gap: 20px; }
@@ -133,6 +137,16 @@
 @media (prefers-reduced-motion: reduce) { .work-card { transition: none; } }
 .avanco-form { display: grid; gap: 22px; max-width: 900px; }
 .avanco-form .page-actions { margin-top: 2px; }
+.draft-media-fieldset { min-width: 0; border: 0; margin: 0; padding: 0; }
+.draft-media-fieldset legend { padding: 0; margin-bottom: 10px; font-size: 16px; font-weight: 600; }
+.draft-media-fieldset > .form-hint { margin-bottom: 16px; }
+.draft-media-item { min-width: 0; display: grid; align-content: start; gap: 12px; }
+.draft-media-choice { display: flex; align-items: center; gap: 10px; min-height: 44px; overflow-wrap: anywhere; }
+.draft-media-choice input { flex: 0 0 18px; width: 18px; height: 18px; accent-color: var(--navy); }
+.draft-review { display: grid; gap: 16px; margin-top: 24px; }
+.draft-review .button { justify-self: start; }
+.draft-description { white-space: pre-wrap; overflow-wrap: anywhere; }
+.avanco-form > section > h3 { margin-bottom: 12px; }
 .media-picker { border: 1px dashed #adbed0; border-radius: 12px; background: #f7f9fc; padding: 18px; }
 .media-picker input[type="file"] { max-width: 100%; font-size: 13px; }
 .media-file-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 8px; }
@@ -152,3 +166,5 @@
 .avanco-media { display: grid; gap: 10px; align-content: start; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
 .avanco-media h3 { font-size: 15px; overflow-wrap: anywhere; }
 .avanco-media img, .avanco-media video { display: block; width: 100%; max-height: 420px; object-fit: contain; background: #f2f4f6; border-radius: 8px; }
+.avanco-publicacao { display: grid; gap: 16px; margin-top: 24px; }
+.avanco-publicacao .page-actions { gap: 12px; }

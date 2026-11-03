@@ -1,3 +1,4 @@
+import { formatarDataHora } from '../../../shared/lib/datas';
 import { Link } from 'react-router-dom';
 import { formatarDia, diaValido } from '../../../shared/lib/datas';
 import { idRecurso } from '../api';
@@ -18,9 +19,9 @@ export default function EventoHistorico({ evento, obraId, search = '', detalhe =
     <h3>{evento.campos.join(', ') || evento.tipo}</h3>
     <p>Alvo: {alvo.tipo} · {alvo.id}</p>
     <div className="historico-valores"><section><h4>Antes</h4><Valor value={evento.antes} /></section><section><h4>Depois</h4><Valor value={evento.depois} /></section></div>
-    <p>Motivo: {evento.motivo}</p><p>Autor: {evento.autor}</p><p>Instante: <time dateTime={evento.instante}>{evento.instante}</time></p>
-    <div className="historico-links">{!detalhe && consultaId && <Link to={`${base}/historico/${encodeURIComponent(consultaId)}${search}`}>Ver detalhe</Link>}
-    {destino && <Link to={`${destino}${search}`}>Consultar {alvo.tipo} atual</Link>}
-    {alvo.tipo === 'avanco' && comparacaoId === alvo.id && <Link to={`${base}/avancos/${encodeURIComponent(comparacaoId)}/versoes${search}`}>Comparar versões</Link>}</div>
+    <p>Motivo: {evento.motivo}</p><p>Autor: {evento.autor}</p><p>Instante: <time dateTime={evento.instante}>{formatarDataHora(evento.instante)}</time></p>
+    <div className="historico-links page-actions action-toolbar">{!detalhe && consultaId && <Link className="button button-secondary" to={`${base}/historico/${encodeURIComponent(consultaId)}${search}`}>Ver detalhe</Link>}
+    {destino && <Link className="button button-secondary" to={`${destino}${search}`}>Consultar {alvo.tipo} atual</Link>}
+    {alvo.tipo === 'avanco' && comparacaoId === alvo.id && <Link className="button button-secondary" to={`${base}/avancos/${encodeURIComponent(comparacaoId)}/versoes${search}`}>Comparar versões</Link>}</div>
   </article>;
 }

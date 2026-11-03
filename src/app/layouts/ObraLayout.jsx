@@ -34,7 +34,7 @@ export default function ObraLayout() {
     return () => controller.abort();
   }, [request, obraId, attempt]);
   const current = state.id === obraId ? state : {};
-  return <><Link className="back-link" to={backTo}><ArrowLeft size={15} />Painel das Obras</Link>
+  return <><Link className="back-link button button-secondary" to={backTo}><ArrowLeft size={15} />Painel das Obras</Link>
     {!current.obra && !current.error && <p role="status">Carregando obra…</p>}
     {current.error && <section className="feature-card"><h1>{current.error.status === 404 ? 'Obra não encontrada' : current.error.status === 400 ? 'Referência de obra inválida' : 'Não foi possível consultar a obra'}</h1><p role="alert" className="form-error">{current.error.message}</p><Button onClick={() => setAttempt((value) => value + 1)}>Consultar novamente</Button></section>}
     {current.obra && <><header className="page-heading obra-detail-heading"><div><span className="eyebrow">Acompanhamento da obra</span><h1>{current.obra.nome}</h1><p>{current.obra.localizacao}</p><p className="record-reference">Referência: {obraId}</p></div><ObraSituacao obra={current.obra} /></header>

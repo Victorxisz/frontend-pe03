@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
-import { Button, Field } from '../../../shared/ui/UI';
+import { Button } from '../../../shared/ui/UI';
+import AvancoFields from './AvancoFields';
 import MediaPicker from '../../../shared/ui/MediaPicker';
 import { avancosApi, resumirErroAvanco } from '../api';
 
@@ -56,8 +57,7 @@ export default function AvancoForm({ marcoId, obraId, onCreate, onSuccess }) {
   return <form className="feature-card avanco-form" onSubmit={submit}>
     <p className="demo-note">O avanço será criado como rascunho. Ele não aparece na prévia de publicações até ser publicado.</p>
     <div className="form-grid">
-      <Field label="Data do trabalho"><input type="date" required value={data} onChange={(event) => { setData(event.target.value); intent.current = null; }} /></Field>
-      <Field label="Descrição"><textarea required value={descricao} onChange={(event) => { setDescricao(event.target.value); intent.current = null; }} rows="4" /></Field>
+      <AvancoFields data={data} descricao={descricao} onChange={(campo, value) => { (campo === 'data' ? setData : setDescricao)(value); intent.current = null; }} />
       <div className="form-full"><MediaPicker files={midias} onChange={updateFiles} disabled={sending} error={fileError} fileErrors={fileErrors} /></div>
     </div>
     {error && <p className="form-error" role="alert">{error}</p>}

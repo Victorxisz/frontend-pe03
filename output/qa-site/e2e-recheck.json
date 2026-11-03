@@ -1,0 +1,715 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/uc-14.spec.js",
+      "tests/e2e/uc-16.spec.js",
+      "--workers=2",
+      "--reporter=json"
+    ],
+    "configFile": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\playwright.config.js",
+    "rootDir": "C:/Users/vinic/Downloads/devlife/Segundo semestre/programacaoEficaz/projeto3/frontend-pe03/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/vinic/Downloads/devlife/Segundo semestre/programacaoEficaz/projeto3/frontend-pe03/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/vinic/Downloads/devlife/Segundo semestre/programacaoEficaz/projeto3/frontend-pe03/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "name": "chromium",
+        "testDir": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4176",
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "serviceWorkers": "block",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium",
+          "channel": "msedge"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "uc-14.spec.js",
+      "file": "uc-14.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "cadastro mínimo usa JSON, consulta detalhe e lista após recarga",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2126,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:24:53.383Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-c657feb2cb51a40e444c",
+          "file": "uc-14.spec.js",
+          "line": 37,
+          "column": 1
+        },
+        {
+          "title": "multipart com vínculos, arquivo e sem aceitação automática",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2113,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:24:56.164Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-63a5e31ce8af0bccd70c",
+          "file": "uc-14.spec.js",
+          "line": 47,
+          "column": 1
+        },
+        {
+          "title": "opcionais vazios no multipart são omitidos e cancelar não grava",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2566,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:24:58.294Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-3a7dfcc66419b51444ec",
+          "file": "uc-14.spec.js",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "erro 400 não anuncia sucesso",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 908,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:00.879Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-42b701517b5dbc900042",
+          "file": "uc-14.spec.js",
+          "line": 66,
+          "column": 49
+        },
+        {
+          "title": "erro 404 não anuncia sucesso",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 917,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:01.809Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-50ec5545c5d6063e4413",
+          "file": "uc-14.spec.js",
+          "line": 66,
+          "column": 49
+        },
+        {
+          "title": "erro 413 não anuncia sucesso",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 891,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:02.739Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-93fa7d649543d22ecfb8",
+          "file": "uc-14.spec.js",
+          "line": 66,
+          "column": 49
+        },
+        {
+          "title": "erro 415 não anuncia sucesso",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1367,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:03.643Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-19ede10528852305ad9a",
+          "file": "uc-14.spec.js",
+          "line": 66,
+          "column": 49
+        },
+        {
+          "title": "erro 422 não anuncia sucesso",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1352,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:05.031Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-cffb11738f7978e02e80",
+          "file": "uc-14.spec.js",
+          "line": 66,
+          "column": 49
+        },
+        {
+          "title": "resposta perdida exige consultar lista e não repete POST",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1429,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:06.397Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-e4b85e040152400e7f1d",
+          "file": "uc-14.spec.js",
+          "line": 70,
+          "column": 1
+        },
+        {
+          "title": "lista vazia, falha temporária e detalhe de outra obra são distintos",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1770,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:07.839Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-3949393f951338c191f9",
+          "file": "uc-14.spec.js",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "503 mantém o resultado como incerto e não reenvia automaticamente",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1393,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:09.621Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-94ef2e7f2218fafec83f",
+          "file": "uc-14.spec.js",
+          "line": 84,
+          "column": 1
+        },
+        {
+          "title": "mais de cinco evidências impede o envio",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1416,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:11.030Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-27125e7d5a7eeaafdd25",
+          "file": "uc-14.spec.js",
+          "line": 90,
+          "column": 1
+        },
+        {
+          "title": "sem trabalhador cadastrado permite seguir sem responsável",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1449,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:25:12.461Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d64bfe784f4e33cea991-2559527e80bf4b964cd3",
+          "file": "uc-14.spec.js",
+          "line": 96,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "uc-16.spec.js",
+      "file": "uc-16.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "aceita sem medida, não muda estado e preserva histórico após recarga",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2160,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:24:53.319Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "63d094c1e48e303984a3-970adb09fcd2ce60fd28",
+          "file": "uc-16.spec.js",
+          "line": 34,
+          "column": 1
+        },
+        {
+          "title": "timeout mantém chave e conteúdo entre recarga e reenvio",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 1608,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('alert')\nExpected substring: \u001b[32m\"Reenvie esta mesma decisão\"\u001b[39m\nError: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <p role=\"alert\">Há uma decisão ainda não confirmada. A repetição …</p> aka getByText('Há uma decisão ainda não')\n    2) <div role=\"alert\" class=\"form-grid-wide\">…</div> aka getByRole('alert').filter({ hasText: 'Não foi possível confirmar a' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('alert') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('alert')\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('alert')\nExpected substring: \u001b[32m\"Reenvie esta mesma decisão\"\u001b[39m\nError: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <p role=\"alert\">Há uma decisão ainda não confirmada. A repetição …</p> aka getByText('Há uma decisão ainda não')\n    2) <div role=\"alert\" class=\"form-grid-wide\">…</div> aka getByRole('alert').filter({ hasText: 'Não foi possível confirmar a' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('alert') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('alert')\u001b[22m\n\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js:58:41",
+                    "location": {
+                      "file": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js",
+                      "column": 41,
+                      "line": 58
+                    },
+                    "snippet": "  56 |   await page.getByRole('button', { name: 'Revisar aceitação' }).click();\n  57 |   await page.getByRole('button', { name: 'Registrar decisão' }).click();\n> 58 |   await expect(page.getByRole('alert')).toContainText('Reenvie esta mesma decisão');\n     |                                         ^\n  59 |   const first = state.posts[0];\n  60 |   await page.reload();\n  61 |   await expect(page.getByRole('button', { name: 'Reenviar para confirmar resultado' })).toBeVisible();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js",
+                        "column": 41,
+                        "line": 58
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('alert')\nExpected substring: \u001b[32m\"Reenvie esta mesma decisão\"\u001b[39m\nError: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <p role=\"alert\">Há uma decisão ainda não confirmada. A repetição …</p> aka getByText('Há uma decisão ainda não')\n    2) <div role=\"alert\" class=\"form-grid-wide\">…</div> aka getByRole('alert').filter({ hasText: 'Não foi possível confirmar a' })\n\nCall log:\n\u001b[2m  - Expect \"toContainText\" getByRole('alert') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('alert')\u001b[22m\n\n\n  56 |   await page.getByRole('button', { name: 'Revisar aceitação' }).click();\n  57 |   await page.getByRole('button', { name: 'Registrar decisão' }).click();\n> 58 |   await expect(page.getByRole('alert')).toContainText('Reenvie esta mesma decisão');\n     |                                         ^\n  59 |   const first = state.posts[0];\n  60 |   await page.reload();\n  61 |   await expect(page.getByRole('button', { name: 'Reenviar para confirmar resultado' })).toBeVisible();\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js:58:41"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:24:56.105Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\test-results\\uc-16-timeout-mantém-chave-033c3-údo-entre-recarga-e-reenvio-chromium\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\test-results\\uc-16-timeout-mantém-chave-033c3-údo-entre-recarga-e-reenvio-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\test-results\\uc-16-timeout-mantém-chave-033c3-údo-entre-recarga-e-reenvio-chromium\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js",
+                    "column": 41,
+                    "line": 58
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "63d094c1e48e303984a3-773eef59c46c37b6e573",
+          "file": "uc-16.spec.js",
+          "line": 52,
+          "column": 1
+        },
+        {
+          "title": "campo compensatório vazio é omitido e estado incompatível impede nova decisão",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2194,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T01:24:58.625Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "63d094c1e48e303984a3-d31480c784811627653c",
+          "file": "uc-16.spec.js",
+          "line": 67,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-03T01:24:52.696Z",
+    "duration": 21567.032,
+    "expected": 15,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

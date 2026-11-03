@@ -1,3 +1,4 @@
+import { formatarDataHora } from '../../../shared/lib/datas';
 import { ArrowRight, History } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
@@ -28,6 +29,6 @@ export default function DecisoesEstadoMarco({ events, obraId, marcoId }) {
     {!data && !state.error && <p role="status">Carregando decisões registradas…</p>}
     {state.error && <div role="alert"><p>{state.error.message}</p><Button variant="secondary" onClick={() => setAttempt((value) => value + 1)}>Consultar decisões novamente</Button></div>}
     {decisions?.length === 0 && <p className="form-hint">Nenhuma decisão de estado deste marco foi retornada pelo histórico.</p>}
-    {decisions?.slice().reverse().map((item) => <article key={item.id}><div className="estado-decisao-transicao"><MarcoEstado estado={item.antes} /><ArrowRight size={16} aria-hidden="true" /><MarcoEstado estado={item.depois} /></div><p className="estado-decisao-motivo">{item.motivo}</p><p className="form-hint">Registrado em <time dateTime={item.instante}>{instante(item.instante)}</time> · Autor: {item.autor}</p></article>)}
+    {decisions?.slice().reverse().map((item) => <article key={item.id}><div className="estado-decisao-transicao"><MarcoEstado estado={item.antes} /><ArrowRight size={16} aria-hidden="true" /><MarcoEstado estado={item.depois} /></div><p className="estado-decisao-motivo">{item.motivo}</p><p className="form-hint">Registrado em <time dateTime={item.instante}>{formatarDataHora(item.instante)}</time> · Autor: {item.autor}</p></article>)}
   </section>;
 }

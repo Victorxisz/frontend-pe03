@@ -43,7 +43,7 @@ for (const tipo of ['obra', 'marco']) {
     await expect(dialog).toContainText('Ocorrências, seus históricos e aceitações');
     await expect(dialog).toContainText('Mudanças e histórico');
     await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
-    await trigger.click(); await page.keyboard.press('Escape');
+    await trigger.click(); await expect(dialog).toBeVisible(); await page.keyboard.press('Escape');
     await expect(dialog).toHaveCount(0);
     expect(state.deletes).toEqual([]);
     await trigger.click(); await page.getByRole('button', { name: 'Excluir definitivamente', exact: true }).click();
@@ -109,4 +109,33 @@ for (const status of [409, 422, 500, 200]) test(`resposta ${status} nunca anunci
   await page.getByRole('button', { name: 'Excluir definitivamente', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Retomar exclusão' })).toBeEnabled();
   await expect(page.getByText('Exclusão concluída.', { exact: false })).toHaveCount(0);
+});
+
+test('aviso de sucesso termina ao navegar e não reaparece ao voltar', async ({ page }) => {
+  await setup(page);
+  await page.goto('/obras/obra-a/marcos/marco-a');
+  await page.getByRole('button', { name: 'Excluir marco', exact: true }).click();
+  await page.getByRole('button', { name: 'Excluir definitivamente', exact: true }).click();
+  const notice = page.getByText('Exclusão concluída.', { exact: false });
+  await expect(notice).toBeVisible();
+  await expect(page).toHaveURL('/obras/obra-a/marcos');
+  await page.getByRole('link', { name: 'Painel das Obras', exact: true }).first().click();
+  await expect(page).toHaveURL('/obras');
+  await expect(notice).toHaveCount(0);
+  await page.goBack();
+  await expect(page).toHaveURL('/obras/obra-a/marcos');
+  await expect(page.getByRole('heading', { name: outroMarco.nome, exact: true })).toBeVisible();
+  await expect(notice).toHaveCount(0);
+});
+
+test('navegação não esconde uma exclusão ainda pendente', async ({ page }) => {
+  await setup(page, [503]);
+  await page.goto('/obras/obra-a/marcos/marco-a');
+  await page.getByRole('button', { name: 'Excluir marco', exact: true }).click();
+  await page.getByRole('button', { name: 'Excluir definitivamente', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Retomar exclusão' })).toBeVisible();
+  await page.getByRole('link', { name: 'Painel das Obras', exact: true }).first().click();
+  await expect(page).toHaveURL('/obras');
+  await expect(page.getByRole('heading', { name: 'Exclusões sem confirmação' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Retomar exclusão' })).toBeVisible();
 });

@@ -59,10 +59,10 @@ function CadastroMarco({ obraId }) {
       onChange: (event) => { setDados((prev) => ({ ...prev, [campo]: event.target.value })); setErrors((prev) => ({ ...prev, [campo]: '' })); } };
     return <Field label={labels[campo]} className={type === 'text' ? 'form-full' : ''}>{campo === 'descricao' ? <textarea {...props} rows={4} placeholder="Descreva o que deve estar pronto para considerar esta entrega realizada." /> : <input {...props} type={type} placeholder={campo === 'nome' ? 'Ex.: Fundação concluída' : undefined} />}{errors[campo] && <small className="field-error" id={`${campo}-erro`}>{errors[campo]}</small>}</Field>;
   }
-  return <section className="feature-page"><Link className="back-link" to={back} onClick={(event) => saving && event.preventDefault()} aria-disabled={saving || undefined}><ArrowLeft size={15} aria-hidden="true" />Marcos da obra</Link>
+  return <section className="feature-page"><Link className="back-link button button-secondary" to={back} onClick={(event) => saving && event.preventDefault()} aria-disabled={saving || undefined}><ArrowLeft size={15} aria-hidden="true" />Marcos da obra</Link>
     <header className="section-heading"><span className="eyebrow">Planejamento de entregas</span><h2>Novo marco</h2><p>Defina a próxima entrega de {obra.nome}. Todos os campos são obrigatórios.</p></header>
     <div className="feature-card obra-form"><div className="marco-form-note"><Flag size={22} aria-hidden="true" /><p>O marco começa <strong>a iniciar</strong>. Depois, seu estado acompanha o trabalho realizado.</p></div>
-      {(failure || Object.values(errors).some(Boolean)) && <div className="form-error" role="alert" ref={summary} tabIndex={-1}><p>{failure?.message || 'Revise os campos indicados antes de salvar.'}</p>{failure && <Link to={back}>Consultar marcos da obra</Link>}</div>}
+      {(failure || Object.values(errors).some(Boolean)) && <div className="form-error" role="alert" ref={summary} tabIndex={-1}><p>{failure?.message || 'Revise os campos indicados antes de salvar.'}</p>{failure && <Link className="button button-secondary" to={back}>Consultar marcos da obra</Link>}</div>}
       <form onSubmit={salvar} noValidate><div className="form-grid">{field('nome')}{field('descricao')}{field('inicio_previsto', 'date')}{field('fim_previsto', 'date')}</div><div className="page-actions"><Button type="submit" loading={saving}>{saving ? 'Salvando…' : 'Salvar marco'}</Button><Button variant="secondary" disabled={saving} onClick={() => navigate(back)}>Cancelar</Button></div></form>
     </div>
   </section>;

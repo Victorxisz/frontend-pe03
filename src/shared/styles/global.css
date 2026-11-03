@@ -132,7 +132,11 @@ small,
   font-size: 13px;
   font-weight: 500;
   line-height: 1.3;
-  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
   transition:
     background-color 140ms ease,
     border-color 140ms ease,
@@ -282,7 +286,7 @@ textarea {
 }
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 .form-full {
@@ -338,6 +342,7 @@ textarea {
 }
 .modal > header {
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: space-between;
   padding: 24px 28px;
@@ -351,6 +356,7 @@ textarea {
   padding: 18px 28px;
   border-top: 1px solid var(--border);
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
 }

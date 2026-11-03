@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+test.use({ timezoneId: 'America/Sao_Paulo' });
 const base = '/obras/obra/avancos/avanco';
 async function setup(page, options = {}) {
   const state = { posts: 0, published: false, ...options };

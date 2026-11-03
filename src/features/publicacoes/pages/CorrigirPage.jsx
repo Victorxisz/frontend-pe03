@@ -1,3 +1,4 @@
+import { formatarDataHora } from '../../../shared/lib/datas';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
@@ -83,7 +84,7 @@ function Editor({ obraId, avancoId, search, request }) {
     {error && <div role="alert"><p>{error.code === 'HISTORICO_INDISPONIVEL' ? 'Falha de integridade: histórico indisponível. ' : ''}{error.message}</p>{Array.isArray(error.fields) && <p>Campos: {error.fields.join(', ')}</p>}</div>}
     {(blocked || (!loaded && !loading)) && <><p>Consulte o estado real e revise novamente antes de outra correção. A nova consulta descarta o formulário.</p><Button disabled={busy || loading} onClick={reload}>Recarregar e revisar</Button></>}
     {loaded && !loading && <><p>Marco: {loaded.detail.marco.nome}</p><Origem origem={loaded.publication.origem_simulada} />
-      <p>Autor original: {loaded.chain.versoes[0].autor_original}</p><p>Publicação original: {loaded.publication.instante} · Publicador: {loaded.publication.autor}</p>
+      <p>Autor original: {loaded.chain.versoes[0].autor_original}</p><p>Publicação original: {formatarDataHora(loaded.publication.instante)} · Publicador: {loaded.publication.autor}</p>
       {!confirmed && <form className="feature-card correction-form" onSubmit={save}>
         <fieldset disabled={busy || blocked}><legend>Conteúdo atual</legend>
           <Field label="Descrição"><textarea required value={descricao} onChange={e => setDescricao(e.target.value)} /></Field>
@@ -100,6 +101,6 @@ function Editor({ obraId, avancoId, search, request }) {
       </form>}
       <h3>Histórico preservado</h3><ComparacaoVersoes versoes={loaded.chain.versoes} />
     </>}
-    {!busy && <p><Link to={`${base}${search}`}>{confirmed ? 'Voltar ao detalhe' : 'Cancelar'}</Link> · <Link to={`${base}/versoes${search}`}>Consultar versões</Link></p>}
+    {!busy && <div className="page-actions action-toolbar"><Link className="button button-secondary" to={`${base}${search}`}>{confirmed ? 'Voltar ao detalhe' : 'Cancelar'}</Link><Link className="button button-secondary" to={`${base}/versoes${search}`}>Consultar versões</Link></div>}
   </section>;
 }

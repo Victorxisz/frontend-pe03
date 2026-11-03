@@ -1,4 +1,18 @@
+import { marcosApi } from '../marcos/api';
+import { conferirAvancoEdicao, corpoEdicaoRascunho, conferirEdicaoConfirmada } from './rascunhos';
+
 export const avancosApi = (request) => ({
+  editorDetail: async (obraId, id, signal) => {
+    const avanco = conferirAvancoEdicao(await request(`/avancos/${encodeURIComponent(id)}`, { signal, expectedStatus: 200 }), id);
+    const marco = await marcosApi(request).detail(obraId, avanco.marco_id, signal);
+    return { ...avanco, marco };
+  },
+  editDraft: async (id, changes, files, signal) => conferirEdicaoConfirmada(await request(`/avancos/${encodeURIComponent(id)}`, {
+    method: 'PATCH', body: corpoEdicaoRascunho(changes, files), signal, expectedStatus: 200,
+  }), id, changes),
+  // UC-09: sem corpo. Se o rascunho tiver sido publicado, o servidor recusa
+  // a exclusão e exige uma nova revisão do impacto como publicação.
+  removeDraft: (id, signal) => request(`/avancos/${encodeURIComponent(id)}`, { method: 'DELETE', signal, expectedStatus: 204 }),
   list: (marcoId, signal) => request(`/marcos/${encodeURIComponent(marcoId)}/avancos`, { signal }),
   detail: (id, signal) => request(`/avancos/${encodeURIComponent(id)}`, { signal }),
   listMedia: (id, signal) => request(`/avancos/${encodeURIComponent(id)}/midias`, { signal }),
@@ -12,10 +26,6 @@ export const avancosApi = (request) => ({
     });
   },
   mediaContent: (id, signal) => request(`/midias/${encodeURIComponent(id)}/conteudo`, { signal, responseType: 'blob', expectedStatus: 200 }),
-});
-
-export const marcosAvancosApi = (request) => ({
-  detail: (id, signal) => request(`/marcos/${encodeURIComponent(id)}`, { signal }),
 });
 
 export function resumirErroAvanco(error) {

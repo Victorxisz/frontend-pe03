@@ -1,3 +1,5 @@
+import { formatarDataHora } from '../../../shared/lib/datas';
+import { ExcluirRegistro } from '../../../shared/ui/Exclusoes';
 import { useCallback } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
@@ -24,12 +26,13 @@ function OcorrenciaDetalhe({ obraId, ocorrenciaId }) { const { search, state: na
   return <section className="feature-page"><h2>Detalhe da ocorrência</h2>{navigation?.ocorrenciaCriada === ocorrenciaId && <p role="status">Ocorrência registrada com sucesso.</p>}{navigation?.ocorrenciaAtualizada === ocorrenciaId && <p role="status">Ocorrência atualizada com sucesso.</p>}
     <ConsultaFeedback state={state} />{item && <article className="feature-card ocorrencia-card"><h3>{item.titulo}</h3><p>{item.descricao}</p><p>Estado: {item.estado}</p><p>Marco: {item.marco_id ? nomeMarco || `Referência ${item.marco_id}` : 'Não informado'}</p><p>Responsável atual: {item.responsavel_id ? nomeResponsavel || `Referência ${item.responsavel_id}` : 'Não atribuído'}</p>
       {anterior && <p>Responsável anterior (histórico): {typeof anterior === 'object' ? [anterior.nome, anterior.cargo, anterior.id].filter(Boolean).join(' · ') : String(anterior)}</p>}
-      <p>Autoria: {item.autor || 'Não informada'}</p><p>Registrada em: <time dateTime={item.data_registro || undefined}>{item.data_registro || 'Não informado'}</time></p>
-      {item.estado === 'sem solução' && <p>{item.aceitacoes_do_estado_atual?.length ? 'Há aceitação registrada para o estado atual.' : 'Sem aceitação registrada para o estado atual.'} <Link to={`${base}/${encodeURIComponent(item.id)}/aceitacoes${search}`}>Consultar aceitações</Link></p>}
+      <p>Autoria: {item.autor || 'Não informada'}</p><p>Registrada em: <time dateTime={item.data_registro || undefined}>{formatarDataHora(item.data_registro)}</time></p>
+      {item.estado === 'sem solução' && <p>{item.aceitacoes_do_estado_atual?.length ? 'Há aceitação registrada para o estado atual.' : 'Sem aceitação registrada para o estado atual.'} <Link className="button button-secondary" to={`${base}/${encodeURIComponent(item.id)}/aceitacoes${search}`}>Consultar aceitações</Link></p>}
       <HistoricoOcorrencia item={item} />
       <section aria-label="Evidências"><h3>Evidências</h3>{item.midias.length ? item.midias.map((media, i) => <MediaViewer key={media.id || i} media={media} loadContent={loadMedia} />) : <p>Nenhuma evidência anexada.</p>}</section>
-      <div className="page-actions"><Link to={`${base}/${encodeURIComponent(item.id)}/editar${search}`}>Atualizar ocorrência</Link><Link to={`${base}/${encodeURIComponent(item.id)}/aceitacoes${search}`}>Aceitações</Link></div>
+      <div className="page-actions action-toolbar"><Link className="button button-primary" to={`${base}/${encodeURIComponent(item.id)}/editar${search}`}>Atualizar ocorrência</Link><Link className="button button-secondary" to={`${base}/${encodeURIComponent(item.id)}/aceitacoes${search}`}>Aceitações</Link></div>
+      <ExcluirRegistro tipo="ocorrencia" id={item.id} obraId={obraId} marcoId={item.marco_id} />
     </article>}
-    <p><Link to={`${base}${search}`}>Voltar às ocorrências</Link></p>
+    <p><Link className="button button-secondary" to={`${base}${search}`}>Voltar às ocorrências</Link></p>
   </section>;
 }

@@ -43,9 +43,11 @@ function Revisao({ obraId, avancoId, search, request }) {
     <ConsultaFeedback state={state} />
     {(confirmed || state.data) && <AtualizacaoCard item={confirmed || state.data} obraId={obraId} links={Boolean(confirmed)} />}
     {error && <div role="alert"><p>{error.message}</p>{error.status === 422 && <p>Revise o conteúdo e as mídias antes de publicar.</p>}{error.fields?.length > 0 && <p>Campos: {error.fields.join(', ')}</p>}<p>Consulte o estado atual antes de tentar novamente; a resposta pode ter sido perdida.</p><Button onClick={reviewAgain}>Revisar estado atual</Button></div>}
-    {!busy && <Link to={`${base}${search}`}>{confirmed ? 'Voltar ao detalhe' : 'Cancelar e voltar ao detalhe'}</Link>}
-    {state.data && !confirmed && !error && state.data.estado === 'rascunho' && <Button disabled={busy} onClick={() => setDialog(true)}>Publicar avanço</Button>}
-    {state.data?.estado === 'publicado' && !confirmed && <p>Este avanço já está publicado. <Link to={`/obras/${encodeURIComponent(obraId)}/publicacoes${search}`}>Consultar linha do tempo</Link></p>}
+    <div className="page-actions action-toolbar">
+      {state.data && !confirmed && !error && state.data.estado === 'rascunho' && <Button disabled={busy} onClick={() => setDialog(true)}>Publicar avanço</Button>}
+      {!busy && <Link className="button button-secondary" to={`${base}${search}`}>{confirmed ? 'Voltar ao detalhe' : 'Cancelar e voltar ao detalhe'}</Link>}
+    </div>
+    {state.data?.estado === 'publicado' && !confirmed && <p>Este avanço já está publicado. <Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/publicacoes${search}`}>Consultar linha do tempo</Link></p>}
     {dialog && <ConfirmDialog title="Confirmar publicação?" confirmLabel="Confirmar publicação" confirmVariant="primary" busy={busy} onConfirm={publish} onCancel={() => setDialog(false)} returnFocusRef={title}><p>O conteúdo revisado ficará na linha do tempo da obra. Autor e instante serão registrados pelo servidor.</p></ConfirmDialog>}
   </section>;
 }

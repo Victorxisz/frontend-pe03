@@ -1,0 +1,2006 @@
+{
+  "stats": {
+    "startTime": "2026-11-03T01:19:32.817Z",
+    "duration": 184030.196,
+    "expected": 266,
+    "skipped": 1,
+    "unexpected": 4,
+    "flaky": 0
+  },
+  "failures": [
+    {
+      "file": "uc-14.spec.js",
+      "title": "uc-14.spec.js > cadastro mínimo usa JSON, consulta detalhe e lista após recarga",
+      "status": "unexpected",
+      "expected": "passed",
+      "errors": [
+        "Error: expect(locator).toContainText(expected) failed\n\nLocator: getByText(/Registrada em:/)\nExpected substring: \"2030-10-20\"\nReceived string:    \"Registrada em: 20/10/2030 : 09:00\"\nTimeout: 5000ms\n\nCall log:\n  - Expect \"toContainText\" getByText(/Registrada em:/) with timeout 5000ms\n  - waiting for getByText(/Registrada em:/)\n    14 × locator resolved to <p>…</p>\n       - unexpected value \"Registrada em: 20/10/2030 : 09:00\"\n\n\n  41 |   expect(state.posts[0].body).toEqual({ titulo: 'Infiltração', descricao: 'Água na parede', estado: 'aberta' });\n  42 |   expect(state.posts[0].headers['idempotency-key']).toBeUndefined();\n> 43 |   await expect(page.getByText('Responsável atual: Não atribuído')).toBeVisible(); await expect(page.getByText(/Registrada em:/)).toContainText('2030-10-20');\n     |                                                                                                                                  ^\n  44 |   await page.reload(); await expect(page.getByRole('heading', { name: 'Infiltração' })).toBeVisible();\n  45 |   await page.getByRole('link', { name: 'Voltar às ocorrências' }).click(); await expect(page.getByRole('link', { name: 'Infiltração' })).toBeVisible();\n  46 | });\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-14.spec.js:43:130"
+      ]
+    },
+    {
+      "file": "uc-16.spec.js",
+      "title": "uc-16.spec.js > aceita sem medida, não muda estado e preserva histórico após recarga",
+      "status": "unexpected",
+      "expected": "passed",
+      "errors": [
+        "Error: expect(locator).toContainText(expected) failed\n\nLocator: getByRole('region', { name: 'Estado atual da ocorrência' })\nExpected substring: \"sem solução\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toContainText\" getByRole('region', { name: 'Estado atual da ocorrência' }) with timeout 5000ms\n  - waiting for getByRole('region', { name: 'Estado atual da ocorrência' })\n\n\n  33 |   const state = await setup(page);\n  34 |   await page.goto(path);\n> 35 |   await expect(page.getByRole('region', { name: 'Estado atual da ocorrência' })).toContainText('sem solução');\n     |                                                                                  ^\n  36 |   await page.getByRole('textbox', { name: 'Justificativa' }).fill('A limitação estrutural foi documentada.');\n  37 |   await page.getByRole('button', { name: 'Revisar aceitação' }).click();\n  38 |   await page.getByRole('button', { name: 'Cancelar', exact: true }).click();\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js:35:82"
+      ]
+    },
+    {
+      "file": "uc-16.spec.js",
+      "title": "uc-16.spec.js > timeout mantém chave e conteúdo entre recarga e reenvio",
+      "status": "unexpected",
+      "expected": "passed",
+      "errors": [
+        "Test timeout of 30000ms exceeded.",
+        "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n  - waiting for getByRole('textbox', { name: 'Justificativa' })\n\n\n  51 |   const state = await setup(page, { failPostOnce: true });\n  52 |   await page.goto(path);\n> 53 |   await page.getByRole('textbox', { name: 'Justificativa' }).fill('Revisão trimestral definida.');\n     |                                                              ^\n  54 |   await page.getByRole('button', { name: 'Revisar aceitação' }).click();\n  55 |   await page.getByRole('button', { name: 'Registrar decisão' }).click();\n  56 |   await expect(page.getByRole('alert')).toContainText('Reenvie esta mesma decisão');\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js:53:62"
+      ]
+    },
+    {
+      "file": "uc-16.spec.js",
+      "title": "uc-16.spec.js > campo compensatório vazio é omitido e estado incompatível impede nova decisão",
+      "status": "unexpected",
+      "expected": "passed",
+      "errors": [
+        "Test timeout of 30000ms exceeded.",
+        "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n  - waiting for getByRole('textbox', { name: 'Justificativa' })\n\n\n  66 |   const state = await setup(page);\n  67 |   await page.goto(path);\n> 68 |   await page.getByRole('textbox', { name: 'Justificativa' }).fill('Decisão registrada sem medida.');\n     |                                                              ^\n  69 |   await page.getByRole('textbox', { name: 'Medida compensatória (opcional)' }).fill('   ');\n  70 |   await page.getByRole('button', { name: 'Revisar aceitação' }).click();\n  71 |   await page.getByRole('button', { name: 'Registrar decisão' }).click();\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js:68:62"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "file": "uc-01.spec.js",
+      "title": "uc-01.spec.js > UC-01 — integração real (CT-01/02/04 e parcela de CT-111) > entra, restaura e API recusa o token revogado após sair",
+      "status": "skipped",
+      "expected": "skipped",
+      "errors": []
+    }
+  ],
+  "files": {
+    "cadastro-avanco.spec.js": [
+      {
+        "file": "cadastro-avanco.spec.js",
+        "title": "cadastro-avanco.spec.js > consulta marco pela obra e envia o cadastro com evidência como rascunho",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "cadastro-avanco.spec.js",
+        "title": "cadastro-avanco.spec.js > tentar novamente recupera a consulta e abre o formulário",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "cadastro-avanco.spec.js",
+        "title": "cadastro-avanco.spec.js > não permite registrar em marco pertencente a outra obra",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "imagem-projeto.spec.js": [
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > cadastro multipart, revisão, imagem autenticada no detalhe e no painel após recarga",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > cancelar com imagem selecionada não envia arquivo nem cria obra",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > upload rejeitado no cadastro mantém textos e seleção para corrigir",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > imagem é salva separadamente e preserva texto ainda não salvo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > substitui com referência atual e remove somente após confirmação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > conflito exige nova consulta antes de substituir",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > falha de upload preserva imagem anterior e exige consulta, sem retry automático",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > reconsulta após conflito descarta confirmação de remoção da imagem anterior",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "imagem-projeto.spec.js",
+        "title": "imagem-projeto.spec.js > Imagem do projeto — API controlada > indisponibilidade de conteúdo não oculta os dados da obra e permite reconsulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "layout-controls.spec.js": [
+      {
+        "file": "layout-controls.spec.js",
+        "title": "layout-controls.spec.js > formulários sem colisões em 320px",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "layout-controls.spec.js",
+        "title": "layout-controls.spec.js > formulários sem colisões em 375px",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "layout-controls.spec.js",
+        "title": "layout-controls.spec.js > formulários sem colisões em 768px",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "layout-controls.spec.js",
+        "title": "layout-controls.spec.js > formulários sem colisões em 1280px",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-01.spec.js": [
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > olho mostra e oculta a senha sem enviar; submissão volta a ocultá-la",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > acesso direto exige login, preserva destino completo e restaura rota aninhada",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > envio visível e mensagem neutra para credenciais inválidas",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > falha de rede no login permite nova tentativa",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > login incompleto não persiste sessão (construtora)",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > login incompleto não persiste sessão (access_token)",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > restauração em andamento oculta conteúdo de negócio",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > consulta pendente para após 8 segundos, preserva login e permite nova tentativa",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > falha na restauração: expirado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > recarga sem cache mantém sessão e destino sem refazer login",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > JWT inválido na restauração permite novo login e preserva o destino",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > recarga com rede preserva token, bloqueia dados e permite restaurar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > recarga com servidor preserva token, bloqueia dados e permite restaurar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > recarga com resposta-incompleta preserva token, bloqueia dados e permite restaurar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > 401 em consulta autenticada encerra sessão e orienta novo login",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > logout aguarda revogação, limpa dados e protege retorno pelo histórico",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > logout sem confirmação: rede",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > logout sem confirmação: servidor",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > logout sem confirmação: expirado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > FE-UC-01 — navegador com API controlada > retorno de página preservada pelo navegador exige revalidação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-01.spec.js",
+        "title": "uc-01.spec.js > UC-01 — integração real (CT-01/02/04 e parcela de CT-111) > entra, restaura e API recusa o token revogado após sair",
+        "status": "skipped",
+        "expected": "skipped",
+        "errors": []
+      }
+    ],
+    "uc-02.spec.js": [
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > cria, consulta detalhe, recarrega e atualiza lista: data_exata",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > cria, consulta detalhe, recarrega e atualiza lista: intervalo_estimado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > alternância repetida limpa campos incompatíveis e envia somente modalidade ativa",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > textos vazios, data impossível e intervalo invertido impedem POST",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > cancelar no formulário ou na revisão retorna à lista sem POST",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > salvamento visível bloqueia cliques duplicados e cancelamento",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > 422 exibe mensagem e campos, preserva valores e permite correção",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > 500: orienta consulta antes de repetir e não reenvia automaticamente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > rede: orienta consulta antes de repetir e não reenvia automaticamente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > resposta-perdida: orienta consulta antes de repetir e não reenvia automaticamente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > 201-sem-id: orienta consulta antes de repetir e não reenvia automaticamente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > 200-inesperado: orienta consulta antes de repetir e não reenvia automaticamente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-02.spec.js",
+        "title": "uc-02.spec.js > FE-UC-02 — cadastro com API controlada > falha no GET depois de 201 permite consultar novamente sem recriar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-03.spec.js": [
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > entrada na raiz e ações internas preservam a busca para voltar ao painel",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > trocar abas preserva rolagem e espaço de uma seção longa em 1440px",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > trocar abas preserva rolagem e espaço de uma seção longa em 390px",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > cartões mostram dados da API, estado e atraso separados; layout desktop e mobile",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > combina todos os filtros uma vez, omite vazios e mantém textos literais",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > filtro isolado na URL: nome",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > filtro isolado na URL: cliente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > filtro isolado na URL: estado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > filtro isolado na URL: alerta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > filtro isolado na URL: entregaDe",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > filtro isolado na URL: entregaAte",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > filtro isolado na URL: registroDe",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > filtro isolado na URL: registroAte",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > vazios são omitidos inclusive alerta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > retorno, abas e recarga preservam busca; detalhe mostra conclusão somente se existente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > estado vazio distinto: lista_vazia",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > estado vazio distinto: sem_resultados",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > datas invertidas indicam campo e não disparam busca",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > URL com filtros repetidos é corrigível e nunca envia repetidos à API",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > erro 422 mantém URL e não apresenta lista vazia",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > erro 500 mantém URL e não apresenta lista vazia",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > duas buscas fora de ordem nunca misturam resultados",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > troca rápida de obra ignora detalhe antigo e remove cabeçalho anterior",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > detalhe 400 não mantém obra anterior",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > detalhe 404 não mantém obra anterior",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-03.spec.js",
+        "title": "uc-03.spec.js > FE-UC-03 — lista, filtros e contexto da obra > detalhe 500 não mantém obra anterior",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-04.spec.js": [
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > edita nome, reconsulta e preserva planejamento após resposta parcial",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > edita cliente, reconsulta e preserva planejamento após resposta parcial",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > edita localizacao, reconsulta e preserva planejamento após resposta parcial",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > edita descricao, reconsulta e preserva planejamento após resposta parcial",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > somente quatro campos editáveis, sem alterações não envia PATCH, cancelamento preserva busca",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > UC-12 é acessível sem permitir replanejamento pelo formulário descritivo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > texto vazio em nome é rejeitado sem envio",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > texto vazio em cliente é rejeitado sem envio",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > texto vazio em localizacao é rejeitado sem envio",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > texto vazio em descricao é rejeitado sem envio",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > carrega antes de editar e não oferece formulário durante a consulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > salvamento bloqueia duplo clique, edição e cancelamento",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > GET 400 não mostra formulário e permite reconsulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > GET 404 não mostra formulário e permite reconsulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > GET 500 não mostra formulário e permite reconsulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > PATCH 400 preserva o que foi digitado sem anunciar sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > PATCH 404 preserva o que foi digitado sem anunciar sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > PATCH 422 preserva o que foi digitado sem anunciar sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > PATCH 500 preserva o que foi digitado sem anunciar sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > PATCH 503 preserva o que foi digitado sem anunciar sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > PATCH 0 preserva o que foi digitado sem anunciar sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > 422 de campo controlado mantém cadastro e ligação para UC-12",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > falha na releitura após PATCH só permite repetir a consulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-04.spec.js",
+        "title": "uc-04.spec.js > FE-UC-04 — edição descritiva > visual da edição em desktop e celular",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-05.spec.js": [
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > array, detalhe direto, recarga e links preservam contexto",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > 201 abre detalhe, reconsulta lista e envia apenas campos permitidos",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > campos vazios e período invertido não salvam; cancelar não envia POST",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > lista vazia, falha de banco e resposta com envelope são diferentes; nova tentativa",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > detalhe trata 400 sem exibir dados de outra obra",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > detalhe trata 404 sem exibir dados de outra obra",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > detalhe trata 500 sem exibir dados de outra obra",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > cadastro trata 400 e preserva formulário",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > cadastro trata 404 e preserva formulário",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > cadastro trata 422 e preserva formulário",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > cadastro trata 500 e preserva formulário",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > alterar obra na URL oculta marco anterior e rejeita vínculo incorreto até com 200",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-05.spec.js",
+        "title": "uc-05.spec.js > FE-UC-05 — criar e consultar marcos > navegação rápida não reapresenta resposta atrasada da obra anterior",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-06.spec.js": [
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > cria relação com direção e nomes, filtra opções e consulta após recarga",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > cancelar e Escape não excluem; foco fica no diálogo e volta ao acionador",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > DELETE usa ID do vínculo, só 204 confirma e marcos permanecem candidatos",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > 409: A dependência formaria um ciclo direto",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > 409: A dependência formaria um ciclo indireto",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > 409: Esta dependência já existe",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > 409: A dependência deve pertencer à mesma obra",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > 409: As dependências foram alteradas por outra requisição; tente novamente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > POST 400 não apresenta vínculo como salvo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > POST 404 não apresenta vínculo como salvo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > POST 422 não apresenta vínculo como salvo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > POST 500 não apresenta vínculo como salvo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > POST 200 não apresenta vínculo como salvo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > DELETE 400 não anuncia retirada e exige nova consulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > DELETE 404 não anuncia retirada e exige nova consulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > DELETE 409 não anuncia retirada e exige nova consulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > DELETE 500 não anuncia retirada e exige nova consulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > DELETE 200 não anuncia retirada e exige nova consulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > lista indisponível e envelope inválido diferem de vazio; nova tentativa recupera",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > 201 com resposta incompleta exige consulta e não inventa vínculo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > falha de releitura após 201 permite consultar sem repetir cadastro",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > falha de candidatos impede POST e permite nova consulta",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > sem candidatos orienta criar outro marco; todos escolhidos orienta estado completo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > obra incorreta não consulta endpoints de dependências sem contexto",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-06.spec.js",
+        "title": "uc-06.spec.js > FE-UC-06 — dependências entre marcos > resposta atrasada de outro marco não mistura vínculos",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-07.spec.js": [
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > altera, conclui, reabre e mantém motivo e histórico após recarga",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > motivo vazio não envia; estado atual não gera nova decisão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > pendências: Cancelar preserva estado e não reenvia",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > pendências: Escape preserva estado e não reenvia",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > confirmar pendências reenvia apenas a mesma decisão com flag explícita",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > 409 DEPENDENCIA_INCONSISTENTE exige nova consulta sem confirmar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > 409 VERSAO_OBSOLETA exige nova consulta sem confirmar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > 409 sem código exige nova consulta sem confirmar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > versão muda durante confirmação: rejeita e exige revisão da decisão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > voltar de outra aba revalida e bloqueia rascunho de uma versão antiga",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > voltar à aba sem mudanças preserva motivo e decisão em edição",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > duplo clique não duplica comando nem evento",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > POST 404 não presume estado nem evento",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > POST 422 não presume estado nem evento",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > POST 500 não presume estado nem evento",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > POST 201 não presume estado nem evento",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > 200 incompleto pede consulta sem anunciar sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > falha na releitura de detail após 200 não repete escrita",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > falha na releitura de list após 200 não repete escrita",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > falha na releitura de history após 200 não repete escrita",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-07.spec.js",
+        "title": "uc-07.spec.js > FE-UC-07 — estado, conclusão e reabertura de marco > aviso malformado não oferece confirmação de dependências",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-10.spec.js": [
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > confirma uma vez, distingue datas e deduplica prévia após recarga",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > cancelar revisão e confirmação não publica; rascunho fora da prévia",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > falha na leitura depois de confirmar repete somente GET",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > resposta perdida exige consulta e reconhece publicação existente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > erro 404 preserva revisão sem sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > erro 422 preserva revisão sem sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > erro 409 preserva revisão sem sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > erro 503 preserva revisão sem sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > duplo clique na confirmação envia uma única decisão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > preserva ordem original mesmo com datas de trabalho diferentes e mídia indisponível",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-10.spec.js",
+        "title": "uc-10.spec.js > releitura mostra conteúdo corrigido no cartão sem repetir publicação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-11.spec.js": [
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > duas correções, restauração original, HTML seguro e cadeia persistida na recarga",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > sem mudança, motivo vazio e remoção da última mídia bloqueiam; cancelar não grava",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > mídia não retida não faz requisição nem cria link; conflito é falha de integridade",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > falha 409 preserva conteúdo e exige revisão quando necessário",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > falha 422 preserva conteúdo e exige revisão quando necessário",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > falha 503 preserva conteúdo e exige revisão quando necessário",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > resposta perdida consulta estado sem repetir PATCH",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > falha de prévia após 200 repete apenas leitura",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > novos arquivos usam multipart com IDs mantidos em JSON",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > diferenças retornadas e mídia retida com acesso remoto falhando",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > alterar somente data envia apenas data e motivo",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > detalhe antigo com cadeia nova exige consulta consistente antes de editar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > correção concorrente após abrir editor bloqueia PATCH e preserva intenção até releitura",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-11.spec.js",
+        "title": "uc-11.spec.js > texto restaurado em outra aba ainda exige revisão da nova versão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-12.spec.js": [
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > troca modalidades sem resíduos, atualiza resumo, alerta e histórico persistido na recarga",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > conclui, repete sem evento artificial e reabre preservando conclusão anterior",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > altera período de marco com início igual ao fim",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > dependências exigem confirmação, cancelamento não reenvia e confirmação preserva comando",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > duas abas: versão antiga não sobrescreve nova e preserva intenção até revisão explícita",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > retorno à aba detecta mudança externa antes do envio",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > datas invertidas e motivo vazio bloqueiam; cancelar não grava",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > erro 400 não anuncia histórico criado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > erro 404 não anuncia histórico criado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > erro 422 não anuncia histórico criado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > erro 500 não anuncia histórico criado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > resposta perdida exige consulta antes de repetir e reconhece valor aplicado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > falha de consulta após 200 permite repetir somente leituras",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > link do detalhe abre o marco e campo corretos preservando busca",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > 409 sem aviso de foco relê valor atual e mantém intenção sem reenviar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > consulta inicial atrasada não substitui histórico confirmado mais recente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > atualizar consultas não adota versão nova para intenção antiga sem revisão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-12.spec.js",
+        "title": "uc-12.spec.js > releitura após salvar detecta mudança concorrente sem liberá-la como base",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-13.spec.js": [
+      {
+        "file": "uc-13.spec.js",
+        "title": "uc-13.spec.js > ordem da API, valores completos, IDs opacos e comparação de duas correções",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-13.spec.js",
+        "title": "uc-13.spec.js > vazio, erro e detalhe ausente ou de outra obra permanecem distintos",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-13.spec.js",
+        "title": "uc-13.spec.js > falhas temporárias e alvo removido não são confundidos com histórico vazio",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-14.spec.js": [
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > cadastro mínimo usa JSON, consulta detalhe e lista após recarga",
+        "status": "unexpected",
+        "expected": "passed",
+        "errors": [
+          "Error: expect(locator).toContainText(expected) failed\n\nLocator: getByText(/Registrada em:/)\nExpected substring: \"2030-10-20\"\nReceived string:    \"Registrada em: 20/10/2030 : 09:00\"\nTimeout: 5000ms\n\nCall log:\n  - Expect \"toContainText\" getByText(/Registrada em:/) with timeout 5000ms\n  - waiting for getByText(/Registrada em:/)\n    14 × locator resolved to <p>…</p>\n       - unexpected value \"Registrada em: 20/10/2030 : 09:00\"\n\n\n  41 |   expect(state.posts[0].body).toEqual({ titulo: 'Infiltração', descricao: 'Água na parede', estado: 'aberta' });\n  42 |   expect(state.posts[0].headers['idempotency-key']).toBeUndefined();\n> 43 |   await expect(page.getByText('Responsável atual: Não atribuído')).toBeVisible(); await expect(page.getByText(/Registrada em:/)).toContainText('2030-10-20');\n     |                                                                                                                                  ^\n  44 |   await page.reload(); await expect(page.getByRole('heading', { name: 'Infiltração' })).toBeVisible();\n  45 |   await page.getByRole('link', { name: 'Voltar às ocorrências' }).click(); await expect(page.getByRole('link', { name: 'Infiltração' })).toBeVisible();\n  46 | });\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-14.spec.js:43:130"
+        ]
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > multipart com vínculos, arquivo e sem aceitação automática",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > opcionais vazios no multipart são omitidos e cancelar não grava",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > erro 400 não anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > erro 404 não anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > erro 413 não anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > erro 415 não anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > erro 422 não anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > resposta perdida exige consultar lista e não repete POST",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > lista vazia, falha temporária e detalhe de outra obra são distintos",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > 503 mantém o resultado como incerto e não reenvia automaticamente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > mais de cinco evidências impede o envio",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-14.spec.js",
+        "title": "uc-14.spec.js > sem trabalhador cadastrado permite seguir sem responsável",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-15.spec.js": [
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > resolve e reabre sem transferir aceitação antiga; preserva histórico",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > edição descritiva não envia estado ou responsável inalterado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > retirar vínculos envia null, sem inventar transição",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > conflito em outra aba exige comparar e revisar antes de reenviar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > resposta perdida exige releitura sem repetir escrita",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > responsável desvinculado é revalidado antes de enviar; cancelar não grava",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > falha 400 não cria sucesso nem transição",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > falha 404 não cria sucesso nem transição",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > falha 415 não cria sucesso nem transição",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > falha 422 não cria sucesso nem transição",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > falha 503 não cria sucesso nem transição",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-15.spec.js",
+        "title": "uc-15.spec.js > correção de texto e transição podem ser enviadas juntas",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-16.spec.js": [
+      {
+        "file": "uc-16.spec.js",
+        "title": "uc-16.spec.js > aceita sem medida, não muda estado e preserva histórico após recarga",
+        "status": "unexpected",
+        "expected": "passed",
+        "errors": [
+          "Error: expect(locator).toContainText(expected) failed\n\nLocator: getByRole('region', { name: 'Estado atual da ocorrência' })\nExpected substring: \"sem solução\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toContainText\" getByRole('region', { name: 'Estado atual da ocorrência' }) with timeout 5000ms\n  - waiting for getByRole('region', { name: 'Estado atual da ocorrência' })\n\n\n  33 |   const state = await setup(page);\n  34 |   await page.goto(path);\n> 35 |   await expect(page.getByRole('region', { name: 'Estado atual da ocorrência' })).toContainText('sem solução');\n     |                                                                                  ^\n  36 |   await page.getByRole('textbox', { name: 'Justificativa' }).fill('A limitação estrutural foi documentada.');\n  37 |   await page.getByRole('button', { name: 'Revisar aceitação' }).click();\n  38 |   await page.getByRole('button', { name: 'Cancelar', exact: true }).click();\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js:35:82"
+        ]
+      },
+      {
+        "file": "uc-16.spec.js",
+        "title": "uc-16.spec.js > timeout mantém chave e conteúdo entre recarga e reenvio",
+        "status": "unexpected",
+        "expected": "passed",
+        "errors": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n  - waiting for getByRole('textbox', { name: 'Justificativa' })\n\n\n  51 |   const state = await setup(page, { failPostOnce: true });\n  52 |   await page.goto(path);\n> 53 |   await page.getByRole('textbox', { name: 'Justificativa' }).fill('Revisão trimestral definida.');\n     |                                                              ^\n  54 |   await page.getByRole('button', { name: 'Revisar aceitação' }).click();\n  55 |   await page.getByRole('button', { name: 'Registrar decisão' }).click();\n  56 |   await expect(page.getByRole('alert')).toContainText('Reenvie esta mesma decisão');\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js:53:62"
+        ]
+      },
+      {
+        "file": "uc-16.spec.js",
+        "title": "uc-16.spec.js > campo compensatório vazio é omitido e estado incompatível impede nova decisão",
+        "status": "unexpected",
+        "expected": "passed",
+        "errors": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n  - waiting for getByRole('textbox', { name: 'Justificativa' })\n\n\n  66 |   const state = await setup(page);\n  67 |   await page.goto(path);\n> 68 |   await page.getByRole('textbox', { name: 'Justificativa' }).fill('Decisão registrada sem medida.');\n     |                                                              ^\n  69 |   await page.getByRole('textbox', { name: 'Medida compensatória (opcional)' }).fill('   ');\n  70 |   await page.getByRole('button', { name: 'Revisar aceitação' }).click();\n  71 |   await page.getByRole('button', { name: 'Registrar decisão' }).click();\n    at C:\\Users\\vinic\\Downloads\\devlife\\Segundo semestre\\programacaoEficaz\\projeto3\\frontend-pe03\\tests\\e2e\\uc-16.spec.js:68:62"
+        ]
+      }
+    ],
+    "uc-17.spec.js": [
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > obra: cancelar e Escape não enviam DELETE; confirmação envia somente confirmar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > marco: cancelar e Escape não enviam DELETE; confirmação envia somente confirmar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > pendência sobrevive à recarga e GET 404; retoma mesmo DELETE e só conclui em 204",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > histórico carregado é descartado durante a pendência e não reaparece ao voltar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > sem armazenamento durável não envia DELETE",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > resposta 409 nunca anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > resposta 422 nunca anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > resposta 500 nunca anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > resposta 200 nunca anuncia sucesso",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > aviso de sucesso termina ao navegar e não reaparece ao voltar",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-17.spec.js",
+        "title": "uc-17.spec.js > navegação não esconde uma exclusão ainda pendente",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ],
+    "uc-18.spec.js": [
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > avanco: mostra impacto real, Cancelar/Escape preservam e 204 atualiza listas",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > avanco: limpeza pendente sobrevive a nova sessão e retoma o mesmo DELETE após GET 404",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > ocorrencia: mostra impacto real, Cancelar/Escape preservam e 204 atualiza listas",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > ocorrencia: limpeza pendente sobrevive a nova sessão e retoma o mesmo DELETE após GET 404",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > ocorrência sem marco não envia marco_id nulo nem contexto duplicado",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > rascunho usa o contrato único UC-09 sem corpo e retorna aos avanços",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia adulterada em alvo não abre confirmação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia adulterada em obra não abre confirmação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia adulterada em marco não abre confirmação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia adulterada em perda não abre confirmação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia 400 não permite exclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia 404 não permite exclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia 409 não permite exclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia 422 não permite exclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > prévia 503 não permite exclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > DELETE 400 exige nova prévia e confirmação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > DELETE 409 exige nova prévia e confirmação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > DELETE 422 exige nova prévia e confirmação",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > DELETE 200 não confirma conclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > DELETE 202 não confirma conclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > DELETE 404 não confirma conclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > sem persistência local não envia DELETE",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > duplo clique envia uma única exclusão",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > resposta perdida mantém a operação e permite repetir o comando sem nova exclusão visual",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > conflito durante retomada não apaga a referência de limpeza já registrada",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > diálogo de impacto legível em 320px",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      },
+      {
+        "file": "uc-18.spec.js",
+        "title": "uc-18.spec.js > diálogo de impacto legível em 1280px",
+        "status": "expected",
+        "expected": "passed",
+        "errors": []
+      }
+    ]
+  }
+}

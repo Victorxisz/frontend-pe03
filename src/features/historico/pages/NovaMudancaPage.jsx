@@ -21,6 +21,6 @@ function EscolherMudanca({ obraId, search, onObraConsultada }) {
     {tipo === 'marco' && <MarcoSelect obraId={obraId} value={marcoId} onChange={setMarcoId} disabled={busy} required />}
     <Field label="Campo da mudança"><select aria-label="Campo da mudança" disabled={busy} value={campo} onChange={e => setCampo(e.target.value)}><option value={tipo === 'obra' ? 'entrega' : 'periodo_previsto'}>{tipo === 'obra' ? 'Entrega' : 'Período previsto'}</option><option value="estado">Estado</option></select></Field></div>
     {targetId && <MudancaForm key={`${tipo}:${targetId}:${campo}`} {...{ obraId, tipo, targetId, campo, onObraConsultada }} onBusy={setBusy} />}
-    {!busy && <p><Link to={`/obras/${encodeURIComponent(obraId)}/${tipo === 'marco' && marcoId ? `marcos/${encodeURIComponent(marcoId)}` : 'marcos'}${backSearch}`}>Cancelar e voltar</Link></p>}
+    {!busy && <p><Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/${tipo === 'marco' && marcoId ? `marcos/${encodeURIComponent(marcoId)}` : 'marcos'}${backSearch}`}>Cancelar e voltar</Link></p>}
   </section>;
 }

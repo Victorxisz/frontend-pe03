@@ -97,7 +97,7 @@ function Editor({ obraId, ocorrenciaId }) {
       {mudouEstado && <Field label="Motivo da mudança"><textarea rows="3" value={motivo} onChange={e => setMotivo(e.target.value)} disabled={saving || pendingReview} /></Field>}</div>
       {marcos.error && <p role="alert">Não foi possível consultar marcos. <Button variant="secondary" onClick={marcos.retry}>Consultar novamente</Button></p>}
       {workers.error && <p role="alert">Não foi possível consultar trabalhadores. <Button variant="secondary" onClick={() => setWorkerAttempt(n => n + 1)}>Consultar novamente</Button></p>}
-      <div className="page-actions"><Button type="submit" loading={saving} disabled={pendingReview}>Salvar alterações</Button><Link className="button button-secondary" to={`${baseUrl}${search}`} onClick={e => saving && e.preventDefault()} aria-disabled={saving || undefined}>Cancelar</Link></div>
+      <div className="page-actions action-toolbar"><Button type="submit" loading={saving} disabled={pendingReview}>Salvar alterações</Button><Link className="button button-secondary" to={`${baseUrl}${search}`} onClick={e => saving && e.preventDefault()} aria-disabled={saving || undefined}>Cancelar</Link></div>
     </form><div className="feature-card ocorrencia-card"><HistoricoOcorrencia item={base} /></div></>}
   </section>;
 }
