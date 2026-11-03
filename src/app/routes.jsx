@@ -13,6 +13,8 @@ import { routes as ocorrencias } from '../features/ocorrencias/routes';
 import { routes as trabalhadores } from '../features/trabalhadores/routes';
 import { routes as historico } from '../features/historico/routes';
 
+const ContaPage = lazy(() => import('../features/auth/ContaPage'));
+const CadastroPage = lazy(() => import('../features/auth/CadastroPage'));
 const LoginPage = lazy(() => import('../features/auth/LoginPage'));
 function ObraIndexRedirect() {
   const { search, hash } = useLocation();
@@ -25,8 +27,10 @@ export const routes = [
     children: [
       { index: true, element: <Navigate to="/obras" replace /> },
       { path: 'login', element: <LoginPage /> },
+      { path: 'cadastro', element: <CadastroPage /> },
       { element: <RequireAuth />, children: [
         { element: <AppLayout />, children: [
+          { path: 'configuracoes', element: <ContaPage /> },
           ...obras,
           { path: 'obras/:obraId', element: <ObraLayout />, children: [
             { index: true, element: <ObraIndexRedirect /> },

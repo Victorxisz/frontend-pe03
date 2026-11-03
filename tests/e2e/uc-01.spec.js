@@ -28,6 +28,7 @@ async function mockApi(page, overrides = {}) {
       if (state.login) return state.login(route);
       return json({ access_token: 'token-teste', refresh_token: 'refresh-nao-persistido', construtora: account });
     }
+    if (path === '/api/construtora/refresh/') return json({ msg: 'Token has expired' }, 401);
     expect(route.request().headers().authorization).toBe('Bearer token-teste');
     if (path === '/api/sessoes/atual') {
       state.restores++;
@@ -98,7 +99,7 @@ test.describe('FE-UC-01 — navegador com API controlada', () => {
     await expect(page.getByRole('heading', { name: 'Marcos da obra' })).toBeVisible();
     expect(state.logins).toBe(1);
     expect(await page.evaluate(() => ({ session: { ...sessionStorage }, local: { ...localStorage } })))
-      .toEqual({ session: { [key]: 'token-teste' }, local: {} });
+      .toEqual({ session: { [key]: 'token-teste', 'pe03:refresh-token': 'refresh-nao-persistido' }, local: {} });
   });
 
   test('envio visível e mensagem neutra para credenciais inválidas', async ({ page }) => {

@@ -15,6 +15,11 @@ export const trabalhadoresApi = request => ({
     return data.map(item => conferir(item)).filter(item => item.obras.includes(obraId));
   },
   detail: async (id, signal) => conferir(await request(`/trabalhadores/${enc(id)}/`, { signal, expectedStatus: 200 }), id),
+  searchCargo: async (cargo, signal) => {
+    const data = await request(`/trabalhadores/cargo/${enc(cargo.trim())}/`, { signal, expectedStatus: 200 });
+    if (!Array.isArray(data)) throw new Error('Não foi possível interpretar a busca por cargo.');
+    return data.map(item => conferir(item));
+  },
   search: async (termo, signal) => {
     const data = await request(`/trabalhadores/nome/${enc(termo.trim())}/`, { signal, expectedStatus: 200 });
     if (!Array.isArray(data)) throw new Error('Não foi possível interpretar a busca de trabalhadores.');

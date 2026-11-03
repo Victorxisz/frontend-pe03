@@ -12,22 +12,22 @@ const normal = valor => valor.normalize('NFD').replace(/[\u0300-\u036f]/g, '').t
 export default function TrabalhadoresPage() {
   const { obraId } = useParams(); const { search } = useLocation(); const { request } = useAuth();
   const consulta = useConsulta(signal => trabalhadoresApi(request).list(obraId, signal), [request, obraId]);
-  const [termo, setTermo] = useState(''); const [busca, setBusca] = useState(''); const [buscaEstado, setBuscaEstado] = useState({}); const buscaController = useRef(null); const [pendente] = useState(() => cadastroPendente(obraId));
+  const [tipoBusca, setTipoBusca] = useState('nome'); const [termo, setTermo] = useState(''); const [busca, setBusca] = useState(''); const [buscaEstado, setBuscaEstado] = useState({}); const buscaController = useRef(null); const [pendente] = useState(() => cadastroPendente(obraId));
   const base = `/obras/${encodeURIComponent(obraId)}/trabalhadores`;
   useEffect(() => { if (consulta.data) { try { sessionStorage.removeItem(chaveCadastro(obraId)); } catch { /* A consulta continua disponível. */ } } }, [consulta.data, obraId]);
   useEffect(() => () => buscaController.current?.abort(), []);
   async function pesquisar(event) {
     event.preventDefault(); buscaController.current?.abort();
-    if (!busca.trim()) { setBuscaEstado({ error: 'Informe um nome para pesquisar.' }); return; }
+    if (!busca.trim()) { setBuscaEstado({ error: 'Informe um nome ou cargo para pesquisar.' }); return; }
     const controller = new AbortController(); buscaController.current = controller; setBuscaEstado({ loading: true });
-    try { const data = await trabalhadoresApi(request).search(busca, controller.signal); if (!controller.signal.aborted) setBuscaEstado({ data }); }
+    try { const api = trabalhadoresApi(request); const data = await (tipoBusca === 'cargo' ? api.searchCargo(busca, controller.signal) : api.search(busca, controller.signal)); if (!controller.signal.aborted) setBuscaEstado({ data }); }
     catch (cause) { if (!controller.signal.aborted) setBuscaEstado({ error: cause.message || 'Não foi possível realizar a busca.' }); }
   }
   const resultados = consulta.data?.filter(item => normal(`${item.nome} ${item.cargo || ''}`).includes(normal(termo.trim())));
   return <section className="feature-page">
     <header className="trabalhadores-heading"><div><h2>Trabalhadores da obra</h2><p>Consulte os contatos e os cargos da equipe. O cadastro não concede acesso ao sistema.</p></div>
       {consulta.data && <Link className="button button-primary" to={`${base}/novo${search}`}><Plus size={16} aria-hidden="true" />Cadastrar trabalhador</Link>}</header>
-    <section className="feature-card trabalhadores-filtros" aria-label="Busca de trabalhadores da construtora"><h3>Buscar na construtora</h3><p>Encontre também pessoas que não estão vinculadas a esta obra.</p><form onSubmit={pesquisar}><Field label="Nome na construtora"><input type="search" value={busca} onChange={e => setBusca(e.target.value)} /></Field><Button type="submit" loading={buscaEstado.loading}>Buscar na construtora</Button></form>
+    <section className="feature-card trabalhadores-filtros" aria-label="Busca de trabalhadores da construtora"><h3>Buscar na construtora</h3><p>Encontre também pessoas que não estão vinculadas a esta obra.</p><form onSubmit={pesquisar}><Field label="Pesquisar por"><select value={tipoBusca} onChange={e => { buscaController.current?.abort(); setTipoBusca(e.target.value); setBuscaEstado({}); }}><option value="nome">Nome</option><option value="cargo">Cargo</option></select></Field><Field label={tipoBusca === 'cargo' ? 'Cargo na construtora' : 'Nome na construtora'}><input type="search" value={busca} onChange={e => setBusca(e.target.value)} /></Field><Button type="submit" loading={buscaEstado.loading}>Buscar na construtora</Button></form>
       {buscaEstado.error && <p role="alert" className="form-error">{buscaEstado.error}</p>}
       {buscaEstado.data?.length === 0 && <p>Nenhum trabalhador encontrado na construtora.</p>}
       {buscaEstado.data?.length > 0 && <ul>{buscaEstado.data.map(item => <li key={item.id}><Link to={`${base}/${encodeURIComponent(item.id)}${search}`}>{item.nome}</Link> · {item.obras.includes(obraId) ? 'Vinculado a esta obra' : 'Sem vínculo com esta obra'}</li>)}</ul>}
