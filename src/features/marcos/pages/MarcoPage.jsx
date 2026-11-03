@@ -1,3 +1,4 @@
+import { ExcluirAlvo } from '../../../shared/ui/Exclusoes';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, GitBranch, Images } from 'lucide-react';
@@ -57,7 +58,7 @@ function MarcoDetalhe({ obraId, marcoId }) {
     {readback?.confirmed && <p role="status" className="obra-save-success">Alteração de estado confirmada pelo servidor.</p>}
     {readback?.loading && <p role="status">Atualizando marco, lista e histórico…</p>}
     {readback?.error && <section className="feature-card dependencia-error" role="alert"><h3>Consulta dos dados atuais incompleta</h3><p>{readback.error}</p><Button variant="secondary" onClick={() => void reload()}>Reconsultar marco e histórico</Button></section>}
-    {marco && <><header className="section-heading marcos-heading"><div><span className="eyebrow">Entrega da obra</span><h2>{marco.nome}</h2></div><MarcoEstado estado={marco.estado} /></header><section className="feature-card"><h3>Planejamento da entrega</h3><dl className="obra-resumo"><div><dt>Início previsto</dt><dd>{formatarDia(marco.inicio_previsto)}</dd></div><div><dt>Fim previsto</dt><dd>{formatarDia(marco.fim_previsto)}</dd></div><div className="form-full"><dt>Descrição</dt><dd>{marco.descricao}</dd></div></dl><p className="record-reference">Referência: {marco.id}</p></section>
+    {marco && <><header className="section-heading marcos-heading"><div><span className="eyebrow">Entrega da obra</span><h2>{marco.nome}</h2></div><MarcoEstado estado={marco.estado} /></header><section className="feature-card"><h3>Planejamento da entrega</h3><dl className="obra-resumo"><div><dt>Início previsto</dt><dd>{formatarDia(marco.inicio_previsto)}</dd></div><div><dt>Fim previsto</dt><dd>{formatarDia(marco.fim_previsto)}</dd></div><div className="form-full"><dt>Descrição</dt><dd>{marco.descricao}</dd></div></dl><p className="record-reference">Referência: {marco.id}</p><ExcluirAlvo tipo="marco" id={marcoId} obraId={obraId} /></section>
       <p><Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/historico/nova-mudanca?${changeParams}`}>Replanejar período do marco</Link></p>
       <EstadoMarcoForm key={`${marco.versao}:${epoch}`} obraId={obraId} marco={marco} disabled={Boolean(readback?.loading || readback?.error)} onStart={() => setReadback((previous) => previous ? { ...previous, confirmed: false } : null)} onApplied={() => reload(true)} onRefresh={() => void reload()} />
       {(!readback || readback.history) && <DecisoesEstadoMarco events={readback?.history} obraId={obraId} marcoId={marcoId} />}

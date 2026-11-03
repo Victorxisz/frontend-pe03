@@ -1,6 +1,7 @@
+import { useExclusoes } from '../../../shared/ui/Exclusoes';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ArrowUpRight, Building2, CalendarDays, House, Plus, Search, X } from 'lucide-react';
+import { ArrowUpRight, Building2, CalendarDays, House, Plus, Search, X, MapPin } from 'lucide-react';
 import { useAuth } from '../../auth/AuthProvider';
 import { obrasApi } from '../api';
 import { Button, EmptyState } from '../../../shared/ui/UI';
@@ -12,6 +13,7 @@ import { lerFiltros, nomesFiltros, parametrosFiltros, textoFiltro } from '../fil
 
 export default function ObrasPage() {
   const { request } = useAuth();
+  const { operations } = useExclusoes();
   const [params, setParams] = useSearchParams();
   const search = params.toString();
   const { filtros, repetidos } = useMemo(() => lerFiltros(new URLSearchParams(search)), [search]);
@@ -32,7 +34,9 @@ export default function ObrasPage() {
   }, [request, queryKey, filtros, repetidos]);
   const repeatedError = useMemo(() => repetidos.length ? { message: 'Há filtros repetidos na URL. Revise os campos e aplique novamente ou limpe os filtros.', fields: repetidos, status: 422 } : null, [repetidos]);
   const current = repeatedError ? { error: repeatedError } : state.key === queryKey ? state : {};
-  const { data, error } = current;
+  const { data: result, error } = current;
+  const visible = result?.obras.filter((obra) => !operations.some((a) => a.tipo === 'obra' && a.id === obra.id));
+  const data = result && { ...result, obras: visible, situacao: result.situacao === 'com_resultados' && !visible.length ? (Object.keys(result.filtros_aplicados).length ? 'sem_resultados' : 'lista_vazia') : result.situacao };
   const loading = !data && !error;
   const serverErrors = Object.fromEntries((Array.isArray(error?.fields) ? error.fields : Object.keys(error?.fields || {})).map((campo) => [campo, error.message]));
   useEffect(() => { if (error) errorSummary.current?.focus(); }, [error]);
@@ -40,7 +44,7 @@ export default function ObrasPage() {
   function remove(campo) { apply({ ...filtros, [campo]: '' }); }
   const entries = Object.entries(data?.filtros_aplicados || {});
   return <>
-    <header className="page-heading obras-heading"><div><span className="eyebrow">Painel de obras</span><h1>Obras em acompanhamento</h1><p>Encontre sua obra. Acompanhe cada entrega.</p></div><Link className="button button-primary" to="/obras/nova"><Plus size={16} aria-hidden="true" />Nova obra</Link></header>
+    <header className="page-heading obras-heading"><div><h1>Obras em acompanhamento</h1></div><Link className="button button-primary" to="/obras/nova"><Plus size={16} aria-hidden="true" />Nova obra</Link></header>
     {error && <section ref={errorSummary} tabIndex={-1} className="feature-card busca-error" role="alert"><h2>{error.status === 422 ? 'Revise os filtros' : 'Não foi possível carregar as obras'}</h2><p>{error.message}</p>{Object.keys(serverErrors).filter((campo) => nomesFiltros[campo]).map((campo) => <p key={campo}><a href={`#filtro-${campo}`}>{nomesFiltros[campo]}</a></p>)}{error.status !== 422 && <Button variant="secondary" onClick={() => setAttempt((value) => value + 1)}>Tentar novamente</Button>}</section>}
     <FiltrosObras key={`${search}:${attempt}`} filtros={filtros} onApply={apply} onClear={() => apply({})} serverErrors={serverErrors} />
     <section className="obras-results" aria-labelledby="titulo-resultados" aria-busy={loading}>
@@ -52,7 +56,7 @@ export default function ObrasPage() {
       {data && <div className="works-grid">{data.obras.map((obra) => <article className="feature-card work-card" key={obra.id}>
         <ImagemProjeto obraId={obra.id} imagem={obra.imagem_projeto} nome={obra.nome} compact />
         <div className="work-card-top"><span className="work-type">{obra.tipo === 'casa' ? <House size={17} aria-hidden="true" /> : <Building2 size={17} aria-hidden="true" />}{obra.tipo === 'casa' ? 'Casa' : obra.tipo === 'apartamentos' ? 'Apartamentos' : 'Obra residencial'}</span><ObraSituacao obra={obra} /></div>
-        <div><h3><Link to={`/obras/${encodeURIComponent(obra.id)}/marcos${search ? `?busca=${encodeURIComponent(search)}` : ''}`}>{obra.nome}<ArrowUpRight size={20} aria-hidden="true" /></Link></h3><p className="work-client"><span>Cliente de referência</span>{obra.cliente}</p></div>
+        <div><h3><Link to={`/obras/${encodeURIComponent(obra.id)}/marcos${search ? `?busca=${encodeURIComponent(search)}` : ''}`}>{obra.nome}<ArrowUpRight size={20} aria-hidden="true" /></Link></h3>{obra.localizacao && <p className="work-location"><MapPin size={14} aria-hidden="true" />{obra.localizacao}</p>}<p className="work-client"><span>Cliente de referência</span>{obra.cliente}</p></div>
         <div className="work-deadline"><CalendarDays size={18} aria-hidden="true" /><p><span>Prazo de entrega</span>{formatarEntrega(obra.entrega)}</p></div>
         <span className="work-card-foot">Ver obra e acompanhamento <ArrowUpRight size={16} aria-hidden="true" /></span>
       </article>)}</div>}
