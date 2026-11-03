@@ -786,3 +786,59 @@ ainda depende da correção de UC-20 no backend.
 
 `tests/e2e/uc-15.spec.js` cobre a interface com API controlada; não comprova
 concorrência real nem persistência após reinício no Atlas.
+
+
+## Exclusão de obra e marco — UC-17
+
+Os detalhes de obra e marco oferecem exclusão definitiva. Antes da confirmação,
+a interface reconsulta nome e ID e avisa sobre histórico, ocorrências, aceitações,
+versões, mídias, dependências e exemplos associados. O aviso não estima totais.
+A obra remove vínculos de trabalhadores, preservando seus cadastros e outras
+obras; excluir marco preserva a obra e os demais marcos.
+
+Cancelar ou Escape não envia DELETE. Confirmar envia somente `{confirmar:true}`
+a `/obras/{id}` ou `/marcos/{id}`; apenas 204 anuncia conclusão. Operações sem
+confirmação ficam em localStorage, separadas por conta, e podem ser retomadas
+após recarga ou novo login no mesmo navegador. Não são apresentadas como obras
+ativas; GET ou DELETE 404 nunca substitui 204. É necessário manter os dados do
+navegador para preservar esse registro local. Se o armazenamento falhar antes do
+envio, a operação não é enviada. Durante a pendência, as telas da obra são
+desmontadas; após 204, listas, dependências, ocorrências e histórico são
+consultados novamente ao abrir as respectivas telas. A limpeza remota pertence
+ao servidor.
+
+`tests/e2e/uc-17.spec.js` cobre os contratos com API controlada. Para executar
+com Chrome instalado: `$env:E2E_BROWSER_CHANNEL="chrome"; npm run test:e2e`.
+Contagens exatas prévias dependem de uma consulta específica no backend antes
+de serem oferecidas pela interface.
+
+Validação em 02/11/2026: build aprovado; 19 testes unitários/contratuais e
+230 cenários de navegador aprovados no Chrome, incluindo 9 de UC-17. Um teste
+de login real permaneceu opt-in. Backend: 1.452 testes aprovados e 52 cenários
+opt-in não executados. Banco e provedor de mídia simulados; esta execução não
+valida Atlas, Cloudinary ou implantação real.
+
+## Interface
+
+A interface usa fundo branco, tipografia discreta, bordas finas e azul nas ações
+e na indicação de navegação ativa. Login em cartão com campos maiores e botão de mostrar/ocultar senha; painel sem
+ilustrações, faixas promocionais ou indicadores adicionais. As cores de estado
+e os avisos de negócio permanecem acompanhados por texto.
+
+A revisão prioriza agrupamento, rótulos claros, foco visível e adaptação a
+celulares. Referências: [Cambridge — organização de páginas](https://help.uis.cam.ac.uk/service/collaboration/365/sharepoint/create-user-friendly-pages-sharepoint-online)
+e [W3C — design acessível](https://www.w3.org/WAI/tips/designing/).
+
+Validação: build e 19 testes unitários aprovados. Na suíte de navegador, 229
+cenários passaram; uma corrida de sincronização no teste de login foi corrigida,
+e os 19 cenários de autenticação passaram na repetição. O cenário de login real
+permanece opt-in. API controlada; login e painel também conferidos visualmente
+em desktop e celular.
+
+Ajuste do login: sem marca gráfica ou ícones decorativos; o olho é um controle
+funcional, acessível por teclado e identificado como Mostrar/Ocultar senha.
+Não envia o formulário e preserva o valor ao alternar. Ao enviar, a senha volta
+a ficar oculta; ao terminar a tentativa, o campo é limpo.
+Validação deste ajuste: build, 19 testes unitários e 55 cenários de navegador
+(UC-01/03/17) aprovados com API controlada; um teste real opt-in não executado.
+Login conferido entre 320 e 1440px, sem rolagem horizontal.

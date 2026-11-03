@@ -54,6 +54,38 @@ async function mockApi(page, overrides = {}) {
 test.describe('FE-UC-01 — navegador com API controlada', () => {
   test.skip(isReal, 'Executar separado da API real');
 
+  test('olho mostra e oculta a senha sem enviar; submissão volta a ocultá-la', async ({ page }) => {
+    let release;
+    const response = new Promise((resolve) => { release = resolve; });
+    const state = await mockApi(page, { login: async (route) => {
+      await response;
+      return route.fulfill({ status: 401, json: { erro: 'Credenciais inválidas' } });
+    } });
+    await page.goto('/login');
+    const password = page.getByLabel('Senha', { exact: true });
+    await password.fill('senha-ficticia');
+    await expect(password).toHaveAttribute('type', 'password');
+    await page.getByRole('button', { name: 'Mostrar senha', exact: true }).click();
+    await expect(password).toHaveAttribute('type', 'text');
+    await expect(password).toHaveValue('senha-ficticia');
+    const hide = page.getByRole('button', { name: 'Ocultar senha', exact: true });
+    await expect(hide).toHaveAttribute('aria-pressed', 'true');
+    await hide.focus(); await page.keyboard.press('Space');
+    await expect(password).toHaveAttribute('type', 'password');
+    await expect(password).toHaveValue('senha-ficticia');
+    expect(state.logins).toBe(0);
+    await page.getByRole('button', { name: 'Mostrar senha', exact: true }).click();
+    await page.getByRole('textbox', { name: 'E-mail', exact: true }).fill('conta@example.test');
+    await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+    await expect(password).toHaveAttribute('type', 'password');
+    await expect(page.getByRole('button', { name: 'Mostrar senha', exact: true })).toBeDisabled();
+    release();
+    await expect(page.getByRole('alert')).toHaveText('E-mail ou senha incorretos.');
+    await expect(password).toHaveValue('');
+    await expect(page.getByRole('button', { name: 'Mostrar senha', exact: true })).toHaveAttribute('aria-pressed', 'false');
+    expect(state.logins).toBe(1);
+  });
+
   test('acesso direto exige login, preserva destino completo e restaura rota aninhada', async ({ page }) => {
     const state = await mockApi(page);
     await page.goto(destination);
@@ -78,6 +110,7 @@ test.describe('FE-UC-01 — navegador com API controlada', () => {
     await page.goto('/login');
     await fillLogin(page);
     await expect(page.getByRole('button', { name: 'Entrando…' })).toBeDisabled();
+    await expect.poll(() => typeof release).toBe('function');
     release();
     await expect(page.getByRole('alert')).toHaveText('E-mail ou senha incorretos.');
     await expect(page.getByLabel('Senha', { exact: true })).toHaveValue('');

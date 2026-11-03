@@ -5,6 +5,7 @@ export const obrasApi = (request) => ({
     const query = parametrosFiltros(filtros).toString();
     return request(`/obras${query ? `?${query}` : ''}`, { signal });
   },
+  remove: (id) => request(`/obras/${encodeURIComponent(id)}`, { method: 'DELETE', body: { confirmar: true }, expectedStatus: 204 }),
   detail: (id, signal) => request(`/obras/${encodeURIComponent(id)}`, { signal }),
   create: (body, imagem) => {
     if (!imagem) return request('/obras', { method: 'POST', body, expectedStatus: 201 });

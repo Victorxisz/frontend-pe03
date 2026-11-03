@@ -1,3 +1,4 @@
+import { ExcluirAlvo } from '../../shared/ui/Exclusoes';
 import { Link, NavLink, Outlet, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Pencil } from 'lucide-react';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
@@ -39,7 +40,7 @@ export default function ObraLayout() {
     {current.obra && <><header className="page-heading obra-detail-heading"><div><span className="eyebrow">Acompanhamento da obra</span><h1>{current.obra.nome}</h1><p>{current.obra.localizacao}</p><p className="record-reference">Referência: {obraId}</p></div><ObraSituacao obra={current.obra} /></header>
       {navigationState?.obraAtualizada === obraId && <p role="status" className="obra-save-success">Dados da obra atualizados.</p>}
       <ImagemProjeto obraId={obraId} imagem={current.obra.imagem_projeto} nome={current.obra.nome} />
-      <section className="feature-card obra-cadastro" aria-label="Cadastro da obra"><div className="cadastro-heading"><h2>Dados da obra</h2><Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/editar${search}`}><Pencil size={16} aria-hidden="true" />Editar obra</Link></div><ObraResumo obra={current.obra} /></section>
+      <section className="feature-card obra-cadastro" aria-label="Cadastro da obra"><div className="cadastro-heading"><h2>Dados da obra</h2><Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/editar${search}`}><Pencil size={16} aria-hidden="true" />Editar obra</Link></div><ObraResumo obra={current.obra} /><ExcluirAlvo tipo="obra" id={obraId} obraId={obraId} /></section>
       <ObraSections key={obraId} obraId={obraId} obra={current.obra} search={search} onObraConsultada={onObraConsultada} /></>}
   </>;
 }

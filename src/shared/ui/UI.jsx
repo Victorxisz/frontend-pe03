@@ -1,5 +1,4 @@
 import { useEffect, useId, useRef } from "react";
-import { X } from "lucide-react";
 import { formatarDia } from '../lib/datas';
 
 export const statusNames = {
@@ -114,7 +113,7 @@ export function Modal({ title, onClose, children, footer, wide = false }) {
         <header>
           <h2 id={id}>{title}</h2>
           <button className="icon-button" aria-label="Fechar" onClick={onClose}>
-            <X size={20} />
+            Fechar
           </button>
         </header>
         <div className="modal-body">{children}</div>

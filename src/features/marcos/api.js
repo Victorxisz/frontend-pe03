@@ -12,6 +12,7 @@ function conferirDependencia(data, marcoId) {
   return data;
 }
 export const marcosApi = (request) => ({
+  remove: (id) => request(`/marcos/${encodeURIComponent(id)}`, { method: 'DELETE', body: { confirmar: true }, expectedStatus: 204 }),
   list: async (obraId, signal) => {
     const data = await request(base(obraId), { signal, expectedStatus: 200 });
     if (!Array.isArray(data)) throw new Error('Não foi possível interpretar a lista de marcos. Tente novamente.');
