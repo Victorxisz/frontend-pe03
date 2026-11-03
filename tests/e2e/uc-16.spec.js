@@ -4,7 +4,9 @@ const path = '/obras/obra-teste/ocorrencias/ocorrencia-teste/aceitacoes';
 const acceptancePath = '/api/ocorrencias/ocorrencia-teste/aceitacoes';
 
 async function setup(page, options = {}) {
-  const state = { occurrence: { id: 'ocorrencia-teste', titulo: 'Infiltração', estado: 'sem solução' }, items: [], posts: [], failPostOnce: false, ...options };
+  const state = { occurrence: { id: 'ocorrencia-teste', obra_id: 'obra-teste', titulo: 'Infiltração', descricao: 'Água na parede', estado: 'sem solução',
+    autor: 'conta-teste', data_registro: '2026-11-02T12:00:00Z', midias: [], aceitacoes: [], aceitacoes_do_estado_atual: [], versao: 1, episodio: 1 },
+    items: [], posts: [], failPostOnce: false, ...options };
   await page.addInitScript(() => sessionStorage.setItem('pe03:access-token', 'token-teste'));
   await page.route('**/api/**', async (route) => {
     const req = route.request(); const url = new URL(req.url()); const pathname = url.pathname;
@@ -53,7 +55,7 @@ test('timeout mantém chave e conteúdo entre recarga e reenvio', async ({ page 
   await page.getByRole('textbox', { name: 'Justificativa' }).fill('Revisão trimestral definida.');
   await page.getByRole('button', { name: 'Revisar aceitação' }).click();
   await page.getByRole('button', { name: 'Registrar decisão' }).click();
-  await expect(page.getByRole('alert')).toContainText('Reenvie esta mesma decisão');
+  await expect(page.getByRole('alert').filter({ hasText: 'Reenvie esta mesma decisão' })).toBeVisible();
   const first = state.posts[0];
   await page.reload();
   await expect(page.getByRole('button', { name: 'Reenviar para confirmar resultado' })).toBeVisible();

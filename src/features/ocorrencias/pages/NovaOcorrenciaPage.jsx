@@ -53,10 +53,10 @@ export default function NovaOcorrenciaPage() {
       </div>
       {marcos.loading && <p role="status">Carregando marcos…</p>}{marcos.error && <p role="alert">Não foi possível carregar marcos. É possível continuar sem marco. <Button variant="secondary" onClick={marcos.retry}>Tentar novamente</Button></p>}
       {!workers.data && !workers.error && <p role="status">Carregando trabalhadores…</p>}{workers.error && <p role="alert">Não foi possível carregar trabalhadores. É possível continuar sem responsável. <Button variant="secondary" onClick={() => setWorkersAttempt(n => n + 1)}>Tentar novamente</Button></p>}
-      {workers.data?.length === 0 && <p>Nenhum trabalhador vinculado. Você pode continuar sem responsável. O cadastro de trabalhador está em preparação; <Link to={`/obras/${encodeURIComponent(obraId)}/trabalhadores/novo${search}`}>abrir essa área</Link>.</p>}
+      {workers.data?.length === 0 && <p>Nenhum trabalhador vinculado. Você pode continuar sem responsável. O cadastro de trabalhador está em preparação; <Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/trabalhadores/novo${search}`}>abrir essa área</Link>.</p>}
       <p className="form-hint">A data de registro e a autoria serão informadas pelo servidor.</p>
-      {error && <div className="form-error" role="alert"><p>{error}</p>{uncertain && <Link to={`${base}${search}`}>Consultar lista de ocorrências</Link>}</div>}
-      <div className="page-actions"><Button type="submit" loading={saving} disabled={uncertain}>Registrar ocorrência</Button><Link className="button button-secondary" aria-disabled={saving || undefined} onClick={e => saving && e.preventDefault()} to={`${base}${search}`}>Cancelar</Link></div>
+      {error && <div className="form-error" role="alert"><p>{error}</p>{uncertain && <Link className="button button-secondary" to={`${base}${search}`}>Consultar lista de ocorrências</Link>}</div>}
+      <div className="page-actions action-toolbar"><Button type="submit" loading={saving} disabled={uncertain}>Registrar ocorrência</Button><Link className="button button-secondary" aria-disabled={saving || undefined} onClick={e => saving && e.preventDefault()} to={`${base}${search}`}>Cancelar</Link></div>
     </form>
   </section>;
 }

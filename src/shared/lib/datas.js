@@ -11,6 +11,19 @@ export function formatarDia(value) {
   return diaValido(value) ? value.split('-').reverse().join('/') : value || '—';
 }
 
+// Instantes usam o fuso local do navegador; datas de calendário continuam sem conversão.
+export function formatarDataHora(value, timeZone) {
+  if (!value) return 'Não informado';
+  const date = new Date(value);
+  if (Number.isNaN(date.valueOf())) return 'Data inválida';
+  const parts = new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone,
+  }).formatToParts(date);
+  const p = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+  return `${p.day}/${p.month}/${p.year} : ${p.hour}:${p.minute}`;
+}
+
 export function formatarEntrega(entrega) {
   if (entrega?.modalidade === 'data_exata') return `Data exata: ${formatarDia(entrega.data)}`;
   if (entrega?.modalidade === 'intervalo_estimado') return `Intervalo estimado: ${formatarDia(entrega.inicio)} a ${formatarDia(entrega.fim)}`;

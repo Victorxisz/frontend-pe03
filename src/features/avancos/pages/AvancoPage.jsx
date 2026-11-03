@@ -1,3 +1,5 @@
+import { formatarDataHora } from '../../../shared/lib/datas';
+import { ExcluirRegistro } from '../../../shared/ui/Exclusoes';
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
@@ -76,8 +78,19 @@ export default function AvancoPage() {
     <dl className="avanco-facts"><div><dt>Registro</dt><dd>{avanco.registro || avanco.registrado_em || 'Não informado'}</dd></div><div><dt>Autoria</dt><dd>{avanco.autoria || avanco.autor || avanco.criado_por || 'Não informada'}</dd></div><div><dt>Marco</dt><dd>{avanco.marco_titulo || avanco.marco?.titulo || marcoId || 'Não informado'}</dd></div></dl>
     <section className="avanco-media-grid" aria-label="Mídias do avanço">{mediaObjects.map((media, index) => <MediaViewer key={media.id || media._id || index} media={media} loadContent={loadContent} />)}</section>
     {mediaError ? <p className="form-error" role="alert">{mediaError}</p> : mediaObjects.length === 0 && <p>Este avanço não retornou mídias.</p>}
-    {obraId && <><h3>Publicação</h3>{publicationError ? <p className="form-error" role="alert">{publicationError}</p> : <p>{avanco.estado === 'rascunho' ? 'Rascunho · ainda não publicado' : 'Estado da publicação consultado'}</p>}{avanco.estado === 'rascunho' ? <nav><Link to={`${base}/editar${search}`}>Editar rascunho</Link> · <Link to={`${base}/publicar${search}`}>Revisar e publicar</Link></nav> : <nav><Link to={`${base}/corrigir${search}`}>Corrigir publicação</Link> · <Link to={`${base}/versoes${search}`}>Consultar versões</Link></nav>}
-      {publicacoes.map((item) => <article className="feature-card" key={item.id}><p>{item.descricao}</p><p>{item.autor} · {item.instante}</p></article>)}
-      <p><Link to={`/obras/${encodeURIComponent(obraId)}/publicacoes${search}`}>Linha do tempo</Link></p></>}
+    {obraId && <section className="feature-card avanco-publicacao" aria-label="Publicação"><h3>Publicação</h3>{publicationError ? <p className="form-error" role="alert">{publicationError}</p> : <p>{avanco.estado === 'rascunho' ? 'Rascunho · ainda não publicado' : 'Estado da publicação consultado'}</p>}
+      <nav className="page-actions" aria-label="Ações de publicação">
+        {avanco.estado === 'rascunho' ? <>
+          <Link className="button button-primary" to={`${base}/publicar${search}`}>Revisar e publicar</Link>
+          <Link className="button button-secondary" to={`${base}/editar${search}`}>Editar rascunho</Link>
+        </> : <>
+          <Link className="button button-primary" to={`${base}/corrigir${search}`}>Corrigir publicação</Link>
+          <Link className="button button-secondary" to={`${base}/versoes${search}`}>Consultar versões</Link>
+        </>}
+        <Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/publicacoes${search}`}>Linha do tempo</Link>
+      </nav>
+      {publicacoes.map((item) => <article className="feature-card" key={item.id}><p>{item.descricao}</p><p>{item.autor} · {formatarDataHora(item.instante)}</p></article>)}
+    </section>}
+    {obraId && <ExcluirRegistro tipo="avanco" id={avancoId} obraId={obraId} marcoId={marcoId} estado={avanco.estado} />}
   </section>;
 }

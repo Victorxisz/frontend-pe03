@@ -1,0 +1,116 @@
+VERIFICAÇÃO FUNCIONAL DO SITE — 02/11/2026
+
+Escopo
+Executado no computador do usuário, no frontend-pe03 e backend-pe03.
+Site real inspecionado: http://127.0.0.1:5173.
+Testes Playwright executados no build local com Microsoft Edge e API controlada.
+A suíte Python usou banco e armazenamento simulados, sem opções de integração real.
+Nenhuma gravação, publicação, alteração de estado ou exclusão foi confirmada nos registros reais.
+
+RESULTADOS
+- Build de produção aprovado.
+- 24 testes unitários/contratuais do frontend aprovados.
+- 270 cenários únicos de navegador aprovados, considerando as reexecuções dos testes atualizados.
+- 1 teste de login/logout real não executado: exige credenciais de teste próprias.
+- 1.452 testes do backend aprovados; 52 cenários de integração opcionais não executados.
+- A execução completa inicial do navegador teve 266 aprovados, 4 falhas e 1 ignorado.
+  As quatro falhas foram investigadas; estavam nos testes antigos, descritas abaixo.
+  A repetição de UC-14/16 teve 15 aprovados e um seletor ambíguo; após corrigir o seletor,
+  os três testes de UC-16 passaram. Não foi necessário alterar o código do produto nesta verificação.
+
+INVENTÁRIO DO QUE ESTÁ DISPONÍVEL
+
+Autenticação e sessão
+- Login da construtora, restauração de sessão, logout, rejeição de sessão inválida e proteção das rotas.
+- Cobertura automatizada aprovada. No site real, a sessão aberta funcionou; uma sessão anônima
+  separada foi redirecionada de /obras para /login, sem encerrar a sessão do usuário.
+- Login/logout real com credenciais não foi executado.
+
+Obras
+- Cadastro com revisão, consulta, edição dos dados descritivos, filtros por nome/cliente/estado,
+  alerta de atraso e datas; prazo com data exata ou intervalo estimado.
+- Imagem opcional: inclusão, substituição, remoção e recuperação autenticada.
+- Exclusão com aviso e retomada de limpeza.
+- Cobertura automatizada aprovada. No site real, a lista mostrou três obras, o filtro por nome
+  retornou a obra esperada e limpar filtros restaurou as três. Formulário vazio foi recusado.
+- Alteração local do nome habilitou Salvar; Cancelar preservou o nome original.
+- A imagem existente da obra foi carregada. Upload real novo não foi realizado.
+
+Marcos
+- Listagem, cadastro, consulta, período previsto, estado com motivo, dependências e exclusão.
+- Conclusão com dependências pendentes exige aviso/confirmação; cancelamento e conflitos cobertos.
+- No site real, dois marcos e a dependência Pavimentação -> Pilares foram consultados.
+- Nenhuma mudança de estado, vínculo ou período real foi enviada.
+
+Avanços
+- Cadastro com data, descrição e 1 a 5 evidências; envio como rascunho.
+- Consulta por marco, detalhe, recuperação de mídia e exclusão individual.
+- Cadastro e tratamento de falhas cobertos por testes controlados.
+- EDIÇÃO DE RASCUNHO AINDA NÃO IMPLEMENTADA NO FRONTEND:
+  EditarAvancoPage.jsx exibe a tela de preparação. O backend possui o contrato, mas não há formulário React funcional.
+
+Publicações
+- Revisar/publicar um rascunho, listar publicados, consultar detalhe, corrigir conteúdo com motivo
+  e consultar versões/diferenças com preservação do histórico.
+- Rascunhos não aparecem na linha do tempo até confirmação da publicação.
+- No site real, uma publicação existente foi listada, a versão atual e a imagem foram abertas,
+  e o formulário de correção carregou com Salvar desabilitado enquanto não havia alteração/motivo.
+- Não foi publicada nem corrigida uma atualização real durante esta verificação.
+
+Ocorrências
+- Listagem, cadastro com evidências opcionais, consulta, edição, mudança de estado com motivo,
+  responsável vinculado à obra, histórico, aceitações e exclusão individual.
+- Estado sem solução permite aceitação justificada; reenvio preserva a chave para evitar duplicação.
+- Cobertura automatizada aprovada após atualizar os dados dos testes UC-16.
+- Na obra inspecionada não havia ocorrências. A lista vazia carregou e o formulário vazio
+  foi recusado. O cadastro foi cancelado sem criar uma ocorrência.
+
+Histórico e replanejamento
+- Consulta de decisões/correções e replanejamento de período, entrega ou estado com motivo e versão.
+- Cobertura automatizada aprovada. A obra real consultada apresentou histórico vazio.
+
+Exclusões UC-17/18
+- Obra, marco, avanço publicado/rascunho e ocorrência, incluindo seus dependentes conforme contrato.
+- Prévia de perda, Cancelar/Escape, validação de contexto, somente 204 como conclusão,
+  Retry-After, referência persistente de limpeza, retomada após recarga/GET 404 e conflitos.
+- Cobertura automatizada aprovada; cenários destrutivos executados somente com dados simulados.
+- No site real, a prévia de exclusão do avanço publicado retornou as contagens corretas;
+  Cancelar fechou o diálogo e o avanço permaneceu disponível. Nenhum DELETE real foi enviado.
+
+Trabalhadores
+- Backend possui cadastro, consultas, edição, vínculos e exclusão, cobertos pela suíte Python.
+- FRONTEND AINDA EM PREPARAÇÃO: lista, cadastro, detalhe e edição não têm formulários/consultas funcionais.
+- A tela de preparação foi confirmada no navegador real.
+
+Exemplos simulados
+- Backend possui consulta somente de leitura e cenários de carga/teste.
+- FRONTEND AINDA EM PREPARAÇÃO. Confirmado no navegador real.
+
+APRESENTAÇÃO E RESPONSIVIDADE
+- Testes de layout entre 320 e 1280 px aprovados nos formulários cobertos.
+- Diálogos de exclusão conferidos em celular e desktop.
+- Problema observado no detalhe real de avanço: o campo Registro mostra Não informado.
+- Marco e autoria do avanço aparecem como IDs técnicos, mesmo com nome do marco disponível
+  em outras telas. Isso dificulta a leitura e merece ajuste de apresentação.
+
+CORREÇÕES FEITAS APENAS NOS TESTES
+1. UC-14 esperava data ISO (2030-10-20); atualizado para o formato aprovado (20/10/2030).
+2. UC-16 simulava ocorrência sem obra_id, descrição, autoria, data, versão, episódio e arrays
+   de evidências/aceitações exigidos pelo cliente atual. Fixture atualizada para o contrato vigente.
+3. UC-16 buscava um único role=alert em tela que apresenta dois avisos válidos; seletor
+   restringido à mensagem de reenvio. Nenhuma validação do produto foi removida para passar testes.
+
+LIMITES DA CONCLUSÃO
+- Os resultados automatizados não comprovam todas as gravações no Atlas/Cloudinary real.
+- Os 52 testes reais opcionais e o login real exigem configuração específica e não foram habilitados.
+- Foram confirmadas consultas e recuperações reais de imagens existentes; não houve novo upload real.
+- As áreas em preparação não devem ser apresentadas como funcionalidades prontas só porque o backend passou.
+- A aba original do usuário foi devolvida ao painel com os filtros limpos e os mesmos três registros.
+
+EVIDÊNCIAS LOCAIS
+- output/qa-site/e2e-raw.json: execução completa inicial do navegador.
+- output/qa-site/e2e-summary.json: diagnóstico inicial dos quatro testes desatualizados.
+- output/qa-site/e2e-recheck.json: repetição de UC-14/16.
+- output/qa-site/e2e-acceptance-final.json: UC-16 aprovado após ajuste do seletor.
+- output/qa-site/resumo-execucoes.json: totais e resultados de cada execução.
+- ../backend-pe03/output/qa-site-backend.xml: resultado completo da suíte Python.

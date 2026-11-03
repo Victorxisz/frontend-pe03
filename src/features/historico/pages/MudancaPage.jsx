@@ -13,6 +13,6 @@ export default function MudancaPage() {
     {state.error?.code === 'HISTORICO_INDISPONIVEL' && <p role="alert">Histórico indisponível ou inconsistente. Consulte novamente.</p>}
     <ConsultaFeedback state={state} />
     {state.data && <EventoHistorico evento={state.data} obraId={obraId} search={search} detalhe />}
-    <p><Link to={`/obras/${encodeURIComponent(obraId)}/historico${search}`}>Voltar ao histórico</Link></p>
+    <p><Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/historico${search}`}>Voltar ao histórico</Link></p>
   </section>;
 }

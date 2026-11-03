@@ -30,6 +30,17 @@ input::placeholder, textarea::placeholder { color: #747a83; opacity: 1; }
 .form-hint { font-size: 12px; }
 .feature-card .record-reference { text-align: left; }
 .page-actions { align-items: center; }
+.action-toolbar { margin-top: 20px; }
+.exclusao-registro { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+.exclusao-impacto { display: grid; gap: 10px; margin: 18px 0; }
+.exclusao-impacto > div { display: flex; justify-content: space-between; gap: 16px; }
+.exclusao-impacto dd { margin: 0; font-weight: 600; }
+.exclusoes-pendentes { display: grid; gap: 16px; margin-bottom: 24px; }
+.exclusoes-pendentes article { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+.exclusoes-pendentes .button { justify-self: start; }
+.back-link.button { min-height: 44px; text-decoration: none; }
+.form-error > .button, p > .button { margin-top: 12px; }
+.page-actions > .button { margin-top: 0; }
 .page-actions a:not(.button), .feature-page > p > a:not(.button) { text-decoration: underline; text-underline-offset: 3px; }
 .topbar { height: 64px; background: #fff; border-bottom: 1px solid var(--border); box-shadow: none; }
 .topbar-inner { max-width: 1240px; gap: 36px; }

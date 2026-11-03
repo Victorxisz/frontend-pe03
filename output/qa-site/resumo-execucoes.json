@@ -1,0 +1,51 @@
+{
+  "date": "02/11/2026",
+  "timezone": "America/Sao_Paulo",
+  "build": "aprovado",
+  "frontendUnit": {
+    "passed": 24
+  },
+  "backend": {
+    "passed": 1452,
+    "skipped": 52
+  },
+  "browser": {
+    "uniquePassedAfterRechecks": 270,
+    "skipped": 1,
+    "runs": [
+      {
+        "file": "e2e-raw.json",
+        "stats": {
+          "startTime": "2026-11-03T01:19:32.817Z",
+          "duration": 184030.196,
+          "expected": 266,
+          "skipped": 1,
+          "unexpected": 4,
+          "flaky": 0
+        }
+      },
+      {
+        "file": "e2e-recheck.json",
+        "stats": {
+          "startTime": "2026-11-03T01:24:52.696Z",
+          "duration": 21567.032,
+          "expected": 15,
+          "skipped": 0,
+          "unexpected": 1,
+          "flaky": 0
+        }
+      },
+      {
+        "file": "e2e-acceptance-final.json",
+        "stats": {
+          "startTime": "2026-11-03T01:25:53.356Z",
+          "duration": 6939.5779999999995,
+          "expected": 3,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      }
+    ]
+  }
+}

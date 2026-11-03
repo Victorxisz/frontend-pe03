@@ -17,7 +17,7 @@ export default function DependenciasPage() {
   const { data: marco, loading, error, retry } = useMarcos(obraId, marcoId);
   const back = `/obras/${encodeURIComponent(obraId)}/marcos/${encodeURIComponent(marcoId)}${search}`;
   // Validar a cadeia obra/marco antes de acessar endpoints sem obraId.
-  return <section className="feature-page"><Link className="back-link" to={back}><ArrowLeft size={15} aria-hidden="true" />Detalhe do marco</Link>
+  return <section className="feature-page"><Link className="back-link button button-secondary" to={back}><ArrowLeft size={15} aria-hidden="true" />Detalhe do marco</Link>
     {loading && <p className="feature-card" role="status">Carregando marco…</p>}
     {error && <MarcoErro error={error} retry={retry} />}
     {marco && <GerenciarDependencias key={`${obraId}:${marcoId}`} obraId={obraId} marco={marco} search={search} />}
@@ -89,7 +89,7 @@ function GerenciarDependencias({ obraId, marco, search }) {
           {chosen && <div className="dependencia-preview"><span>Relação a adicionar</span><DependenciaRelacao origem={marco.nome} destino={chosen.nome} /></div>}
           <Button type="submit" icon={Plus} loading={busy && !target} disabled={!ready || !chosen}>Adicionar dependência</Button>
         </form>
-        <div className="dependencia-note"><p>Escolha entre os marcos desta obra. O próprio marco e os pré-requisitos já definidos ficam fora da seleção.</p><Link to={`/obras/${encodeURIComponent(obraId)}/marcos/novo${search}`}>Cadastrar outro marco →</Link></div>
+        <div className="dependencia-note"><p>Escolha entre os marcos desta obra. O próprio marco e os pré-requisitos já definidos ficam fora da seleção.</p><Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/marcos/novo${search}`}>Cadastrar outro marco →</Link></div>
       </section>
     </div>
     {target && <ConfirmDialog title="Retirar dependência?" confirmLabel="Retirar vínculo" busy={busy} returnFocusRef={heading} onCancel={() => setTarget(null)}

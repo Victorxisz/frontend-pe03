@@ -91,10 +91,10 @@ export default function NovaObraPage() {
     return <Field label={labels[campo]} className={full ? 'form-full' : ''}>{campo === 'descricao' ? <textarea {...props} rows={4} /> : <input type={type} {...props} />}{errors[campo] && <small id={`${campo}-erro`} className="field-error">{errors[campo]}</small>}</Field>;
   }
   return <>
-    <Link className="back-link" to="/obras" onClick={(event) => saving && event.preventDefault()} aria-disabled={saving || undefined}>Painel das Obras</Link>
+    <Link className="back-link button button-secondary" to="/obras" onClick={(event) => saving && event.preventDefault()} aria-disabled={saving || undefined}>Painel das Obras</Link>
     <header className="page-heading"><span className="eyebrow">Cadastro</span><h1>Nova obra</h1><p>Cadastre uma casa ou apartamentos e defina o prazo de entrega. A imagem do projeto é opcional.</p></header>
     <section className="feature-card obra-form">
-      {(failure || Object.keys(errors).length > 0) && <div ref={errorSummary} tabIndex={-1} role="alert" className="form-error"><p>{failure?.message || 'Revise os campos indicados antes de continuar.'}</p>{failure?.uncertain && <Link to="/obras">Consultar lista de obras</Link>}</div>}
+      {(failure || Object.keys(errors).length > 0) && <div ref={errorSummary} tabIndex={-1} role="alert" className="form-error"><p>{failure?.message || 'Revise os campos indicados antes de continuar.'}</p>{failure?.uncertain && <Link className="button button-secondary" to="/obras">Consultar lista de obras</Link>}</div>}
       {review ? <>
         <h2 ref={reviewHeading} tabIndex={-1}>Revisar obra</h2><p className="form-hint">Confira os dados e confirme o cadastro.</p>
         <ObraResumo obra={dados} />

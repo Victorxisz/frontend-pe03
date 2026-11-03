@@ -40,7 +40,7 @@ test('cadastro mínimo usa JSON, consulta detalhe e lista após recarga', async 
   await expect(page.getByText('Ocorrência registrada com sucesso.')).toBeVisible();
   expect(state.posts[0].body).toEqual({ titulo: 'Infiltração', descricao: 'Água na parede', estado: 'aberta' });
   expect(state.posts[0].headers['idempotency-key']).toBeUndefined();
-  await expect(page.getByText('Responsável atual: Não atribuído')).toBeVisible(); await expect(page.getByText(/Registrada em:/)).toContainText('2030-10-20');
+  await expect(page.getByText('Responsável atual: Não atribuído')).toBeVisible(); await expect(page.getByText(/Registrada em:/)).toContainText('20/10/2030');
   await page.reload(); await expect(page.getByRole('heading', { name: 'Infiltração' })).toBeVisible();
   await page.getByRole('link', { name: 'Voltar às ocorrências' }).click(); await expect(page.getByRole('link', { name: 'Infiltração' })).toBeVisible();
 });

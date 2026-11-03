@@ -49,7 +49,7 @@ function MarcoDetalhe({ obraId, marcoId }) {
   const changeParams = new URLSearchParams(search);
   changeParams.set('alvo', 'marco'); changeParams.set('marcoId', marcoId); changeParams.set('campo', 'periodo_previsto');
   return <section className="feature-page" aria-busy={loading}>
-    <Link className="back-link" to={`${base}${search}`}><ArrowLeft size={15} aria-hidden="true" />Marcos da obra</Link>
+    <Link className="back-link button button-secondary" to={`${base}${search}`}><ArrowLeft size={15} aria-hidden="true" />Marcos da obra</Link>
     {created && <p className="obra-save-success" role="status">Marco criado com sucesso.</p>}
     {created && refreshed.loading && <p role="status">Atualizando lista de marcos…</p>}
     {refreshed.error && <MarcoErro error={refreshed.error} retry={refreshed.retry} />}

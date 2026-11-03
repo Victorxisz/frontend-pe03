@@ -34,7 +34,9 @@ export function createHttpClient({ baseUrl = '/api', getToken = () => null, onUn
       const detail = data?.erro && typeof data.erro === 'object' ? data.erro : data?.error;
       const message = [data?.erro, data?.mensagem, data?.msg, data?.message, data?.error, detail?.mensagem, detail?.message, detail?.msg]
         .find((value) => typeof value === 'string' && value.trim());
-      throw new ApiError(message || 'Não foi possível concluir a solicitação.', response.status, data);
+      const error = new ApiError(message || 'Não foi possível concluir a solicitação.', response.status, data);
+      error.retryAfter = response.headers.get('Retry-After');
+      throw error;
     }
     if (expectedStatus !== undefined && !(Array.isArray(expectedStatus) ? expectedStatus : [expectedStatus]).includes(response.status)) {
       throw new ApiError('O servidor não confirmou o resultado da solicitação.', 0);

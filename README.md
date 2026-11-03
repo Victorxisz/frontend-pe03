@@ -818,6 +818,67 @@ de login real permaneceu opt-in. Backend: 1.452 testes aprovados e 52 cenários
 opt-in não executados. Banco e provedor de mídia simulados; esta execução não
 valida Atlas, Cloudinary ou implantação real.
 
+## Edição de rascunho — UC-09
+
+O detalhe de um rascunho oferece **Editar rascunho**. O editor consulta o avanço,
+suas mídias e o marco na obra antes de habilitar os campos. Permite alterar data,
+descrição, selecionar quais evidências manter e adicionar até cinco novos
+arquivos por requisição, mantendo ao menos uma evidência no conjunto final.
+Não altera autoria, marco ou estado e não publica automaticamente.
+
+O PATCH envia somente diferenças em `data`, `descricao` e `midias_manter`.
+Sem novos arquivos usa JSON; com novos arquivos usa multipart e serializa a
+lista de IDs como JSON textual. Campos omitidos permanecem no servidor. A
+edição não envia revisão ou chave de idempotência de cadastro inventadas.
+
+Antes do PATCH, uma nova consulta verifica alterações de conteúdo e publicação.
+O controle transacional do servidor continua responsável pela concorrência;
+a revisão do rascunho não é exposta pelo GET atual para uma precondição atômica
+do cliente. Em conflito ou resposta incerta, o editor preserva a intenção local
+e bloqueia reenvio até consultar e revisar o estado atual. Adotar os dados
+consultados descarta explicitamente a intenção local e os arquivos selecionados.
+Publicados oferecem o caminho de correção com motivo do UC-11.
+
+Somente uma resposta 200 que confirme ID, estado, conteúdo e revisão do rascunho
+mostra **Rascunho atualizado**. Depois são relidos detalhe e lista. Falha nessa
+releitura repete apenas GET, sem reenviar a edição. O aviso confirma a edição,
+sem prometer remoção dos arquivos antigos: tarefas internas de limpeza não são
+expostas na resposta atual do backend. A exclusão de rascunhos permanece no
+fluxo compartilhado de UC-18, com DELETE sem corpo e confirmação somente em 204.
+
+Cobertura: `tests/rascunhos.test.js`, `tests/e2e/uc-09.spec.js` e, no backend,
+`tests/avancos/test_edicao_rascunhos.py` / `test_exclusao_rascunhos.py`.
+
+## Exclusão individual de avanço e ocorrência — UC-18
+
+Os detalhes de avanço e ocorrência oferecem **Excluir avanço** e **Excluir
+ocorrência**. O diálogo consulta `/avancos/{id}/exclusao` ou
+`/ocorrencias/{id}/exclusao`, confere alvo/obra/marco e mostra as contagens
+de perda retornadas pelo servidor. Falha ou resposta incompatível não abre a
+confirmação. Cancelar e Escape não enviam DELETE.
+
+Publicados e ocorrências usam `{confirmar:true, obra_id, marco_id?}`, sem repetir
+contexto na query. Rascunhos usam um único adaptador de UC-09, com DELETE sem
+corpo; se tiverem sido publicados enquanto a tela estava aberta, o backend
+recusa esse contrato e a interface exige uma nova revisão.
+
+Somente 204 conclui. A operação é guardada antes do envio no diário por conta,
+reaproveitado de UC-17. Falha externa, resposta perdida ou 404 preservam a
+retomada, mesmo sem o documento original. A referência de limpeza e o prazo
+`Retry-After` permanecem após recarga. A retomada repete o mesmo comando.
+Rejeições 400/409/422 na primeira tentativa exigem nova consulta de impacto e
+confirmação. Se a limpeza já estava pendente, a referência permanece até 204,
+inclusive se houver conflito ao retomá-la. A interface não oferece execução
+de reconciliação operacional de uploads.
+
+Durante uma exclusão sem confirmação, as telas da obra são desmontadas para
+evitar cartões e links desatualizados. Após 204, o retorno à prévia publicada,
+à lista de rascunhos ou às ocorrências reconsulta os dados sem cache.
+
+Cobertura React: `tests/exclusao-registros.test.js` e `tests/e2e/uc-18.spec.js`.
+Os testes de navegador usam API controlada. Os testes de persistência real do
+backend continuam opt-in e exigem Atlas; não são comprovados pelos mocks.
+
 ## Interface
 
 A interface usa fundo branco, tipografia discreta, bordas finas e azul nas ações
