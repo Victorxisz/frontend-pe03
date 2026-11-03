@@ -781,8 +781,8 @@ registradas anteriormente. A edição envia somente campos alterados, com a
 versão consultada; mudança de estado exige motivo. Conflitos e respostas de
 resultado incerto bloqueiam novo envio até consultar e revisar os dados atuais.
 Responsáveis escolhidos são revalidados e vínculos não alterados não são
-reenviados. O comportamento de retirada automática de trabalhador da obra
-ainda depende da correção de UC-20 no backend.
+reenviados. A retirada de trabalhador da obra é protegida pela implementação transacional
+de UC-20 no backend; é necessário implantar essa versão em conjunto.
 
 `tests/e2e/uc-15.spec.js` cobre a interface com API controlada; não comprova
 concorrência real nem persistência após reinício no Atlas.
@@ -943,3 +943,21 @@ Para repetir os testes de navegador com o Chrome instalado:
 $env:E2E_BROWSER_CHANNEL = 'chrome'
 npx playwright test tests/e2e/uc-19.spec.js tests/e2e/uc-14.spec.js tests/e2e/uc-15.spec.js
 ```
+
+## Manutenção de trabalhadores — UC-20
+
+O detalhe oferece edição e exclusão com confirmação. A edição envia apenas os
+campos alterados e trata a seleção de obras como substituição integral. Uma
+busca por nome da construtora permite localizar e vincular novamente pessoas sem
+obras. Após o sucesso, a interface relê o cadastro, as equipes e as ocorrências
+relacionadas; o DELETE confirma com o status 200 e a contagem retornada.
+
+A versão corrigida do backend limpa as atribuições nas obras retiradas,
+preservando responsável anterior e histórico. A tela verifica a releitura e
+avisa se uma ocorrência ainda apontar para a pessoa; é necessário implantar a
+versão correspondente do backend. A API de trabalhadores ainda não recebe
+uma versão esperada do formulário: a consulta antes do PATCH reduz o risco de
+sobrescrita, mas não é uma garantia atômica de concorrência.
+
+`tests/e2e/uc-20.spec.js` usa API controlada. O backend foi testado em
+coleções temporárias no Atlas, inclusive concorrência e releitura após reinício.
