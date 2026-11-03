@@ -641,7 +641,7 @@ UC-09/10/11 para avanço; UC-14/16 para ocorrência com aceitação; UC-17 para 
 
 **1. Contexto e cobertura**
 
-Confirmado: cadastrar e consultar equipe da obra sem dar acesso ao sistema. Cobre **F-20, CA-10**. Trabalhador pertence à construtora e pode ter zero ou mais obras. Backend implementado; páginas React ainda são estruturas. Proposta: formulário, lista e detalhe já roteados.
+Confirmado: cadastrar e consultar equipe da obra sem dar acesso ao sistema. Cobre **F-20, CA-10**. Trabalhador pertence à construtora e pode ter zero ou mais obras. Backend implementado. Frontend implementado em 02/11/2026: formulário, lista com busca local, detalhe e seletor compartilhado com UC-14/15. Consulte o README para contratos, verificações e limites; as listas abaixo preservam o planejamento do cartão.
 
 **2. Arquivos previstos**
 

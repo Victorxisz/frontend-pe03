@@ -1,0 +1,26 @@
+.trabalhadores-heading { display: flex; align-items: start; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+.trabalhadores-heading h2 { margin: 0 0 8px; }
+.trabalhadores-heading p { color: var(--muted); max-width: 65ch; line-height: 1.6; }
+.trabalhadores-heading .button { flex-shrink: 0; }
+.trabalhadores-filtros { margin-bottom: 24px; }
+.trabalhadores-filtros .field { max-width: 540px; }
+.trabalhadores-results { margin: 18px 0; color: var(--muted); font-size: 14px; }
+.trabalhadores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 18px; }
+.trabalhador-card { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.trabalhador-card header { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+.trabalhador-card h3 { margin: 0 0 6px; overflow-wrap: anywhere; }
+.trabalhador-card p { color: var(--muted); overflow-wrap: anywhere; }
+.trabalhador-card a:not(.button), .trabalhador-dados a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.trabalhador-card .button { align-self: start; margin-top: auto; }
+.trabalhador-status { display: inline-block; border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; font-size: 12px; white-space: nowrap; }
+.trabalhador-form { max-width: 800px; }
+.trabalhador-form h3 { margin: 0 0 12px; }
+.trabalhador-form > p { margin-bottom: 24px; line-height: 1.6; color: var(--muted); }
+.trabalhador-field-error { color: #8c2b24; line-height: 1.5; }
+.trabalhador-form .field > label { font-size: 13px; font-weight: 500; }
+.trabalhador-form [aria-invalid=true] { border-color: #8c2b24; }
+.trabalhador-dados { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 24px 0; }
+.trabalhador-dados dt { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+.trabalhador-dados dd { margin: 0; overflow-wrap: anywhere; line-height: 1.6; }
+.trabalhador-vinculos { display: grid; gap: 12px; margin-top: 16px; padding-left: 20px; }
+@media (max-width: 600px) { .trabalhadores-heading { flex-direction: column; } .trabalhador-dados { grid-template-columns: 1fr; } }

@@ -4,6 +4,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import { useMarcos } from '../../marcos/useMarcos';
 import { Button, Field } from '../../../shared/ui/UI';
 import { ocorrenciasApi } from '../api';
+import TrabalhadorSelect from '../../trabalhadores/components/TrabalhadorSelect';
 import HistoricoOcorrencia from '../components/HistoricoOcorrencia';
 import '../ocorrencias.css';
 
@@ -92,7 +93,7 @@ function Editor({ obraId, ocorrenciaId }) {
       <div className="form-grid"><Field label="Título"><input value={draft.titulo} onChange={e => change('titulo', e.target.value)} disabled={saving || pendingReview} /></Field>
       <Field label="Descrição" className="form-full"><textarea rows="4" value={draft.descricao} onChange={e => change('descricao', e.target.value)} disabled={saving || pendingReview} /></Field>
       <Field label="Marco"><select value={draft.marco_id} onChange={e => change('marco_id', e.target.value)} disabled={saving || pendingReview || !marcos.data}><option value="">Sem marco</option>{draft.marco_id && !marcos.data?.some(m => m.id === draft.marco_id) && <option value={draft.marco_id}>Referência atual: {draft.marco_id}</option>}{marcos.data?.map(m => <option key={m.id} value={m.id}>{m.nome}</option>)}</select></Field>
-      <Field label="Responsável"><select value={draft.responsavel_id} onChange={e => change('responsavel_id', e.target.value)} disabled={saving || pendingReview || !workers.data}><option value="">Sem responsável</option>{draft.responsavel_id && !workers.data?.some(w => w.id === draft.responsavel_id) && <option value={draft.responsavel_id}>Referência atual indisponível: {draft.responsavel_id}</option>}{workers.data?.map(w => <option key={w.id} value={w.id}>{w.nome}</option>)}</select></Field>
+      <TrabalhadorSelect label="Responsável" trabalhadores={workers.data} obraId={obraId} value={draft.responsavel_id} onChange={value => change('responsavel_id', value)} disabled={saving || pendingReview} />
       <Field label="Novo estado"><select value={estado} onChange={e => { setEstado(e.target.value); setError(null); }} disabled={saving || pendingReview}><option value="aberta">Aberta</option><option value="resolvida">Resolvida</option><option value="sem solução">Sem solução</option></select></Field>
       {mudouEstado && <Field label="Motivo da mudança"><textarea rows="3" value={motivo} onChange={e => setMotivo(e.target.value)} disabled={saving || pendingReview} /></Field>}</div>
       {marcos.error && <p role="alert">Não foi possível consultar marcos. <Button variant="secondary" onClick={marcos.retry}>Consultar novamente</Button></p>}
