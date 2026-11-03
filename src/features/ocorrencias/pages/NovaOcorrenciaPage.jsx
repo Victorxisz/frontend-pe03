@@ -5,6 +5,7 @@ import { useMarcos } from '../../marcos/useMarcos';
 import { Button, Field } from '../../../shared/ui/UI';
 import MediaPicker from '../../../shared/ui/MediaPicker';
 import { ocorrenciasApi } from '../api';
+import TrabalhadorSelect from '../../trabalhadores/components/TrabalhadorSelect';
 import '../ocorrencias.css';
 
 export default function NovaOcorrenciaPage() {
@@ -48,12 +49,12 @@ export default function NovaOcorrenciaPage() {
         <Field label="Estado inicial"><select value={dados.estado} onChange={e => change('estado', e.target.value)} disabled={saving || uncertain}><option value="aberta">Aberta</option><option value="sem solução">Sem solução</option></select></Field>
         <Field label="Descrição" className="form-full"><textarea required rows="4" value={dados.descricao} onChange={e => change('descricao', e.target.value)} disabled={saving || uncertain} /></Field>
         <Field label="Marco (opcional)"><select value={dados.marco_id} onChange={e => change('marco_id', e.target.value)} disabled={saving || uncertain || !marcos.data}><option value="">Sem marco</option>{marcos.data?.map(m => <option key={m.id} value={m.id}>{m.nome}</option>)}</select></Field>
-        <Field label="Responsável (opcional)"><select value={dados.responsavel_id} onChange={e => change('responsavel_id', e.target.value)} disabled={saving || uncertain || !workers.data}><option value="">Sem responsável</option>{workers.data?.map(w => <option key={w.id} value={w.id}>{w.nome}</option>)}</select></Field>
+        <TrabalhadorSelect trabalhadores={workers.data} obraId={obraId} value={dados.responsavel_id} onChange={value => change('responsavel_id', value)} disabled={saving || uncertain} />
         <div className="form-full"><MediaPicker required={false} files={files} onChange={setFiles} disabled={saving || uncertain} /></div>
       </div>
       {marcos.loading && <p role="status">Carregando marcos…</p>}{marcos.error && <p role="alert">Não foi possível carregar marcos. É possível continuar sem marco. <Button variant="secondary" onClick={marcos.retry}>Tentar novamente</Button></p>}
       {!workers.data && !workers.error && <p role="status">Carregando trabalhadores…</p>}{workers.error && <p role="alert">Não foi possível carregar trabalhadores. É possível continuar sem responsável. <Button variant="secondary" onClick={() => setWorkersAttempt(n => n + 1)}>Tentar novamente</Button></p>}
-      {workers.data?.length === 0 && <p>Nenhum trabalhador vinculado. Você pode continuar sem responsável. O cadastro de trabalhador está em preparação; <Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/trabalhadores/novo${search}`}>abrir essa área</Link>.</p>}
+      {workers.data?.length === 0 && <p>Nenhum trabalhador vinculado. Você pode continuar sem responsável ou <Link className="button button-secondary" to={`/obras/${encodeURIComponent(obraId)}/trabalhadores/novo${search}`}>Cadastrar trabalhador</Link>.</p>}
       <p className="form-hint">A data de registro e a autoria serão informadas pelo servidor.</p>
       {error && <div className="form-error" role="alert"><p>{error}</p>{uncertain && <Link className="button button-secondary" to={`${base}${search}`}>Consultar lista de ocorrências</Link>}</div>}
       <div className="page-actions action-toolbar"><Button type="submit" loading={saving} disabled={uncertain}>Registrar ocorrência</Button><Link className="button button-secondary" aria-disabled={saving || undefined} onClick={e => saving && e.preventDefault()} to={`${base}${search}`}>Cancelar</Link></div>

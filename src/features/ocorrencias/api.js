@@ -1,4 +1,5 @@
 import { ApiError } from '../../shared/api/http';
+import { trabalhadoresApi } from '../trabalhadores/api';
 
 const enc = encodeURIComponent;
 
@@ -24,13 +25,7 @@ export const ocorrenciasApi = request => ({
   detail: async (obraId, id, signal) => conferir(
     await request(`/ocorrencias/${enc(id)}`, { signal, expectedStatus: 200 }), obraId, id,
   ),
-  workers: async (obraId, signal) => {
-    const data = await request(`/trabalhadores/obra/${enc(obraId)}/`, { signal, expectedStatus: 200 });
-    if (!Array.isArray(data) || !data.every(item => typeof item.id === 'string' && typeof item.nome === 'string' && Array.isArray(item.obras))) {
-      throw new Error('Não foi possível interpretar os trabalhadores.');
-    }
-    return data.filter(item => item.obras.includes(obraId));
-  },
+  workers: (obraId, signal) => trabalhadoresApi(request).list(obraId, signal),
   create: async (obraId, dados, arquivos, signal) => {
     const campos = { titulo: dados.titulo.trim(), descricao: dados.descricao.trim(), estado: dados.estado };
     if (dados.marco_id) campos.marco_id = dados.marco_id;

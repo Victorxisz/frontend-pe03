@@ -903,3 +903,43 @@ a ficar oculta; ao terminar a tentativa, o campo é limpo.
 Validação deste ajuste: build, 19 testes unitários e 55 cenários de navegador
 (UC-01/03/17) aprovados com API controlada; um teste real opt-in não executado.
 Login conferido entre 320 e 1440px, sem rolagem horizontal.
+
+## Cadastro e consulta de trabalhadores — UC-19
+
+Na aba Trabalhadores de uma obra, a construtora pode cadastrar nome, cargo,
+e-mail e telefone com DDD, buscar por nome/cargo na equipe e consultar o detalhe.
+Não há criação de senha ou sessão de trabalhador. Campos de status, data e
+vínculos são apresentados conforme retornados pelo servidor.
+
+O módulo usa `POST /trabalhadores/obra/{obraId}/`,
+`GET /trabalhadores/obra/{obraId}/` e `GET /trabalhadores/{id}/`, preservando
+as barras finais e a autenticação compartilhada. O `201` fornece o ID;
+o detalhe é consultado antes de apresentar os dados salvos. Telefone aceita
+10 ou 11 dígitos com DDD, espaços, parênteses e hífen, sem código de país.
+A data HTTP do cadastro é exibida no fuso de Brasília.
+
+Lista vazia, falha de consulta e obra inexistente têm apresentações distintas.
+Duplo clique não duplica o envio. Resposta perdida, incompleta ou falha de
+servidor bloqueia novo cadastro até consultar a equipe; essa proteção permanece
+após recarga na mesma aba. Não há reenvio automático nem sucesso otimista.
+O seletor de responsável em UC-14/15 compartilha a consulta e aceita somente
+trabalhadores vinculados à obra. Edição e exclusão do cadastro pertencem ao UC-20.
+
+Design: rótulos visíveis, ajuda e erros associados ao campo, foco no primeiro
+erro, feedback de carregamento e cartões responsivos, seguindo
+[W3C — Forms Tutorial](https://www.w3.org/WAI/tutorials/forms/) e
+[Home Office — Search for something](https://design.homeoffice.gov.uk/design-system/patterns/help-users-to/search-for-something).
+A busca local atua apenas sobre a equipe devolvida pela API da obra.
+
+Validação em 02/11/2026: build e 30 testes unitários do frontend aprovados;
+21 cenários UC-19 e 25 regressões UC-14/15 com API controlada;
+146 testes existentes de cadastro, consulta e rotas do backend com banco simulado.
+Capturas de lista, formulário e detalhe em 320 e 1280px ficam em `test-results/`
+(ignorado pelo Git). Não foi executada integração real com MongoDB Atlas.
+
+Para repetir os testes de navegador com o Chrome instalado:
+
+```powershell
+$env:E2E_BROWSER_CHANNEL = 'chrome'
+npx playwright test tests/e2e/uc-19.spec.js tests/e2e/uc-14.spec.js tests/e2e/uc-15.spec.js
+```
