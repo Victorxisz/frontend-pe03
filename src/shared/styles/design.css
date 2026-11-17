@@ -127,3 +127,22 @@ input::placeholder, textarea::placeholder { color: #747a83; opacity: 1; }
 .feature-card { border-radius: 8px; }
 .feature-card.work-card, .feature-card.filtros-obras { border-radius: 8px; }
 @media (max-width: 600px) { .app-name { max-width: 175px; font-size: 13px; } }
+
+/* Cards de lista: o cartão inteiro abre o registro, não só o título. O link do título se estende
+   sobre o cartão; botões e campos internos ficam acima dele e continuam funcionando. */
+.feature-card:is(.marco-card, .avanco-list-item, .ocorrencia-card, .trabalhador-card) { position: relative; cursor: pointer; }
+:is(.marco-card, .avanco-list-item, .ocorrencia-card, .trabalhador-card) h3 a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+:is(.marco-card, .avanco-list-item, .ocorrencia-card, .trabalhador-card) :is(button, .button, input, select, textarea, summary) { position: relative; z-index: 1; }
+:is(.marco-card, .avanco-list-item, .ocorrencia-card, .trabalhador-card) h3 a:focus-visible { outline: none; box-shadow: none; }
+:is(.marco-card, .avanco-list-item, .ocorrencia-card, .trabalhador-card):has(h3 a:focus-visible) { outline: 2px solid var(--navy); outline-offset: 3px; }
+
+/* Ao passar o mouse, tudo que é clicável escurece (visibilidade do que responde ao clique). */
+.feature-card:is(.work-card, .marco-card, .avanco-list-item, .ocorrencia-card, .trabalhador-card):hover { background: #f1f4f7; border-color: #8e99a6; }
+:is(.marco-card, .avanco-list-item, .ocorrencia-card, .trabalhador-card, .work-card):hover h3 a { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+.marco-related a:hover { background: #f1f4f7; border-color: #8e99a6; }
+.button-secondary:hover:not(:disabled), a.button-secondary:hover { background: #e6eaef; border-color: #8e98a4; }
+.icon-button:hover:not(:disabled) { background: #e6eaef; border-color: #8e98a4; }
+.obra-tabs a:hover { background: #e9edf1; color: var(--ink); }
+.topbar nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 6px; }
+.filter-chip:hover { background: #d3e0ee; border-color: #6f8aa6; }
+.page a:not(.button):not([class*="card"]):hover { color: #10233a; }
