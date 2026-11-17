@@ -132,7 +132,14 @@
 .skip-link { position: fixed; top: -100px; left: 16px; padding: 12px; background: white; z-index: 100; }
 .skip-link:focus { top: 12px; }
 .topbar .account { margin-left: auto; }
-@media (max-width: 720px) { .topbar nav { display: none; } .account > span { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+/* Menu do topo: links espaçados; no celular passam para uma segunda linha em vez de sumir. */
+.topbar nav { display: flex; align-items: center; gap: 24px; }
+@media (max-width: 720px) {
+  .topbar { height: auto; }
+  .topbar-inner { flex-wrap: wrap; row-gap: 0; padding-top: 10px; }
+  .topbar nav { order: 3; flex-basis: 100%; gap: 20px; overflow-x: auto; }
+  .account > span { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
 @media (max-width: 400px) { .account > span { display: none; } .topbar-inner { gap: 12px; } }
 @media (prefers-reduced-motion: reduce) { .work-card { transition: none; } }
 .avanco-form { display: grid; gap: 22px; max-width: 900px; }

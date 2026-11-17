@@ -26,12 +26,12 @@ export default function LoginPage() {
     finally { setSenha(''); setSenhaVisivel(false); setBusy(false); }
   }
   return <main className="login-page">
+    <LoginMarca />
     <div className="login-shell">
     <section className="login-card" aria-labelledby="login-title">
       <header className="login-heading">
-      <p className="login-section-label">Área da construtora</p>
-      <h1 id="login-title">Entrar na conta</h1>
-      <p>Use seu e-mail e senha para acessar suas obras.</p>
+      <h1 id="login-title">Entrar</h1>
+      <p>Acesse o acompanhamento das obras da sua construtora.</p>
       </header>
       <form onSubmit={submit} aria-busy={busy}>
         <label className="login-field"><span>E-mail</span><div><input required type="email" autoComplete="username" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="voce@construtora.com.br" /></div></label>
@@ -39,8 +39,13 @@ export default function LoginPage() {
         {(error || sessionError) && <p role="alert" className="form-error">{error || sessionError}</p>}
         <Button type="submit" className="login-submit" loading={busy}>{busy ? 'Entrando…' : 'Entrar'}</Button>
       </form>
-      <p className="login-footnote">Acesso exclusivo à conta da construtora. <Link to="/cadastro">Cadastrar construtora</Link></p>
+      <p className="login-footnote">Ainda não tem conta? <Link to="/cadastro">Cadastrar construtora</Link></p>
     </section>
     </div>
+    <p className="login-rodape">Acesso restrito às construtoras cadastradas.</p>
   </main>;
+}
+
+export function LoginMarca() {
+  return <p className="login-marca"><span className="login-marca-icone" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 11.5 12 4l9 7.5" /><path d="M6 10v9h12v-9" /><path d="M10 19v-5h4v5" /></svg></span>Acompanhamento de obras</p>;
 }

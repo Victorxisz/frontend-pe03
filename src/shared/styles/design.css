@@ -16,8 +16,10 @@ h3 { font-size: 18px; }
 .button-primary:hover:not(:disabled) { background: #213e5c; }
 .button-secondary { background: #fff; border-color: #cdd0d5; color: var(--ink); }
 .button-secondary:hover:not(:disabled) { background: #f6f7f8; border-color: #a9aeb5; }
-.button-danger { background: #fff; border-color: #ddbbb6; color: #9b342a; }
-.button-danger:hover:not(:disabled) { background: #fff4f2; border-color: #bb7b72; }
+/* Cores por função: azul confirma, branco é alternativa, vermelho apaga. */
+.button-danger { background: #c0392b; border-color: #c0392b; color: #fff; }
+.button-danger:hover:not(:disabled) { background: #9f2d21; border-color: #9f2d21; }
+.button:disabled { opacity: .55; cursor: not-allowed; }
 .button:hover:not(:disabled), .button:active:not(:disabled), .icon-button:hover:not(:disabled), .icon-button:active:not(:disabled) { transform: none; }
 :is(button, a, input, select, textarea, summary):focus-visible { outline: 2px solid #315782; outline-offset: 3px; }
 .field > span { font-size: 13px; font-weight: 500; }
