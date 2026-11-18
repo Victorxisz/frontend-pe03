@@ -56,7 +56,7 @@ export default function ObrasPage() {
       {data && <div className="works-grid">{data.obras.map((obra) => <article className="feature-card work-card" key={obra.id}>
         <ImagemProjeto obraId={obra.id} imagem={obra.imagem_projeto} nome={obra.nome} compact />
         <div className="work-card-top"><span className="work-type">{obra.tipo === 'casa' ? <House size={17} aria-hidden="true" /> : <Building2 size={17} aria-hidden="true" />}{obra.tipo === 'casa' ? 'Casa' : obra.tipo === 'apartamentos' ? 'Apartamentos' : 'Obra residencial'}</span><ObraSituacao obra={obra} /></div>
-        <div><h3><Link to={`/obras/${encodeURIComponent(obra.id)}/marcos${search ? `?busca=${encodeURIComponent(search)}` : ''}`}>{obra.nome}<ArrowUpRight size={20} aria-hidden="true" /></Link></h3>{obra.localizacao && <p className="work-location"><MapPin size={14} aria-hidden="true" />{obra.localizacao}</p>}<p className="work-client"><span>Cliente de referência</span>{obra.cliente}</p></div>
+        <div><h3><Link to={`/obras/${encodeURIComponent(obra.id)}${search ? `?busca=${encodeURIComponent(search)}` : ''}`}>{obra.nome}<ArrowUpRight size={20} aria-hidden="true" /></Link></h3>{obra.localizacao && <p className="work-location"><MapPin size={14} aria-hidden="true" />{obra.localizacao}</p>}<p className="work-client"><span>Cliente de referência</span>{obra.cliente}</p></div>
         <div className="work-deadline"><CalendarDays size={18} aria-hidden="true" /><p><span>Prazo de entrega</span>{formatarEntrega(obra.entrega)}</p></div>
         <span className="work-card-foot">Ver obra e acompanhamento <ArrowUpRight size={16} aria-hidden="true" /></span>
       </article>)}</div>}

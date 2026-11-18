@@ -48,7 +48,7 @@ export default function EditorImagemProjeto({ obra, disabled, onBusyChange, onSa
     {failure && <p role="alert" className="form-error">{failure}</p>}
     {mustRefresh && <Button variant="secondary" disabled={saving || disabled} onClick={() => execute('refresh')}>Consultar imagem atual</Button>}
     <ImagemProjetoPicker key={obra.imagem_projeto?.id || 'sem-imagem'} file={file} disabled={saving || disabled} onChange={(value) => { setFile(value); setFailure(''); setMessage(''); }} />
-    <div className="page-actions"><Button disabled={!file || saving || disabled || mustRefresh} loading={saving} onClick={() => execute('save')}>Salvar imagem do projeto</Button>{obra.imagem_projeto && !confirm && <Button variant="secondary" disabled={saving || disabled || mustRefresh} onClick={() => setConfirm(true)}>Remover imagem do projeto</Button>}</div>
+    <div className="page-actions"><Button disabled={!file || saving || disabled || mustRefresh} loading={saving} onClick={() => execute('save')}>Salvar imagem do projeto</Button>{obra.imagem_projeto && !confirm && <Button variant="danger" disabled={saving || disabled || mustRefresh} onClick={() => setConfirm(true)}>Remover imagem do projeto</Button>}</div>
     {confirm && <div className="imagem-removal"><p>Remover a perspectiva ilustrativa desta obra?</p><div className="page-actions"><Button variant="danger" disabled={saving || disabled || mustRefresh} onClick={() => execute('remove')}>Confirmar remoção da imagem</Button><Button variant="secondary" disabled={saving || disabled} onClick={() => setConfirm(false)}>Manter imagem</Button></div></div>}
     {(message || saving) && <p role="status" className="form-hint">{saving ? 'Atualizando imagem do projeto…' : message}</p>}
   </section>;

@@ -2,10 +2,13 @@
 .marcos-heading > .button { flex-shrink: 0; }
 .marcos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 20px; }
 .marcos-count { color: var(--muted); font-size: 13px; margin-bottom: 16px; }
-.marco-card { display: flex; flex-direction: column; gap: 18px; min-width: 0; border-top: 3px solid #476b8c; transition: border-color 140ms ease, box-shadow 140ms ease; }
+.marco-card { position: relative; display: flex; flex-direction: column; gap: 18px; min-width: 0; border-top: 3px solid #476b8c; transition: border-color 140ms ease, box-shadow 140ms ease; }
 .marco-card:hover, .marco-card:focus-within { border-color: var(--navy); box-shadow: 0 4px 18px #18314f0c; }
 .marco-card > .status-badge { align-self: flex-start; }
 .marco-card h3 a { display: flex; align-items: start; justify-content: space-between; gap: 12px; overflow-wrap: anywhere; }
+.marco-card h3 a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.marco-card h3 a:focus-visible { outline: none; }
+.marco-card:has(h3 a:focus-visible) { outline: 2px solid #557493; outline-offset: 3px; }
 .marco-card h3 svg { flex-shrink: 0; }
 .marco-card-description { color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
 .marco-period { margin-top: auto; display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--border); padding-top: 18px; }
@@ -17,7 +20,7 @@
 .marco-dependencies-label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; }
 .marco-card-dependencies ul { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; }
 .marco-card-dependencies li { color: var(--navy); background: #edf2f8; padding: 4px 9px; border-radius: 6px; max-width: 100%; }
-.marco-card-dependencies .button { margin-top: 10px; }
+.marco-card-dependencies .button { position: relative; z-index: 1; margin-top: 10px; }
 .estado-marco-form, .decisoes-marco { margin-top: 24px; }
 .estado-marco-form h3 { margin-top: 8px; }
 .estado-marco-form > .form-hint { margin: 16px 0 24px; }

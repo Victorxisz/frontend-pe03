@@ -68,7 +68,7 @@ export default function NovaObraPage() {
     try {
       const obra = await obrasApi(request).create(payload, imagem);
       if (typeof obra?.id !== 'string' || !obra.id.trim()) throw new Error('Resposta de cadastro incompleta.');
-      if (active.current) navigate(`/obras/${encodeURIComponent(obra.id)}/marcos`, { replace: true });
+      if (active.current) navigate(`/obras/${encodeURIComponent(obra.id)}`, { replace: true });
     } catch (error) {
       if (!active.current) return;
       const uncertain = !error.status || error.status >= 500;

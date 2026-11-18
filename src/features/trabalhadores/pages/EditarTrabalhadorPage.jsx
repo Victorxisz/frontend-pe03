@@ -89,6 +89,6 @@ function Editor({ obraId, trabalhadorId }) {
       <VinculosObrasFields obras={obras} selecionadas={draft.obras} onChange={value => handleChange('obras', value)} disabled={busy || Boolean(confirmed) || needsReload} />
       <div className="page-actions"><Button type="submit" loading={busy} disabled={Boolean(confirmed) || needsReload}>Salvar alterações</Button><Link className="button button-secondary" to={`${basePath}${search}`} onClick={e => busy && e.preventDefault()}>Cancelar</Link></div>
     </form>}
-    {review && <ConfirmDialog title="Revisar vínculos retirados" confirmLabel="Salvar vínculos" busy={busy} onConfirm={salvar} onCancel={() => setReview(false)}><p>As seguintes obras serão retiradas: {removidas.map(id => obras.find(o => o.id === id)?.nome || id).join(', ')}.</p><p>Ao salvar, as atribuições nas ocorrências dessas obras serão limpas, preservando o responsável anterior e o histórico. Isso exige a versão atualizada do backend de UC-20.</p></ConfirmDialog>}
+    {review && <ConfirmDialog title="Revisar vínculos retirados" confirmLabel="Salvar vínculos" confirmVariant="primary" busy={busy} onConfirm={salvar} onCancel={() => setReview(false)}><p>As seguintes obras serão retiradas: {removidas.map(id => obras.find(o => o.id === id)?.nome || id).join(', ')}.</p><p>Ao salvar, as atribuições nas ocorrências dessas obras serão limpas, preservando o responsável anterior e o histórico. Isso exige a versão atualizada do backend de UC-20.</p></ConfirmDialog>}
   </section>;
 }

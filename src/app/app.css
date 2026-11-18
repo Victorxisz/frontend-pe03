@@ -1,4 +1,6 @@
 .route-status { padding: 64px 24px; text-align: center; color: var(--muted); }
+/* Espaçamento mínimo entre blocos de conteúdo empilhados. */
+.feature-page > * + *, .mudanca-decisao > * + * { margin-block-start: 16px; }
 .obra-form { max-width: 900px; }
 .obra-form .page-actions { margin-top: 28px; }
 .prazo-fields { border: 1px solid var(--border); border-radius: 10px; padding: 20px; min-width: 0; }
@@ -9,6 +11,22 @@
 .obra-resumo dt { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
 .obra-resumo dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .obra-cadastro { margin-bottom: 24px; }
+.obra-details-link { display: inline-block; margin-top: 12px; color: var(--navy); font-size: 13px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.obra-detalhes { margin-top: 36px; border-top: 1px solid var(--border); padding-top: 24px; }
+.obra-detalhes summary { cursor: pointer; color: var(--navy); font-weight: 600; padding: 8px 0; }
+.obra-detalhes-conteudo { margin-top: 20px; }
+.obra-visao-imagem .imagem-projeto img { max-height: 220px; }
+.obra-detalhes-conteudo > .cadastro-heading { margin-bottom: 20px; }
+.obra-detalhes-conteudo > .cadastro-heading p { margin-top: 6px; color: var(--muted); font-size: 13px; }
+.obra-detalhes .obra-resumo { margin-top: 0; }
+.obra-prazo { display: grid; gap: 6px; margin-top: 20px; color: var(--ink); }
+.obra-prazo span { font-size: 12px; color: var(--muted); }
+.obra-opcoes { margin-top: 28px; }
+.obra-opcoes > p { margin-top: 6px; color: var(--muted); }
+.obra-opcoes > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 12px; margin-top: 20px; }
+.obra-opcao { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: 600; color: var(--navy); }
+.obra-opcao-destaque { border-color: #a9bfd2; background: #f4f8fb; }
+.obra-opcao:hover, .obra-opcao:focus-visible { border-color: #829fbd; background: #f7f9fc; }
 .cadastro-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .obra-edit-grid { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr); gap: 24px; align-items: start; }
 .obra-edit-main { display: grid; gap: 24px; min-width: 0; }
@@ -119,6 +137,7 @@
 @media (max-width: 900px) { .filter-primary { grid-template-columns: 1fr 1fr; } .filter-primary > :last-child { grid-column: 1 / -1; } .filter-date-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .obras-heading, .obra-detail-heading { align-items: flex-start; flex-direction: column; } .filter-heading { align-items: flex-start; flex-direction: column; gap: 8px; } .filter-primary { grid-template-columns: 1fr; } .filter-secondary { gap: 0; } .results-heading { align-items: flex-start; flex-direction: column; gap: 8px; } .filtros-obras { padding: 20px; } }
 .section-heading { display: grid; gap: 12px; margin-bottom: 24px; }
+.section-heading > .button { justify-self: start; }
 .section-heading p { color: var(--muted); max-width: 680px; }
 .feature-card { border: 1px solid var(--border); border-radius: var(--radius); background: white; padding: 24px; }
 .record-reference { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; margin-top: 12px; }
@@ -132,9 +151,16 @@
 .skip-link { position: fixed; top: -100px; left: 16px; padding: 12px; background: white; z-index: 100; }
 .skip-link:focus { top: 12px; }
 .topbar .account { margin-left: auto; }
-@media (max-width: 720px) { .topbar nav { display: none; } .account > span { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+@media (max-width: 720px) { header.topbar { height: auto; } .topbar-inner { min-height: 64px; height: auto; flex-wrap: wrap; row-gap: 0; } .topbar nav { display: flex; order: 3; width: 100%; gap: 24px; } .account > span { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
 @media (max-width: 400px) { .account > span { display: none; } .topbar-inner { gap: 12px; } }
 @media (prefers-reduced-motion: reduce) { .work-card { transition: none; } }
+.conta-page { display: grid; gap: 24px; }
+.conta-page > header p { color: var(--muted); margin-top: 8px; }
+.conta-page > .feature-card h2 { margin-bottom: 20px; }
+.conta-page form { display: grid; gap: 18px; }
+.conta-page form > .button { justify-self: start; margin-top: 4px; }
+.conta-page > .feature-card > p { color: var(--muted); margin-bottom: 16px; }
+.feature-card > .record-reference + .button-danger { margin-top: 16px; }
 .avanco-form { display: grid; gap: 22px; max-width: 900px; }
 .avanco-form .page-actions { margin-top: 2px; }
 .draft-media-fieldset { min-width: 0; border: 0; margin: 0; padding: 0; }

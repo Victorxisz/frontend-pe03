@@ -22,7 +22,7 @@ function EditarObra({ obraId }) {
   const { request } = useAuth();
   const { search } = useLocation();
   const navigate = useNavigate();
-  const detailTo = `/obras/${encodeURIComponent(obraId)}/marcos${search}`;
+  const detailTo = `/obras/${encodeURIComponent(obraId)}${search}`;
   const changeTo = `/obras/${encodeURIComponent(obraId)}/historico/nova-mudanca${search}`;
   const busca = new URLSearchParams(search).get('busca');
   const listTo = busca ? `/obras?${new URLSearchParams(busca)}` : '/obras';

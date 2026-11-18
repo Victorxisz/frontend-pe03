@@ -16,8 +16,9 @@ h3 { font-size: 18px; }
 .button-primary:hover:not(:disabled) { background: #213e5c; }
 .button-secondary { background: #fff; border-color: #cdd0d5; color: var(--ink); }
 .button-secondary:hover:not(:disabled) { background: #f6f7f8; border-color: #a9aeb5; }
-.button-danger { background: #fff; border-color: #ddbbb6; color: #9b342a; }
-.button-danger:hover:not(:disabled) { background: #fff4f2; border-color: #bb7b72; }
+.button-danger { background: #b32d2d; border-color: #b32d2d; color: #fff; }
+.button-danger:hover:not(:disabled) { background: #902323; border-color: #902323; }
+.button-danger:active:not(:disabled) { background: #791d1d; border-color: #791d1d; }
 .button:hover:not(:disabled), .button:active:not(:disabled), .icon-button:hover:not(:disabled), .icon-button:active:not(:disabled) { transform: none; }
 :is(button, a, input, select, textarea, summary):focus-visible { outline: 2px solid #315782; outline-offset: 3px; }
 .field > span { font-size: 13px; font-weight: 500; }
@@ -44,6 +45,7 @@ input::placeholder, textarea::placeholder { color: #747a83; opacity: 1; }
 .page-actions a:not(.button), .feature-page > p > a:not(.button) { text-decoration: underline; text-underline-offset: 3px; }
 .topbar { height: 64px; background: #fff; border-bottom: 1px solid var(--border); box-shadow: none; }
 .topbar-inner { max-width: 1240px; gap: 36px; }
+.topbar nav { display: flex; align-items: center; gap: 24px; }
 .brand { flex-direction: row; align-items: center; }
 .brand-wordmark { display: grid; gap: 3px; }
 .brand-name { color: #282d34; font-size: 20px; letter-spacing: -.035em; }

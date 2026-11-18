@@ -113,7 +113,7 @@ export default function MudancaForm({ obraId, tipo, targetId, campo, onBusy, onO
   }
   const frozen = saving || loading || blocked || Boolean(warning);
   const same = current && valoresIguais(novoValor(campo, intent), valorAtual(current, campo));
-  return <section aria-label="Decisão de mudança"><h3 ref={heading} tabIndex={-1}>{current?.nome || 'Consultar alvo'}</h3>
+  return <section className="mudanca-decisao" aria-label="Decisão de mudança"><h3 ref={heading} tabIndex={-1}>{current?.nome || 'Consultar alvo'}</h3>
     {loading && <p role="status">Consultando alvo e versão…</p>}
     {(failure || Object.keys(errors).length > 0) && <div ref={summary} tabIndex={-1} role="alert" className="form-error"><p>{failure?.message || 'Revise os campos indicados.'}</p>{Object.entries(errors).map(([key, message]) => <p key={key}>{key}: {message}</p>)}</div>}
     {confirmed && <p role="status" className="obra-save-success">Decisão confirmada pelo servidor.</p>}

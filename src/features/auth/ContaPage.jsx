@@ -17,7 +17,7 @@ export default function ContaPage() {
     finally { setBusy(false); }
   }
   async function remove() { setBusy(true); setError(''); try { await deleteAccount(); } catch (failure) { setError((failure.status === 0 || failure.status >= 500) ? 'Não foi possível confirmar a exclusão. Tente entrar novamente para verificar a conta.' : failure.message); } finally { setBusy(false); } }
-  return <section className="feature-page"><header><h1>Configurações</h1><p>Gerencie a conta da construtora.</p></header><section className="feature-card"><h2>Dados da conta</h2><form onSubmit={save}>
+  return <section className="feature-page conta-page"><header><h1>Configurações</h1><p>Gerencie a conta da construtora.</p></header><section className="feature-card"><h2>Dados da conta</h2><form onSubmit={save}>
     {[['nome', 'Nome', 'text'], ['email', 'E-mail', 'email'], ['telefone', 'Telefone com DDD', 'tel'], ['senha', 'Nova senha (opcional)', 'password']].map(([campo, label, tipo]) => <Field key={campo} label={label}><input type={tipo} required={campo === 'nome' || campo === 'email'} value={dados[campo]} autoComplete={campo === 'senha' ? 'new-password' : undefined} onChange={e => setDados({ ...dados, [campo]: e.target.value })} /></Field>)}
     {error && !confirm && <p role="alert" className="form-error">{error}</p>}{message && <p role="status">{message}</p>}<Button type="submit" loading={busy}>Salvar alterações</Button>
   </form></section><section className="feature-card"><h2>Excluir conta</h2><p>Após a exclusão, não será possível entrar com esta conta.</p><Button variant="danger" onClick={() => { setError(''); setConfirm(true); }}>Excluir conta</Button></section>
