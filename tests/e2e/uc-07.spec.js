@@ -37,7 +37,7 @@ async function setup(page, options = {}) {
         const body = route.request().postDataJSON(); state.posts.push(body);
         if (state.post) return state.post(route, body);
         if (body.versao !== state.record.versao) return route.fulfill({ status: 409, json: { mensagem: 'O alvo foi alterado; consulte novamente', campos: ['versao'] } });
-        if (body.novo_valor === 'concluído' && state.pending.length && body.confirmar_dependencias !== true) return route.fulfill({ status: 409, json: { mensagem: 'Há dependências pendentes', codigo: 'DEPENDENCIAS_PENDENTES', dependencias: state.pending } });
+        if ((body.novo_valor === 'concluído' || (state.record.estado === 'a iniciar' && body.novo_valor === 'em andamento')) && state.pending.length && body.confirmar_dependencias !== true) return route.fulfill({ status: 409, json: { mensagem: 'Há dependências pendentes', codigo: 'DEPENDENCIAS_PENDENTES', dependencias: state.pending } });
         return route.fulfill({ json: state.apply(body) });
       }
     }
@@ -59,6 +59,17 @@ const success = (page) => page.getByRole('status').filter({ hasText: 'Alteraçã
 
 test.describe('FE-UC-07 — estado, conclusão e reabertura de marco', () => {
   test.skip(process.env.E2E_REAL === '1', 'API controlada; não comprova transações/Atlas');
+  test('solicita confirmação para iniciar com dependências pendentes', async ({ page }) => {
+    const state = await setup(page, { pending });
+    await page.goto(base);
+    await choose(page, 'em andamento'); await save(page);
+    const dialog = page.getByRole('dialog', { name: 'Iniciar com pré-requisitos pendentes?' });
+    await expect(dialog).toContainText('Estrutura');
+    expect(state.record.estado).toBe('a iniciar');
+    await dialog.getByRole('button', { name: 'Iniciar mesmo assim' }).click();
+    await expect(badge(page)).toHaveText('Em andamento');
+    expect(state.posts.at(-1).confirmar_dependencias).toBe(true);
+  });
   test('altera, conclui, reabre e mantém motivo e histórico após recarga', async ({ page }, testInfo) => {
     const state = await setup(page);
     await page.goto(`${base}?busca=nome%3DAurora`);

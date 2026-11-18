@@ -16,7 +16,7 @@
 .password-toggle { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; padding: 0; background: transparent; color: #536277; border: 0; border-radius: 4px; }
 .password-toggle:hover:not(:disabled) { background: #f0f3f6; color: #294c71; }
 .password-toggle:focus-visible { outline: 2px solid #315782; outline-offset: -3px; }
-.login-card .login-submit { width: 100%; min-height: 48px; margin-top: 4px; border-radius: 6px; background: #294c71; font-size: 14px; font-weight: 500; }
+.login-card .login-submit { width: 100%; min-height: 52px; margin-top: 4px; border-radius: 10px; background: #294c71; font-size: 16px; font-weight: 500; }
 .login-card .login-footnote { color: #67717d; padding-top: 22px; margin-top: 26px; border-top: 1px solid #eaedf0; font-size: 12px; line-height: 1.7; }
 .login-card .form-error { margin: 0; }
 @media (max-width: 600px) { .login-page { padding: 40px 20px; } .login-card { padding: 32px 26px; border-radius: 8px; } .login-card h1 { font-size: 27px; } }
@@ -46,7 +46,7 @@
 .auth-register .login-footnote { margin-top: 20px; padding-top: 18px; }
 .auth-content .login-field > div { border-color: #cbd3db; border-radius: 8px; }
 .auth-content .login-field > span, .auth-content .login-field > label { font-weight: 600; }
-.auth-content .login-submit { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 50px; border-radius: 8px; background: #183b5c; }
+.auth-content .login-submit { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 52px; border-radius: 10px; background: #183b5c; }
 .auth-content .login-submit:hover:not(:disabled) { background: #285579; }
 .auth-content .login-footnote { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-top: 28px; padding-top: 22px; font-size: 13px; }
 .auth-content .login-footnote a { display: inline-flex; align-items: center; gap: 4px; color: #294c71; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }

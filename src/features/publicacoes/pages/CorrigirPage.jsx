@@ -77,7 +77,7 @@ function Editor({ obraId, avancoId, search, request }) {
     } finally { clearTimeout(timeout); lock.current = false; if (active.current) setBusy(false); }
   }
   const base = `/obras/${encodeURIComponent(obraId)}/avancos/${encodeURIComponent(avancoId)}`;
-  return <section><h2>Corrigir publicação</h2><p>Registre o motivo. O servidor preserva o conteúdo anterior e a autoria.</p>
+  return <section className="correction-page"><h2>Corrigir publicação</h2><p>Registre o motivo. O servidor preserva o conteúdo anterior e a autoria.</p>
     {loading && <p role="status">Carregando publicação e versões…</p>}
     {confirmed && <p role="status">Correção confirmada pelo servidor.</p>}
     {refreshError && <div role="alert"><p>A correção foi confirmada, mas a visualização não pôde ser atualizada.</p><Button disabled={busy} onClick={refresh}>Atualizar visualização</Button></div>}

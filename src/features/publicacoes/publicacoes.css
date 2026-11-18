@@ -7,6 +7,15 @@
 .correction-form { display: grid; gap: 20px; }
 .correction-form textarea { min-height: 130px; }
 .correction-form fieldset { border: 1px solid #d7dfe8; border-radius: 12px; padding: 16px; }
+.correction-page > * + * { margin-top: 12px; }
+.correction-page > .correction-form, .correction-page > h3 { margin-top: 24px; }
+.correction-form > fieldset { padding: 20px; min-width: 0; }
+.correction-form > fieldset > * + * { margin-top: 20px; }
+.correction-form fieldset legend { padding: 0 6px; }
+.correction-form .correction-media { display: flex; align-items: center; gap: 10px; min-height: 36px; }
+.correction-form .correction-media + .correction-media { margin-top: 8px; }
+.correction-form > p { margin-top: 20px; }
+.correction-form > .button { margin-top: 20px; }
 .correction-media { display: flex; align-items: center; gap: 10px; padding: 8px; overflow-wrap: anywhere; }
 .correction-media input { width: auto; }
 @media(max-width:600px) { .version-comparison { grid-template-columns: 1fr; } }
