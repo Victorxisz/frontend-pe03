@@ -49,3 +49,5 @@ export default function ObraLayout() {
       </details></> : <div className="obra-tab-content"><Suspense fallback={<p role="status">Carregando seção da obra…</p>}><Outlet context={{ obra: current.obra, onObraConsultada }} /></Suspense></div>}</>}
   </div>;
 }
+
+

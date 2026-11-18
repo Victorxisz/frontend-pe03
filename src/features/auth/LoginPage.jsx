@@ -42,6 +42,7 @@ export default function LoginPage() {
         {(error || sessionError) && <p role="alert" className="form-error">{error || sessionError}</p>}
         <Button type="submit" className="login-submit" loading={busy}>{busy ? 'Entrando…' : 'Entrar'} {!busy && <ArrowRight size={17} aria-hidden="true" />}</Button>
       </form>
+      <p className="login-footnote"><Link to="/portal">Sou comprador: acessar minha obra</Link></p>
       <p className="login-footnote">Ainda não tem uma conta? <Link to="/cadastro">Cadastrar construtora <ArrowRight size={14} aria-hidden="true" /></Link></p>
     </section>
     </div>
@@ -49,3 +50,4 @@ export default function LoginPage() {
     </div>
   </main>;
 }
+

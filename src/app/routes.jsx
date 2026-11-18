@@ -13,6 +13,8 @@ import { routes as ocorrencias } from '../features/ocorrencias/routes';
 import { routes as trabalhadores } from '../features/trabalhadores/routes';
 import { routes as historico } from '../features/historico/routes';
 
+const CompradoresPage = lazy(() => import('../features/portal/CompradoresPage'));
+const PortalPage = lazy(() => import('../features/portal/PortalPage'));
 const ContaPage = lazy(() => import('../features/auth/ContaPage'));
 const CadastroPage = lazy(() => import('../features/auth/CadastroPage'));
 const LoginPage = lazy(() => import('../features/auth/LoginPage'));
@@ -22,10 +24,12 @@ export const routes = [
     errorElement: <RouteErrorPage />,
     children: [
       { index: true, element: <Navigate to="/obras" replace /> },
+      { path: 'portal', element: <PortalPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'cadastro', element: <CadastroPage /> },
       { element: <RequireAuth />, children: [
         { element: <AppLayout />, children: [
+          { path: 'compradores', element: <CompradoresPage /> },
           { path: 'configuracoes', element: <ContaPage /> },
           ...obras,
           { path: 'obras/:obraId', element: <ObraLayout />, children: [
@@ -39,3 +43,5 @@ export const routes = [
     ],
   },
 ];
+
+

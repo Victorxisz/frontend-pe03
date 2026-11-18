@@ -1,0 +1,62 @@
+.theme-settings fieldset { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 0; padding: 0; border: 0; }
+.theme-settings legend { margin-bottom: 10px; font-weight: 600; }
+.theme-settings label { display: inline-flex; align-items: center; gap: 8px; min-width: 110px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+.theme-settings label:has(input:checked) { border-color: var(--navy); background: #edf3f9; }
+.theme-settings input { accent-color: #294c71; }
+:root[data-theme='dark'] { color-scheme: dark; --ink: #e8edf4; --muted: #b2bdcb; --navy: #a6c8ed; --border: #3b4a5c; --bg: #111923; }
+:root[data-theme='dark'] body { background: #111923; color: var(--ink); }
+:root[data-theme='dark'] :is(.side-nav, .topbar, .feature-card, .modal, .login-card, .compradores-field input, .field input, .field select, .field textarea, input.input, select.input, textarea.input, .media-file-list li, .avanco-media) { background: #1c2836; color: var(--ink); border-color: var(--border); }
+:root[data-theme='dark'] :is(input, select, textarea) { color: var(--ink); background-color: #202e3d; border-color: #657487; }
+:root[data-theme='dark'] input::placeholder, :root[data-theme='dark'] textarea::placeholder { color: #a5b2c1; }
+:root[data-theme='dark'] :is(.button-secondary, .back-link.button) { background: #263546; color: var(--ink); border-color: #5d7085; }
+:root[data-theme='dark'] .button-secondary:hover:not(:disabled) { background: #34485e; }
+:root[data-theme='dark'] .button-primary { background: #376b9c; color: white; }
+:root[data-theme='dark'] .button-primary:hover:not(:disabled) { background: #477fad; }
+:root[data-theme='dark'] :is(.side-nav a, .side-nav button, .side-nav-brand, .side-nav-user) { color: #d5dfeb; }
+:root[data-theme='dark'] :is(.side-nav a.active, .side-nav a:hover, .side-nav button:hover) { background: #31455a; color: #fff; }
+:root[data-theme='dark'] :is(.work-deadline, .avanco-facts > div, .obras-loading, .imagem-picker, .media-picker, .marco-card-dependencies li, .filter-chip, .obra-cover-placeholder) { background: #263647; color: #dce7f3; border-color: #455b72; }
+:root[data-theme='dark'] :is(.obra-opcao:hover, .obra-opcao:focus-visible, .obra-tabs a:hover) { background: #263647; color: #fff; }
+:root[data-theme='dark'] :is(.obra-tabs a.active, .filter-dates summary, .compradores-heading p, .compradores-obras > p, .compradores-empty p, .compradores-empty span, .compradores-registro p, .compradores-obras-vazio) { color: #c1cfdd; }
+:root[data-theme='dark'] :is(.compradores-password button, .compradores-field input) { color: var(--ink); }
+:root[data-theme='dark'] :is(.compradores-obras-lista, .compradores-obra + .compradores-obra, .compradores-registro) { border-color: var(--border); }
+:root[data-theme='dark'] .theme-settings label:has(input:checked) { background: #314c68; border-color: #a6c8ed; }
+:root[data-theme='dark'] .form-error { color: #ffd5cf; background: #512c30; }
+:root[data-theme='dark'] :is(.auth-page, .login-page) { background: #172330; }
+:root[data-theme='dark'] .auth-content { background: rgba(28, 40, 54, .88); }
+:root[data-theme='dark'] .auth-content .login-card { background: transparent; }
+@media (max-width: 900px) { :root[data-theme='dark'] .auth-content { background: rgba(28, 40, 54, .93); } }
+:root[data-theme='dark'] .auth-aside { color: #e8edf4; }
+:root[data-theme='dark'] .auth-aside::after { background: linear-gradient(0deg, #172330 0%, #172330b8 24%, transparent 60%); }
+:root[data-theme='dark'] :is(.login-field > div, .login-field input) { background: #202e3d; color: var(--ink); }
+:root[data-theme='dark'] :is(.login-field > span, .login-field > label, .login-heading > p:last-child, .auth-bottom, .auth-aside-copy small) { color: #c1cfdd; }
+:root[data-theme='dark'] .password-toggle { color: #d5dfeb; }
+:root[data-theme='dark'] :is(button, a, input, select, textarea, summary):focus-visible { outline-color: #a6c8ed; }
+
+/* Superfícies e controles do painel em modo escuro. */
+:root[data-theme='dark'] :is(.quick-search, .quick-filters select, .advanced-filters) { background: #202e3d; color: var(--ink); border-color: #657487; }
+:root[data-theme='dark'] .quick-search input { background: transparent; color: var(--ink); }
+:root[data-theme='dark'] .quick-search svg { color: #a9bdd1; }
+:root[data-theme='dark'] .more-filters { background: #202e3d; color: #e8edf4; border-color: #657487; }
+:root[data-theme='dark'] .more-filters:hover { background: #31455a; }
+:root[data-theme='dark'] :is(.date-filter-title, .work-card-delivery, .obra-overview .obra-prazo strong) { color: var(--ink); }
+:root[data-theme='dark'] :is(.work-cover, .imagem-projeto, .obra-cover-placeholder) { background: #2a3a4c; color: #91a9c0; }
+:root[data-theme='dark'] :is(.work-location, .work-card-delivery span, .obra-overview-back, .obra-overview .obra-detail-heading p, .obra-overview-meta) { color: #b2c1d1; }
+:root[data-theme='dark'] :is(.estado-marco-preview, .version-comparison > div, .imagem-projeto figcaption, .imagem-picker .imagem-previa) { background: #263647; color: var(--ink); border-color: var(--border); }
+:root[data-theme='dark'] :is(.auth-content .login-footnote a, .obra-details-link) { color: #a6c8ed; }
+:root[data-theme='dark'] .password-toggle:hover:not(:disabled) { background: #34485e; color: #fff; }
+:root[data-theme='dark'] .skip-link { background: #202e3d; color: #fff; }
+:root[data-theme='dark'] :is(.login-card .login-footnote, .auth-content .login-footnote, .auth-content .login-heading .login-section-label) { color: #aebfd1; border-color: var(--border); }
+:root[data-theme='dark'] :is(.status-planejada, .status-badge.status-planejada) { background: #344c64; color: #e0edf9; border-color: #55718c; }
+:root[data-theme='dark'] :is(.status-suspensa, .status-badge.status-suspensa) { background: #5a4930; color: #ffe2ad; border-color: #8f754b; }
+:root[data-theme='dark'] :is(.status-concluido, .status-concluida, .status-concluida-obra) { background: #25493e; color: #b9ead3; border-color: #437765; }
+:root[data-theme='dark'] :is(.status-em-andamento, .status-andamento) { background: #304a64; color: #d3e9ff; border-color: #547699; }
+:root[data-theme='dark'] .obra-alerta { background: #573337; color: #ffd5ce; }
+
+/* Painéis de confirmação e prévias de marcos devem seguir a superfície escura. */
+:root[data-theme='dark'] :is(.dependencia-preview, .marco-form-note) {
+  background: #263647;
+  color: var(--ink);
+}
+:root[data-theme='dark'] :is(.dependencia-preview > span, .dependencia-relacao > span) { color: #b2c1d1; }
+:root[data-theme='dark'] .dependencia-relacao strong { color: #bcd9f7; }
+
